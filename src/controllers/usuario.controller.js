@@ -1,32 +1,31 @@
-import Usuario from "../models/usuario.model";
-import { tiposMovimiento } from "../public/js/enumeraciones";
-import bcrypt from "bcrypt";
+import Usuario from '../models/usuario.model'
+import bcrypt from 'bcrypt'
 
-let usuario = new Usuario();
+let usuario = new Usuario()
 
 export const getUsuarios = async (req, res) => {
-  const { err, dat } = await usuario.getUsuarios();
+  const { err, dat } = await usuario.getUsuarios()
 
   if (err) {
-    return res.status(404).json({ err });
+    return res.status(404).json({ err })
   } else {
-    return res.status(200).json({ dat });
+    return res.status(200).json({ dat })
   }
-};
+}
 export const getUsuario = async (req, res) => {
-  usuario.userid = req.body.userid;
+  usuario.userid = req.body.userid
   try {
-    const { err, dat } = await usuario.getUsuarioByUserID();
+    const { err, dat } = await usuario.getUsuarioByUserID()
 
     if (err) {
-      res.status(412).send(err);
+      res.status(412).send(err)
     } else {
-      res.status(202).send(usuario);
+      res.status(202).send(usuario)
     }
   } catch (error) {
-    return res.status(404).json(err);
+    return res.status(404).json(err)
   }
-};
+}
 export const insertUsuario = async (req, res) => {
   const {
     nombre,
@@ -38,39 +37,40 @@ export const insertUsuario = async (req, res) => {
     telefono,
     estado,
     usuarioMov,
-  } = req.body.usuario;
+    tipoMov,
+  } = req.body.usuario
 
   try {
-    const passSalt = await bcrypt.genSalt(10);
-    const passHash = await bcrypt.hash(userid, passSalt);
+    const passSalt = await bcrypt.genSalt(10)
+    const passHash = await bcrypt.hash(userid, passSalt)
 
     // usuario
-    usuario.nombre = nombre;
-    usuario.oficina = oficina;
-    usuario.rol = rol;
-    usuario.userID = userid;
-    usuario.email = email;
-    usuario.perfil = perfil;
-    usuario.telefono = telefono;
-    usuario.estado = estado;
-    usuario.password = passHash;
+    usuario.nombre = nombre
+    usuario.oficina = oficina
+    usuario.rol = rol
+    usuario.userID = userid
+    usuario.email = email
+    usuario.perfil = perfil
+    usuario.telefono = telefono
+    usuario.password = passHash
+    usuario.estado = estado
     // movimiento
-    usuario.movimiento.usuario = usuarioMov;
-    usuario.movimiento.tipo = tiposMovimiento.crearUsuario;
+    usuario.movimiento.usuario = usuarioMov
+    usuario.movimiento.tipo = tipoMov
 
-    const { err, dat } = await usuario.insert();
+    const { err, dat } = await usuario.insert()
 
     if (err) {
-      res.status(404).json(err);
+      res.status(404).json(err)
     } else {
-      usuario.id = dat.p_idusua;
+      usuario.id = dat.p_idusua
 
-      res.status(202).json(usuario);
+      res.status(202).json(usuario)
     }
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json(error)
   }
-};
+}
 export const updateUsuario = async (req, res) => {
   const {
     id,
@@ -83,123 +83,124 @@ export const updateUsuario = async (req, res) => {
     telefono,
     estado,
     usuarioMov,
-  } = req.body.usuario;
+    tipoMov,
+  } = req.body.usuario
 
   try {
-    usuario.id = id;
-    usuario.nombre = nombre;
-    usuario.oficina = oficina;
-    usuario.rol = rol;
-    usuario.userID = userid;
-    usuario.email = email;
-    usuario.perfil = perfil;
-    usuario.telefono = telefono;
-    usuario.estado = estado;
+    usuario.id = id
+    usuario.nombre = nombre
+    usuario.oficina = oficina
+    usuario.rol = rol
+    usuario.userID = userid
+    usuario.email = email
+    usuario.perfil = perfil
+    usuario.telefono = telefono
+    usuario.estado = estado
     // movimiento
-    usuario.movimiento.usuario = usuarioMov;
-    usuario.movimiento.tipo = tiposMovimiento.modificarUsuario;
+    usuario.movimiento.usuario = usuarioMov
+    usuario.movimiento.tipo = tipoMov
 
-    const { err, dat } = await usuario.update();
+    const { err, dat } = await usuario.update()
 
     if (err) {
-      res.status(404).json(err);
+      res.status(404).json(err)
     } else {
-      res.status(202).json(usuario);
+      res.status(202).json(usuario)
     }
   } catch (error) {
-    res.status(405).json(error);
+    res.status(405).json(error)
   }
-};
+}
 export const deleteUsuario = async (req, res) => {
-  const { id, usuarioMov } = req.body.usuario;
+  const { id, usuarioMov, tipoMov } = req.body.usuario
 
   try {
     // usuario
-    usuario.id = id;
+    usuario.id = id
     // movimiento
-    usuario.movimiento.usuario = usuarioMov;
-    usuario.movimiento.tipo = tiposMovimiento.borrarUsuario;
+    usuario.movimiento.usuario = usuarioMov
+    usuario.movimiento.tipo = tipoMov
 
-    const { err, dat } = await usuario.delete();
+    const { err, dat } = await usuario.delete()
 
     if (err) {
-      res.status(404).json({ err });
+      res.status(404).json({ err })
     } else {
-      res.status(204).json("ok");
+      res.status(204).json('ok')
     }
   } catch (error) {
-    res.status(405).json(error);
+    res.status(405).json(error)
   }
-};
+}
 export const cambioPassword = async (req, res) => {
-  const { id, password } = req.body.usuario;
+  const { id, password } = req.body.usuario
 
   try {
-    const passSalt = await bcrypt.genSalt(10);
-    const passHash = await bcrypt.hash(password, passSalt);
+    const passSalt = await bcrypt.genSalt(10)
+    const passHash = await bcrypt.hash(password, passSalt)
 
-    usuario.id = id;
-    usuario.password = passHash;
+    usuario.id = id
+    usuario.password = passHash
     // movimiento
-    usuario.movimiento.usuario = id;
-    usuario.movimiento.tipo = tiposMovimiento.cambioPassword;
+    usuario.movimiento.usuario = id
+    usuario.movimiento.tipo = tiposMovimiento.cambioPassword
 
-    const { err, dat } = await usuario.cambioPassword();
+    const { err, dat } = await usuario.cambioPassword()
 
     if (err) {
-      res.status(404).json(err);
+      res.status(404).json(err)
     } else {
-      res.status(202).json(usuario);
+      res.status(202).json(usuario)
     }
   } catch (error) {
-    res.status(405).json(error);
+    res.status(405).json(error)
   }
-};
+}
 export const updatePerfil = async (req, res) => {
-  const { id, nombre, email, telefono } = req.body.usuario;
+  const { id, nombre, email, telefono } = req.body.usuario
 
   try {
-    usuario.id = id;
-    usuario.nombre = nombre;
-    usuario.email = email;
-    usuario.telefono = telefono;
+    usuario.id = id
+    usuario.nombre = nombre
+    usuario.email = email
+    usuario.telefono = telefono
     // movimiento
-    usuario.movimiento.usuario = id;
-    usuario.movimiento.tipo = tiposMovimiento.modificarUsuario;
+    usuario.movimiento.usuario = id
+    usuario.movimiento.tipo = tiposMovimiento.modificarUsuario
 
-    const { err, dat } = await usuario.updatePerfil();
+    const { err, dat } = await usuario.updatePerfil()
 
     if (err) {
-      res.status(404).json(err);
+      res.status(404).json(err)
     } else {
-      res.status(202).json(usuario);
+      res.status(202).json(usuario)
     }
   } catch (error) {
-    res.status(405).json(error);
+    res.status(405).json(error)
   }
-};
+}
 export const restablecerPassword = async (req, res) => {
-  const { id, usuarioMov } = req.body.usuario;
+  const { id, usuarioMov } = req.body.usuario
 
   try {
-    const passSalt = await bcrypt.genSalt(10);
-    const passHash = await bcrypt.hash(userid, passSalt);
+    const passSalt = await bcrypt.genSalt(10)
+    const passHash = await bcrypt.hash(userid, passSalt)
 
     // usuario
-    usuario.id = id;
-    usuario.password = passHash;
+    usuario.id = id
+    usuario.password = passHash
     // movimiento
-    usuario.movimiento.usuario = usuarioMov;
-    usuario.movimiento.tipo = tiposMovimiento.restablecerPassword;
+    usuario.movimiento.usuario = usuarioMov
+    usuario.movimiento.tipo = tiposMovimiento.restablecerPassword
 
-    const { err, dat } = await usuario.restablecerPassword();
+    const { err, dat } = await usuario.restablecerPassword()
 
     if (err) {
-      res.status(404).json(err);
+      res.status(404).json(err)
     } else {
-      res.status(204).json(usuario);
+      res.status(204).json(usuario)
     }
   } catch (error) {
-    res.status(405).json(error);
+    res.status(405).json(error)
   }
-};
+}
