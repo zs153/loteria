@@ -1,0 +1,32 @@
+{
+  "name": "ecommerceapi",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "server": "pm2 start ./dist/bin/www",
+    "babel": "babel src -d dist --copy-files",
+    "start": "node ./dist/bin/www",
+    "startdev": "nodemon --exec babel-node ./src/bin/www"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "oracledb": "^5.3.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.0",
+    "@babel/core": "^7.17.0",
+    "@babel/node": "^7.16.8",
+    "@babel/plugin-transform-runtime": "^7.17.0",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/register": "^7.17.0",
+    "@babel/runtime": "^7.17.0",
+    "nodemon": "^2.0.15"
+  }
+}
