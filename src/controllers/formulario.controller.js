@@ -137,6 +137,8 @@ export const estadisticaFormularios = async (req, res) => {
     desde,
     hasta,
   };
+
+  console.log(formulario);
   const { err, dat } = await formulario.estadistica();
 
   if (err) {

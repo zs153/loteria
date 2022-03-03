@@ -259,6 +259,7 @@ class Formulario {
     let conn;
     let ret;
 
+    console.log(this.perido);
     let strSql = "SELECT desofi,";
     strSql += "SUM(CASE WHEN stadoc = 0 THEN 1 ELSE 0 END) AS pend,";
     strSql += "SUM(CASE WHEN stadoc = 1 THEN 1 ELSE 0 END) AS asig,";
@@ -267,7 +268,7 @@ class Formulario {
     strSql += "FROM (SELECT iddocu FROM movimientos mm ";
     strSql += "INNER JOIN movimientosdocumento md ON md.idmovi = mm.idmovi ";
     strSql +=
-      "WHERE tipmov = 0 AND mm.fecmov BETWEEN TO_DATE(:p_desfec,'DD/MM/YYYY') AND TO_DATE(:p_hasfec,'DD/MM/YYYY')) p1 ";
+      "WHERE tipmov = 0 AND mm.fecmov BETWEEN TO_DATE(:p_desfec,'YYYY-MM-DD') AND TO_DATE(:p_hasfec,'YYYY-MM-DD')) p1 ";
     strSql += "INNER JOIN documentos dd ON dd.iddocu = p1.iddocu ";
     strSql += "INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc ";
     strSql += "GROUP BY desofi ORDER BY desofi";
@@ -287,6 +288,7 @@ class Formulario {
         dat: result.rows,
       };
     } catch (error) {
+      console.log(error);
       ret = {
         err: error,
         dat: undefined,
