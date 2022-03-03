@@ -20,7 +20,7 @@ POST {{api}}
 Content-Type: application/json
 
 {
-  "userid": "lg29",
+  "userid": "aa100",
 }
 
 ###

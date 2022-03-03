@@ -5,14 +5,12 @@ import {
   insertUsuario,
   updateUsuario,
   deleteUsuario,
-  restablecerPassword,
   updatePerfil,
   cambioPassword,
 } from "../controllers/usuario.controller";
 import {
   verifyLogin,
   verifyLogout,
-  changePassword,
   forgotPassword,
   crearRegistro,
 } from "../controllers/login.controller";
@@ -62,7 +60,6 @@ apiRouter.post("/usuario", getUsuario);
 apiRouter.post("/usuarios/insert", insertUsuario);
 apiRouter.post("/usuarios/update", updateUsuario);
 apiRouter.post("/usuarios/delete", deleteUsuario);
-apiRouter.post("/usuarios/restablecer", restablecerPassword);
 apiRouter.post("/usuarios/updatePerfil", updatePerfil);
 apiRouter.post("/usuarios/cambio", cambioPassword);
 
@@ -83,7 +80,6 @@ apiRouter.post("/tipos/delete", deleteTipo);
 // login
 apiRouter.post("/verificar", verifyLogin);
 apiRouter.post("/logout", verifyLogout);
-apiRouter.post("/change", changePassword);
 apiRouter.post("/forgot", forgotPassword);
 apiRouter.post("/registro", crearRegistro);
 

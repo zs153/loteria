@@ -9,14 +9,14 @@ class Formulario {
     nif,
     nombre,
     email,
+    telefono,
+    movil,
+    estado,
     referencia,
     tipo,
     ejercicio,
     oficina,
     observaciones,
-    telefono,
-    movil,
-    estado,
     funcionario,
     liquidador
   ) {
@@ -24,14 +24,14 @@ class Formulario {
     this.fecdoc = fecha;
     this.nifcon = nif;
     this.nomcon = nombre;
-    this.email = email;
+    this.emacon = email;
+    this.telcon = telefono;
+    this.movcon = movil;
     this.refdoc = referencia;
     this.tipdoc = tipo;
     this.ejedoc = ejercicio;
     this.ofidoc = oficina;
     this.obsdoc = observaciones;
-    this.teldec = telefono;
-    this.movdoc = movil;
     this.fundoc = funcionario;
     this.liqdoc = liquidador;
     this.stadoc = estado;
@@ -73,6 +73,18 @@ class Formulario {
   set email(value) {
     this.emacon = value;
   }
+  get telefono() {
+    return this.telcon;
+  }
+  set telefono(value) {
+    this.telcon = value;
+  }
+  get movil() {
+    return this.movcon;
+  }
+  set movil(value) {
+    this.movcon = value;
+  }
   get referencia() {
     return this.refdoc;
   }
@@ -102,18 +114,6 @@ class Formulario {
   }
   set observaciones(value) {
     this.obsdoc = value;
-  }
-  get telefono() {
-    return this.teldec;
-  }
-  set telefono(value) {
-    this.teldec = value;
-  }
-  get movil() {
-    return this.movdoc;
-  }
-  set movil(value) {
-    this.movdoc = value;
   }
   get funcionario() {
     return this.fundoc;
@@ -171,13 +171,13 @@ class Formulario {
         this.nif = result.rows[0].NIFCON;
         this.nombre = result.rows[0].NOMCON;
         this.email = result.rows[0].EMACON;
+        this.telefono = result.rows[0].TELCON;
+        this.movil = result.rows[0].MOVCON;
         this.referencia = result.rows[0].REFDOC;
         this.tipo = result.rows[0].TIPDOC;
         this.ejercicio = result.rows[0].EJEDOC;
         this.oficina = result.rows[0].OFIDOC;
         this.observaciones = result.rows[0].OBSDOC;
-        this.telefono = result.rows[0].TELDEC;
-        this.movil = result.rows[0].MOVDOC;
         this.funcionario = result.rows[0].FUNDOC;
         this.liquidador = result.rows[0].LIQDOC;
         this.estado = result.rows[0].STADOC;
@@ -217,7 +217,7 @@ class Formulario {
     let ret;
 
     let strSql =
-      "SELECT oo.desofi,tt.destip,dd.iddocu,TO_CHAR(dd.fecdoc, 'DD/MM/YYYY') AS strfec,dd.refdoc,dd.nifcon,dd.nomcon,dd.obsdoc,dd.liqdoc,dd.stadoc FROM ";
+      "SELECT oo.desofi,tt.destip,dd.iddocu,TO_CHAR(dd.fecdoc, 'DD/MM/YYYY') AS strfec,dd.refdoc,dd.nifcon,dd.nomcon,dd.movcon,dd.obsdoc,dd.liqdoc,dd.stadoc FROM ";
     strSql +=
       "(SELECT ofidoc, fecdoc, iddocu FROM documentos GROUP BY ofidoc, fecdoc, iddocu) zz ";
     strSql += "INNER JOIN documentos dd ON dd.iddocu = zz.iddocu ";
@@ -313,20 +313,20 @@ class Formulario {
     try {
       const conn = await oracledb.getConnection(connectionString);
       const result = await conn.execute(
-        "BEGIN FORMULARIOS_PKG.INSERTFORMULARIO(TO_DATE(:p_fecdoc,'YYYY-MM-DD'), :p_nifcon, :p_nomcon, :p_emacon, :p_refdoc, :p_tipdoc, :p_ejedoc, :p_ofidoc, :p_obsdoc, :p_teldec, :p_movdoc, :p_fundoc, :p_liqdoc, :p_stadoc, :p_usumov, :p_tipmov, :p_iddocu); END;",
+        "BEGIN FORMULARIOS_PKG.INSERTFORMULARIO(TO_DATE(:p_fecdoc,'YYYY-MM-DD'), :p_nifcon, :p_nomcon, :p_emacon, :p_telcon, :p_movcon, :p_refdoc, :p_tipdoc, :p_ejedoc, :p_ofidoc, :p_obsdoc, :p_fundoc, :p_liqdoc, :p_stadoc, :p_usumov, :p_tipmov, :p_iddocu); END;",
         {
           // formulario
           p_fecdoc: this.fecha,
           p_nifcon: this.nif,
           p_nomcon: this.nombre,
           p_emacon: this.email,
+          p_telcon: this.telefono,
+          p_movcon: this.movil,
           p_refdoc: this.referencia,
           p_tipdoc: this.tipo,
           p_ejedoc: this.ejercicio,
           p_ofidoc: this.oficina,
           p_obsdoc: this.observaciones,
-          p_teldec: this.telefono,
-          p_movdoc: this.movil,
           p_fundoc: this.funcionario,
           p_liqdoc: this.liquidador,
           p_stadoc: this.estado,
@@ -343,6 +343,7 @@ class Formulario {
         dat: result.outBinds,
       };
     } catch (error) {
+      console.log(error);
       ret = {
         err: error,
         dat: undefined,
@@ -369,7 +370,7 @@ class Formulario {
     try {
       const conn = await oracledb.getConnection(connectionString);
       await conn.execute(
-        "BEGIN FORMULARIOS_PKG.UPDATEFORMULARIO(:p_iddocu, TO_DATE(:p_fecdoc,'YYYY-MM-DD'), :p_nifcon, :p_nomcon, :p_emacon, :p_refdoc, :p_tipdoc, :p_ejedoc, :p_ofidoc, :p_obsdoc, :p_teldec, :p_movdoc, :p_usumov, :p_tipmov); END;",
+        "BEGIN FORMULARIOS_PKG.UPDATEFORMULARIO(:p_iddocu, TO_DATE(:p_fecdoc,'YYYY-MM-DD'), :p_nifcon, :p_nomcon, :p_emacon, :p_telcon, :p_movcon, :p_refdoc, :p_tipdoc, :p_ejedoc, :p_ofidoc, :p_obsdoc, :p_usumov, :p_tipmov); END;",
         {
           // formulario
           p_iddocu: this.id,
@@ -377,13 +378,13 @@ class Formulario {
           p_nifcon: this.nif,
           p_nomcon: this.nombre,
           p_emacon: this.email,
+          p_telcon: this.telefono,
+          p_movcon: this.movil,
           p_refdoc: this.referencia,
           p_tipdoc: this.tipo,
           p_ejedoc: this.ejercicio,
           p_ofidoc: this.oficina,
           p_obsdoc: this.observaciones,
-          p_teldec: this.telefono,
-          p_movdoc: this.movil,
           // movimiento
           p_usumov: this.movimiento.usuario,
           p_tipmov: this.movimiento.tipo,
