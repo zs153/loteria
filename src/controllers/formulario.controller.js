@@ -35,13 +35,15 @@ export const getFormulario = async (req, res) => {
 export const insertFormulario = async (req, res) => {
   const { usuarioMov, tipoMov } = req.body.movimiento
   const formulario = new Formulario()
+  const referencia =
+    'D' + randomString(10, '01289012345673456783456s7e8345678h3xyz')
 
   // formulario
   formulario.fecha = req.body.documento.fecha.substr(0, 10)
   formulario.nif = req.body.documento.nif
   formulario.nombre = req.body.documento.nombre
   formulario.email = req.body.documento.email
-  formulario.referencia = req.body.documento.referencia
+  formulario.referencia = referencia
   formulario.tipo = req.body.documento.tipo
   formulario.ejercicio = req.body.documento.ejercicio
   formulario.oficina = req.body.documento.oficina
@@ -112,12 +114,13 @@ export const deleteFormulario = async (req, res) => {
 }
 export const cambioEstado = async (req, res) => {
   const { usuarioMov, tipoMov } = req.body.movimiento
+  const { id, liquidador, estado } = req.body.documento
   const formulario = new Formulario()
 
   // formulario
-  formulario.id = req.body.documento.id
-  formulario.liquidador = req.body.documento.userID
-  formulario.estado = req.body.documento.estado
+  formulario.id = id
+  formulario.liquidador = liquidador
+  formulario.estado = estado
   // movimiento
   formulario.movimiento.usuario = usuarioMov
   formulario.movimiento.tipo = tipoMov
@@ -220,4 +223,11 @@ export const sms = async (req, res) => {
   } catch (error) {
     res.status(500).json('No se ha podido insertar el mensaje sms')
   }
+}
+function randomString(long, chars) {
+  let result = ''
+  for (let i = long; i > 0; --i) {
+    result += chars[Math.floor(Math.random() * chars.length)]
+  }
+  return result
 }
