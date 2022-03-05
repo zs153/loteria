@@ -40,6 +40,13 @@ import {
   insertTipo,
   updateTipo,
 } from '../controllers/tipo.controller'
+import {
+  getSmss,
+  getSms,
+  insertSms,
+  updateSms,
+  deleteSms,
+} from '../controllers/sms.controller'
 const apiRouter = express.Router()
 
 // formularios
@@ -76,6 +83,13 @@ apiRouter.post('/tipo/', getTipo)
 apiRouter.post('/tipos/insert', insertTipo)
 apiRouter.post('/tipos/update', updateTipo)
 apiRouter.post('/tipos/delete', deleteTipo)
+
+// sms
+apiRouter.get('/smss', getSmss)
+apiRouter.post('/sms/', getSms)
+apiRouter.post('/smss/insert', insertSms)
+apiRouter.post('/smss/update', updateSms)
+apiRouter.post('/smss/delete', deleteSms)
 
 // login
 apiRouter.post('/verificar', verifyLogin)

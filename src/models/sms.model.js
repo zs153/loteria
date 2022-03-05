@@ -70,10 +70,11 @@ class SMS {
       )
 
       if (result) {
-        this.id = result.rows[0].idsmss
-        this.texto = result.rows[0].texsms
-        this.movil = result.rows[0].movsms
-        this.estado = result.rows[0].stasms
+        this.id = result.rows[0].IDSMSS
+        this.fecha = result.rows[0].FECSMS
+        this.texto = result.rows[0].TEXSMS
+        this.movil = result.rows[0].MOVSMS
+        this.estado = result.rows[0].STASMS
 
         ret = {
           err: undefined,
@@ -112,7 +113,7 @@ class SMS {
     try {
       const conn = await oracledb.getConnection(connectionString)
       const result = await conn.execute(
-        'SELECT * FROM smss ORDER BY fecsms',
+        "SELECT ss.*,dd.*, TO_CHAR(ss.fecsms, 'DD/MM/YYYY') AS strfec FROM smss ss LEFT JOIN smssdocumento sd ON sd.idsmss = ss.idsmss LEFT JOIN documentos dd ON dd.iddocu = sd.iddocu ORDER BY ss.fecsms",
         [],
         {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
@@ -197,13 +198,13 @@ class SMS {
     try {
       const conn = await oracledb.getConnection(connectionString)
       await conn.execute(
-        'BEGIN FORMULARIOS_PKG.UPDATESMS(:p_idsmss, :p_texsms, :p_movsms, :p_usumov, :p_tipmov); END;',
+        'BEGIN FORMULARIOS_PKG.UPDATESMS(:p_idsmss, :p_texsms, :p_movsms, :p_stasms, :p_usumov, :p_tipmov); END;',
         {
           // sms
           p_idsmss: this.id,
           p_texsms: this.texto,
           p_movsms: this.movil,
-          p_stadoc: this.estado,
+          p_stasms: this.estado,
           // movimiento
           p_usumov: this.movimiento.usuario,
           p_tipmov: this.movimiento.tipo,
@@ -215,6 +216,7 @@ class SMS {
         dat: this.id,
       }
     } catch (error) {
+      console.log(error)
       ret = {
         err: error,
         dat: undefined,
