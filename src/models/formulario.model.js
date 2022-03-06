@@ -284,7 +284,7 @@ class Formulario {
     strSql += 'INNER JOIN documentos dd ON dd.iddocu = zz.iddocu '
     strSql += 'INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc '
     strSql += 'INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc '
-    strSql += 'WHERE stadoc < :p_stadoc ORDER BY dd.ofidoc'
+    strSql += 'WHERE stadoc < :p_stadoc ORDER BY dd.ofidoc, dd.fecdoc'
 
     try {
       const conn = await oracledb.getConnection(connectionString)
