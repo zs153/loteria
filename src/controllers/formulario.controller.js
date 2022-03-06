@@ -51,28 +51,22 @@ export const getFormularioByRef = async (req, res) => {
 export const insertFormulario = async (req, res) => {
   const { usuarioMov, tipoMov } = req.body.movimiento
   const formulario = new Formulario()
-  const referencia =
-    'D' +
-    randomString(
-      10,
-      '123456789012345678901234567890123456789012345678901234567890abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ'
-    )
 
   // formulario
-  formulario.fecha = req.body.documento.fecha.substr(0, 10)
-  formulario.nif = req.body.documento.nif
-  formulario.nombre = req.body.documento.nombre
-  formulario.email = req.body.documento.email
-  formulario.referencia = referencia
-  formulario.tipo = req.body.documento.tipo
-  formulario.ejercicio = req.body.documento.ejercicio
-  formulario.oficina = req.body.documento.oficina
-  formulario.observaciones = req.body.documento.observaciones
-  formulario.telefono = req.body.documento.telefono
-  formulario.movil = req.body.documento.movil
-  formulario.funcionario = req.body.documento.funcionario
-  formulario.liquidador = req.body.documento.liquidador
-  formulario.estado = req.body.documento.estado
+  formulario.fecha = req.body.documento.fecdoc
+  formulario.nif = req.body.documento.nifcon
+  formulario.nombre = req.body.documento.nomcon
+  formulario.email = req.body.documento.emacon
+  formulario.telefono = req.body.documento.telcon
+  formulario.movil = req.body.documento.movcon
+  formulario.referencia = req.body.documento.refdoc
+  formulario.tipo = req.body.documento.tipdoc
+  formulario.ejercicio = req.body.documento.ejedoc
+  formulario.oficina = req.body.documento.ofidoc
+  formulario.observaciones = req.body.documento.obsdoc
+  formulario.funcionario = req.body.documento.fundoc
+  formulario.liquidador = req.body.documento.liqdoc
+  formulario.estado = req.body.documento.stadoc
   // movimiento
   formulario.movimiento.usuario = usuarioMov
   formulario.movimiento.tipo = tipoMov
@@ -90,18 +84,19 @@ export const updateFormulario = async (req, res) => {
   const { usuarioMov, tipoMov } = req.body.movimiento
 
   // formulario
-  formulario.id = req.body.documento.id
-  formulario.fecha = req.body.documento.fecha
-  formulario.nif = req.body.documento.nif
-  formulario.nombre = req.body.documento.nombre
-  formulario.email = req.body.documento.email
-  formulario.referencia = req.body.documento.referencia
-  formulario.tipo = req.body.documento.tipo
-  formulario.ejercicio = req.body.documento.ejercicio
-  formulario.oficina = req.body.documento.oficina
-  formulario.observaciones = req.body.documento.observaciones
-  formulario.telefono = req.body.documento.telefono
-  formulario.movil = req.body.documento.movil
+  formulario.id = req.body.documento.iddocu
+  formulario.fecha = req.body.documento.fecdoc
+  formulario.nif = req.body.documento.nifcon
+  formulario.nombre = req.body.documento.nomcon
+  formulario.email = req.body.documento.emacon
+  formulario.telefono = req.body.documento.telcon
+  formulario.movil = req.body.documento.movcon
+  formulario.referencia = req.body.documento.refdoc
+  formulario.tipo = req.body.documento.tipdoc
+  formulario.ejercicio = req.body.documento.ejedoc
+  formulario.oficina = req.body.documento.ofidoc
+  formulario.observaciones = req.body.documento.obsdoc
+  formulario.funcionario = req.body.documento.fundoc
   // movimiento
   formulario.movimiento.usuario = usuarioMov
   formulario.movimiento.tipo = tipoMov
@@ -269,11 +264,4 @@ export const referenciaSms = async (req, res) => {
   } catch (error) {
     res.status(500).json('No se ha podido insertar el mensaje sms')
   }
-}
-function randomString(long, chars) {
-  let result = ''
-  for (let i = long; i > 0; --i) {
-    result += chars[Math.floor(Math.random() * chars.length)]
-  }
-  return result
 }
