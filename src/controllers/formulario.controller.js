@@ -32,11 +32,31 @@ export const getFormulario = async (req, res) => {
     res.status(401).json(err)
   }
 }
+export const getFormularioByRef = async (req, res) => {
+  const formulario = new Formulario()
+  formulario.referencia = req.body.referencia
+
+  try {
+    const { err, dat } = await formulario.getFormularioByRef()
+
+    if (err) {
+      res.status(404).send(err)
+    } else {
+      res.status(201).send(formulario)
+    }
+  } catch (error) {
+    res.status(401).json(err)
+  }
+}
 export const insertFormulario = async (req, res) => {
   const { usuarioMov, tipoMov } = req.body.movimiento
   const formulario = new Formulario()
   const referencia =
-    'D' + randomString(10, '01289012345673456783456s7e8345678h3xyz')
+    'D' +
+    randomString(
+      10,
+      '123456789012345678901234567890123456789012345678901234567890abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ'
+    )
 
   // formulario
   formulario.fecha = req.body.documento.fecha.substr(0, 10)
@@ -200,6 +220,32 @@ export const updatePerfilFormulario = async (req, res) => {
 }
 export const sms = async (req, res) => {
   const { usuarioMov, tipoMov } = req.body.movimiento
+  try {
+    const sms = new SMS()
+
+    // sms
+    sms.texto = req.body.sms.texto
+    sms.movil = req.body.sms.movil
+    sms.estado = req.body.sms.estado
+    // documento
+    sms.idDocumento = req.body.sms.idDocumento
+    // movimiento
+    sms.movimiento.usuario = usuarioMov
+    sms.movimiento.tipo = tipoMov
+
+    const { err, dat } = await sms.insert()
+
+    if (err) {
+      res.status(403).json(err)
+    } else {
+      res.status(202).json(sms)
+    }
+  } catch (error) {
+    res.status(500).json('No se ha podido insertar el mensaje sms')
+  }
+}
+export const referenciaSms = async (req, res) => {
+  const { referencia } = req.body.referencia
   try {
     const sms = new SMS()
 

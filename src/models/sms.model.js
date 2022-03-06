@@ -3,12 +3,13 @@ import Movimiento from './movimiento.model'
 import { connectionString } from '../settings'
 
 class SMS {
-  constructor(id, texto, movil, estado, documento) {
+  constructor(id, texto, movil, estado) {
     this.idsmss = id
     this.texsms = texto
     this.movsms = movil
     this.stasms = estado
-    this.iddocu = documento
+    this.iddocu = 0
+    this.refdoc = ''
 
     this.movi = new Movimiento()
   }
@@ -45,6 +46,12 @@ class SMS {
   set idDocumento(value) {
     this.iddocu = value
   }
+  get referenciaDocumento() {
+    return this.refdoc
+  }
+  set referenciaDocumento(value) {
+    this.refdoc = value
+  }
 
   // movimiento
   get movimiento() {
@@ -62,7 +69,7 @@ class SMS {
     try {
       const conn = await oracledb.getConnection(connectionString)
       const result = await conn.execute(
-        'SELECT * FROM smss WHERE idsmss = :p_idsmss',
+        'SELECT ss.*,dd.refdoc FROM smss ss INNER JOIN smssdocumento sd ON sd.idsmss = ss.idsmss INNER JOIN documentos dd ON dd.iddocu = sd.iddocu WHERE ss.idsmss = :p_idsmss',
         [this.id],
         {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
@@ -75,6 +82,7 @@ class SMS {
         this.texto = result.rows[0].TEXSMS
         this.movil = result.rows[0].MOVSMS
         this.estado = result.rows[0].STASMS
+        this.referenciaDocumento = result.rows[0].REFDOC
 
         ret = {
           err: undefined,
@@ -216,7 +224,6 @@ class SMS {
         dat: this.id,
       }
     } catch (error) {
-      console.log(error)
       ret = {
         err: error,
         dat: undefined,

@@ -27,8 +27,9 @@ export const getSms = async (req, res) => {
   }
 }
 export const insertSms = async (req, res) => {
+  const { texto, movil, estado } = req.body.sms
+  const { idDocumento } = req.body.documento
   const { usuarioMov, tipoMov } = req.body.movimiento
-  const { texto, movil, estado, idDocumento } = req.body.sms
 
   // Sms
   sms.texto = texto
@@ -41,7 +42,6 @@ export const insertSms = async (req, res) => {
   sms.movimiento.tipo = tipoMov
 
   const { err, dat } = await sms.insert()
-
   if (err) {
     res.status(403).json(err)
   } else {
@@ -70,13 +70,13 @@ export const updateSms = async (req, res) => {
   }
 }
 export const deleteSms = async (req, res) => {
-  const user = req.body.user
+  const { usuarioMov, tipoMov } = req.body.movimiento
 
   // Sms
   sms.id = req.body.sms.id
   // movimiento
-  sms.movimiento.usuario = req.body.sms.usuarioMov
-  sms.movimiento.tipo = req.body.sms.tipoMov
+  sms.movimiento.usuario = usuarioMov
+  sms.movimiento.tipo = tipoMov
 
   const { err, dat } = await sms.delete()
 

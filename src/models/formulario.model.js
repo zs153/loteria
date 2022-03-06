@@ -212,6 +212,67 @@ class Formulario {
 
     return ret
   }
+  async getFormularioByRef() {
+    let conn
+    let ret
+
+    try {
+      const conn = await oracledb.getConnection(connectionString)
+      const result = await conn.execute(
+        "SELECT dd.*, TO_CHAR(fecdoc,'YYYY-MM-DD') AS strfec FROM documentos dd WHERE dd.refdoc = :p_refdoc",
+        [this.referencia],
+        {
+          outFormat: oracledb.OUT_FORMAT_OBJECT,
+        }
+      )
+
+      if (result) {
+        this.id = result.rows[0].IDDOCU
+        this.fecha = result.rows[0].STRFEC
+        this.nif = result.rows[0].NIFCON
+        this.nombre = result.rows[0].NOMCON
+        this.email = result.rows[0].EMACON
+        this.telefono = result.rows[0].TELCON
+        this.movil = result.rows[0].MOVCON
+        this.referencia = result.rows[0].REFDOC
+        this.tipo = result.rows[0].TIPDOC
+        this.ejercicio = result.rows[0].EJEDOC
+        this.oficina = result.rows[0].OFIDOC
+        this.observaciones = result.rows[0].OBSDOC
+        this.funcionario = result.rows[0].FUNDOC
+        this.liquidador = result.rows[0].LIQDOC
+        this.estado = result.rows[0].STADOC
+
+        ret = {
+          err: undefined,
+          dat: result.rows,
+        }
+      } else {
+        ret = {
+          err: 1,
+          dat: 'No hay registro',
+        }
+      }
+    } catch (error) {
+      ret = {
+        err: error,
+        dat: undefined,
+      }
+    } finally {
+      if (conn) {
+        try {
+          await conn.close()
+        } catch (error) {
+          ret = {
+            err: error,
+            dat: undefined,
+          }
+        }
+      }
+    }
+
+    return ret
+  }
   async getFormularios() {
     let conn
     let ret

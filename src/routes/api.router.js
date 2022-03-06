@@ -26,6 +26,7 @@ import {
   deleteFormulario,
   estadisticaFormularios,
   getFormulario,
+  getFormularioByRef,
   getFormularios,
   insertFormulario,
   updateFormulario,
@@ -57,6 +58,7 @@ apiRouter.post('/formularios/update', updateFormulario)
 apiRouter.post('/formularios/delete', deleteFormulario)
 apiRouter.post('/formularios/cambioEstado', cambioEstado)
 apiRouter.post('/formularios/estadistica', estadisticaFormularios)
+apiRouter.post('/formularios/referencia', getFormularioByRef)
 apiRouter.post('/formularios/sms', sms)
 apiRouter.post('/formularios/cambio', cambioPasswordFormulario)
 apiRouter.post('/formularios/updatePerfil', updatePerfilFormulario)
