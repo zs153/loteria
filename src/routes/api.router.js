@@ -35,6 +35,19 @@ import {
   sms,
 } from '../controllers/formulario.controller'
 import {
+  cambioEstadoFraude,
+  deleteFraude,
+  estadisticaFraudes,
+  getFraude,
+  getFraudeByRef,
+  getFraudes,
+  insertFraude,
+  updateFraude,
+  cambioPasswordFraude,
+  updatePerfilFraude,
+  smsFraude,
+} from '../controllers/fraude.controller'
+import {
   deleteTipo,
   getTipo,
   getTipos,
@@ -56,12 +69,25 @@ apiRouter.post('/formulario', getFormulario)
 apiRouter.post('/formularios/insert', insertFormulario)
 apiRouter.post('/formularios/update', updateFormulario)
 apiRouter.post('/formularios/delete', deleteFormulario)
-apiRouter.post('/formularios/cambioEstado', cambioEstado)
-apiRouter.post('/formularios/estadistica', estadisticaFormularios)
+apiRouter.post('/formularios/cambioEstado', cambioEstadoFraude)
+apiRouter.post('/formularios/estadistica', estadisticaFraudes)
 apiRouter.post('/formularios/referencia', getFormularioByRef)
-apiRouter.post('/formularios/sms', sms)
+apiRouter.post('/formularios/sms', smsFraude)
 apiRouter.post('/formularios/cambio', cambioPasswordFormulario)
 apiRouter.post('/formularios/updatePerfil', updatePerfilFormulario)
+
+// fraudes
+apiRouter.post('/fraudes', getFraudes)
+apiRouter.post('/fraude', getFraude)
+apiRouter.post('/fraudes/insert', insertFraude)
+apiRouter.post('/fraudes/update', updateFraude)
+apiRouter.post('/fraudes/delete', deleteFraude)
+apiRouter.post('/fraudes/cambioEstado', cambioEstado)
+apiRouter.post('/fraudes/estadistica', estadisticaFraudes)
+apiRouter.post('/fraudes/referencia', getFraudeByRef)
+apiRouter.post('/fraudes/sms', sms)
+apiRouter.post('/fraudes/cambio', cambioPasswordFraude)
+apiRouter.post('/fraudes/updatePerfil', updatePerfilFraude)
 
 // usuarios
 apiRouter.post('/usuarios', getUsuarios)

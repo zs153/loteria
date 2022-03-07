@@ -2,7 +2,7 @@ import oracledb from 'oracledb'
 import Movimiento from './movimiento.model'
 import { connectionString } from '../settings'
 
-class Formulario {
+class Fraude {
   constructor(
     id,
     fecha,
@@ -20,21 +20,21 @@ class Formulario {
     funcionario,
     liquidador
   ) {
-    this.iddocu = id
-    this.fecdoc = fecha
+    this.idfrau = id
+    this.fecfra = fecha
     this.nifcon = nif
     this.nomcon = nombre
     this.emacon = email
     this.telcon = telefono
     this.movcon = movil
-    this.refdoc = referencia
-    this.tipdoc = tipo
-    this.ejedoc = ejercicio
-    this.ofidoc = oficina
-    this.obsdoc = observaciones
-    this.fundoc = funcionario
-    this.liqdoc = liquidador
-    this.stadoc = estado
+    this.reffra = referencia
+    this.tipfra = tipo
+    this.ejefra = ejercicio
+    this.ofifra = oficina
+    this.obsfra = observaciones
+    this.funfra = funcionario
+    this.liqfra = liquidador
+    this.stafra = estado
 
     this.movi = new Movimiento()
     this.peri = {
@@ -44,16 +44,16 @@ class Formulario {
   }
 
   get id() {
-    return this.iddocu
+    return this.idfrau
   }
   set id(value) {
-    this.iddocu = value
+    this.idfrau = value
   }
   get fecha() {
-    return this.fecdoc
+    return this.fecfra
   }
   set fecha(value) {
-    this.fecdoc = value
+    this.fecfra = value
   }
   get nif() {
     return this.nifcon
@@ -86,52 +86,52 @@ class Formulario {
     this.movcon = value
   }
   get referencia() {
-    return this.refdoc
+    return this.reffra
   }
   set referencia(value) {
-    this.refdoc = value
+    this.reffra = value
   }
   get tipo() {
-    return this.tipdoc
+    return this.tipfra
   }
   set tipo(value) {
-    this.tipdoc = value
+    this.tipfra = value
   }
   get ejercicio() {
-    return this.ejedoc
+    return this.ejefra
   }
   set ejercicio(value) {
-    this.ejedoc = value
+    this.ejefra = value
   }
   get oficina() {
-    return this.ofidoc
+    return this.ofifra
   }
   set oficina(value) {
-    this.ofidoc = value
+    this.ofifra = value
   }
   get observaciones() {
-    return this.obsdoc
+    return this.obsfra
   }
   set observaciones(value) {
-    this.obsdoc = value
+    this.obsfra = value
   }
   get funcionario() {
-    return this.fundoc
+    return this.funfra
   }
   set funcionario(value) {
-    this.fundoc = value
+    this.funfra = value
   }
   get liquidador() {
-    return this.liqdoc
+    return this.liqfra
   }
   set liquidador(value) {
-    this.liqdoc = value
+    this.liqfra = value
   }
   get estado() {
-    return this.stadoc
+    return this.stafra
   }
   set estado(value) {
-    this.stadoc = value
+    this.stafra = value
   }
 
   // periodo
@@ -151,14 +151,14 @@ class Formulario {
   }
 
   // procedimientos
-  async getFormulario() {
+  async getFraude() {
     let conn
     let ret
 
     try {
       const conn = await oracledb.getConnection(connectionString)
       const result = await conn.execute(
-        "SELECT dd.*, TO_CHAR(fecdoc,'YYYY-MM-DD') AS strfec FROM documentos dd WHERE dd.iddocu = :p_iddocu",
+        "SELECT ff.*, TO_CHAR(fecfra,'YYYY-MM-DD') AS strfec FROM fraudes ff WHERE ff.idfrau = :p_idfrau",
         [this.id],
         {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
@@ -166,21 +166,21 @@ class Formulario {
       )
 
       if (result) {
-        this.id = result.rows[0].IDDOCU
+        this.id = result.rows[0].IDFRAU
         this.fecha = result.rows[0].STRFEC
         this.nif = result.rows[0].NIFCON
         this.nombre = result.rows[0].NOMCON
         this.email = result.rows[0].EMACON
         this.telefono = result.rows[0].TELCON
         this.movil = result.rows[0].MOVCON
-        this.referencia = result.rows[0].REFDOC
-        this.tipo = result.rows[0].TIPDOC
-        this.ejercicio = result.rows[0].EJEDOC
-        this.oficina = result.rows[0].OFIDOC
-        this.observaciones = result.rows[0].OBSDOC
-        this.funcionario = result.rows[0].FUNDOC
-        this.liquidador = result.rows[0].LIQDOC
-        this.estado = result.rows[0].STADOC
+        this.referencia = result.rows[0].REFFRA
+        this.tipo = result.rows[0].TIPFRA
+        this.ejercicio = result.rows[0].EJEFRA
+        this.oficina = result.rows[0].OFIFRA
+        this.observaciones = result.rows[0].OBSFRA
+        this.funcionario = result.rows[0].FUNFRA
+        this.liquidador = result.rows[0].LIQFRA
+        this.estado = result.rows[0].STAFRA
 
         ret = {
           err: undefined,
@@ -212,14 +212,14 @@ class Formulario {
 
     return ret
   }
-  async getFormularioByRef() {
+  async getFraudeByRef() {
     let conn
     let ret
 
     try {
       const conn = await oracledb.getConnection(connectionString)
       const result = await conn.execute(
-        "SELECT dd.*, TO_CHAR(fecdoc,'YYYY-MM-DD') AS strfec FROM documentos dd WHERE dd.refdoc = :p_refdoc",
+        "SELECT ff.*, TO_CHAR(fecfra,'YYYY-MM-DD') AS strfec FROM fraudes ff WHERE ff.reffra = :p_reffra",
         [this.referencia],
         {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
@@ -227,21 +227,21 @@ class Formulario {
       )
 
       if (result) {
-        this.id = result.rows[0].IDDOCU
+        this.id = result.rows[0].IDFRAU
         this.fecha = result.rows[0].STRFEC
         this.nif = result.rows[0].NIFCON
         this.nombre = result.rows[0].NOMCON
         this.email = result.rows[0].EMACON
         this.telefono = result.rows[0].TELCON
         this.movil = result.rows[0].MOVCON
-        this.referencia = result.rows[0].REFDOC
-        this.tipo = result.rows[0].TIPDOC
-        this.ejercicio = result.rows[0].EJEDOC
-        this.oficina = result.rows[0].OFIDOC
-        this.observaciones = result.rows[0].OBSDOC
-        this.funcionario = result.rows[0].FUNDOC
-        this.liquidador = result.rows[0].LIQDOC
-        this.estado = result.rows[0].STADOC
+        this.referencia = result.rows[0].REFFRA
+        this.tipo = result.rows[0].TIPFRA
+        this.ejercicio = result.rows[0].EJEFRA
+        this.oficina = result.rows[0].OFIFRA
+        this.observaciones = result.rows[0].OBSFRA
+        this.funcionario = result.rows[0].FUNFRA
+        this.liquidador = result.rows[0].LIQFRA
+        this.estado = result.rows[0].STAFRA
 
         ret = {
           err: undefined,
@@ -273,18 +273,18 @@ class Formulario {
 
     return ret
   }
-  async getFormularios() {
+  async getFraudes() {
     let conn
     let ret
 
     let strSql =
-      "SELECT oo.desofi,tt.destip,dd.iddocu,TO_CHAR(dd.fecdoc, 'DD/MM/YYYY') AS strfec,dd.refdoc,dd.nifcon,dd.nomcon,dd.movcon,dd.obsdoc,dd.liqdoc,dd.stadoc FROM "
+      "SELECT oo.desofi,tt.destip,ff.idfrau,TO_CHAR(ff.fecfra, 'DD/MM/YYYY') AS strfec,ff.reffra,ff.nifcon,ff.nomcon,ff.movcon,ff.obsfra,ff.liqfra,ff.stafra FROM "
     strSql +=
-      '(SELECT ofidoc, fecdoc, iddocu FROM documentos GROUP BY ofidoc, fecdoc, iddocu) zz '
-    strSql += 'INNER JOIN documentos dd ON dd.iddocu = zz.iddocu '
-    strSql += 'INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc '
-    strSql += 'INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc '
-    strSql += 'WHERE stadoc < :p_stadoc ORDER BY dd.ofidoc, dd.fecdoc'
+      '(SELECT ofifra, fecfra, idfrau FROM fraudes GROUP BY ofifra, fecfra, idfrau) zz '
+    strSql += 'INNER JOIN fraudes ff ON ff.idfrau = zz.idfrau '
+    strSql += 'INNER JOIN oficinas oo ON oo.idofic = zz.ofifra '
+    strSql += 'INNER JOIN tipos tt ON tt.idtipo = ff.tipfra '
+    strSql += 'WHERE ff.stafra < :p_stafra ORDER BY ff.ofifra, ff.fecfra'
 
     try {
       const conn = await oracledb.getConnection(connectionString)
@@ -321,16 +321,16 @@ class Formulario {
     let ret
 
     let strSql = 'SELECT desofi,'
-    strSql += 'SUM(CASE WHEN stadoc = 0 THEN 1 ELSE 0 END) AS pend,'
-    strSql += 'SUM(CASE WHEN stadoc = 1 THEN 1 ELSE 0 END) AS asig,'
-    strSql += 'SUM(CASE WHEN stadoc = 2 THEN 1 ELSE 0 END) AS resu,'
-    strSql += 'SUM(CASE WHEN stadoc = 3 THEN 1 ELSE 0 END) AS remi '
-    strSql += 'FROM (SELECT iddocu FROM movimientos mm '
+    strSql += 'SUM(CASE WHEN stafra = 0 THEN 1 ELSE 0 END) AS pend,'
+    strSql += 'SUM(CASE WHEN stafra = 1 THEN 1 ELSE 0 END) AS asig,'
+    strSql += 'SUM(CASE WHEN stafra = 2 THEN 1 ELSE 0 END) AS resu,'
+    strSql += 'SUM(CASE WHEN stafra = 3 THEN 1 ELSE 0 END) AS remi '
+    strSql += 'FROM (SELECT idfrau FROM movimientos mm '
     strSql += 'INNER JOIN movimientosdocumento md ON md.idmovi = mm.idmovi '
     strSql +=
       "WHERE tipmov = 0 AND mm.fecmov BETWEEN TO_DATE(:p_desfec,'YYYY-MM-DD') AND TO_DATE(:p_hasfec,'YYYY-MM-DD')) p1 "
-    strSql += 'INNER JOIN documentos dd ON dd.iddocu = p1.iddocu '
-    strSql += 'INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc '
+    strSql += 'INNER JOIN fraudes ff ON ff.idfrau = p1.idfrau '
+    strSql += 'INNER JOIN oficinas oo ON oo.idofic = ff.ofifra '
     strSql += 'GROUP BY desofi ORDER BY desofi'
 
     try {
@@ -374,28 +374,28 @@ class Formulario {
     try {
       const conn = await oracledb.getConnection(connectionString)
       const result = await conn.execute(
-        "BEGIN FORMULARIOS_PKG.INSERTFORMULARIO(TO_DATE(:p_fecdoc,'YYYY-MM-DD'), :p_nifcon, :p_nomcon, :p_emacon, :p_telcon, :p_movcon, :p_refdoc, :p_tipdoc, :p_ejedoc, :p_ofidoc, :p_obsdoc, :p_fundoc, :p_liqdoc, :p_stadoc, :p_usumov, :p_tipmov, :p_iddocu); END;",
+        "BEGIN FORMULARIOS_PKG.INSERTFRAUDE(TO_DATE(:p_fecfra,'YYYY-MM-DD'), :p_nifcon, :p_nomcon, :p_emacon, :p_telcon, :p_movcon, :p_reffra, :p_tipfra, :p_tipfra, :p_ofifra, :p_obsfra, :p_funfra, :p_liqfra, :p_stafra, :p_usumov, :p_tipmov, :p_idfrau); END;",
         {
-          // formulario
-          p_fecdoc: this.fecha,
+          // fraude
+          p_fecfra: this.fecha,
           p_nifcon: this.nif,
           p_nomcon: this.nombre,
           p_emacon: this.email,
           p_telcon: this.telefono,
           p_movcon: this.movil,
-          p_refdoc: this.referencia,
-          p_tipdoc: this.tipo,
-          p_ejedoc: this.ejercicio,
-          p_ofidoc: this.oficina,
-          p_obsdoc: this.observaciones,
-          p_fundoc: this.funcionario,
-          p_liqdoc: this.liquidador,
-          p_stadoc: this.estado,
+          p_reffra: this.referencia,
+          p_tipfra: this.tipo,
+          p_ejefra: this.ejercicio,
+          p_ofifra: this.oficina,
+          p_obsfra: this.observaciones,
+          p_funfra: this.funcionario,
+          p_liqfra: this.liquidador,
+          p_stafra: this.estado,
           // movimiento
           p_usumov: this.movimiento.usuario,
           p_tipmov: this.movimiento.tipo,
           // retorno
-          p_iddocu: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
+          p_idfrau: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
         }
       )
 
@@ -430,21 +430,21 @@ class Formulario {
     try {
       const conn = await oracledb.getConnection(connectionString)
       await conn.execute(
-        "BEGIN FORMULARIOS_PKG.UPDATEFORMULARIO(:p_iddocu, TO_DATE(:p_fecdoc,'YYYY-MM-DD'), :p_nifcon, :p_nomcon, :p_emacon, :p_telcon, :p_movcon, :p_refdoc, :p_tipdoc, :p_ejedoc, :p_ofidoc, :p_obsdoc, :p_usumov, :p_tipmov); END;",
+        "BEGIN FORMULARIOS_PKG.UPDATEFRAUDE(:p_idfrau, TO_DATE(:p_fecfra,'YYYY-MM-DD'), :p_nifcon, :p_nomcon, :p_emacon, :p_telcon, :p_movcon, :p_reffra, :p_tipfra, :p_tipfra, :p_ofifra, :p_obsfra, :p_usumov, :p_tipmov); END;",
         {
-          // formulario
-          p_iddocu: this.id,
-          p_fecdoc: this.fecha,
+          // fraude
+          p_idfrau: this.id,
+          p_fecfra: this.fecha,
           p_nifcon: this.nif,
           p_nomcon: this.nombre,
           p_emacon: this.email,
           p_telcon: this.telefono,
           p_movcon: this.movil,
-          p_refdoc: this.referencia,
-          p_tipdoc: this.tipo,
-          p_ejedoc: this.ejercicio,
-          p_ofidoc: this.oficina,
-          p_obsdoc: this.observaciones,
+          p_reffra: this.referencia,
+          p_tipfra: this.tipo,
+          p_ejefra: this.ejercicio,
+          p_ofifra: this.oficina,
+          p_obsfra: this.observaciones,
           // movimiento
           p_usumov: this.movimiento.usuario,
           p_tipmov: this.movimiento.tipo,
@@ -482,10 +482,10 @@ class Formulario {
     try {
       conn = await oracledb.getConnection(connectionString)
       await conn.execute(
-        'BEGIN FORMULARIOS_PKG.DELETEFORMULARIO(:p_iddocu, :p_usumov, :p_tipmov); END;',
+        'BEGIN FORMULARIOS_PKG.DELETEFRAUDE(:p_idfrau, :p_usumov, :p_tipmov); END;',
         {
-          // formulario
-          p_iddocu: this.id,
+          // fraude
+          p_idfrau: this.id,
           // movimiento
           p_usumov: this.movimiento.usuario,
           p_tipmov: this.movimiento.tipo,
@@ -523,12 +523,12 @@ class Formulario {
     try {
       conn = await oracledb.getConnection(connectionString)
       await conn.execute(
-        'BEGIN FORMULARIOS_PKG.CAMBIOESTADOFORMULARIO(:p_iddocu, :p_liqdoc, :p_stadoc, :p_usumov, :p_tipmov); END;',
+        'BEGIN FORMULARIOS_PKG.CAMBIOESTADOFRAUDE(:p_idfrau, :p_liqfra, :p_stafra, :p_usumov, :p_tipmov); END;',
         {
-          // formulario
-          p_iddocu: this.id,
-          p_liqdoc: this.liquidador,
-          p_stadoc: this.estado,
+          // fraude
+          p_idfrau: this.id,
+          p_liqfra: this.liquidador,
+          p_stafra: this.estado,
           // movimiento
           p_usumov: this.movimiento.usuario,
           p_tipmov: this.movimiento.tipo,
@@ -561,4 +561,4 @@ class Formulario {
   }
 }
 
-export default Formulario
+export default Fraude
