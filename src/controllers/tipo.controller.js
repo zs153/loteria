@@ -12,6 +12,20 @@ export const getTipos = async (req, res) => {
     return res.status(200).json({ dat });
   }
 };
+export const getTiposByOrigen = async (req, res) => {
+  tipo.origen = req.body.origen;
+  try {
+    const { err, dat } = await tipo.getTiposByOrigen();
+
+    if (err) {
+      res.status(402).json(err);
+    } else {
+      res.status(202).json(dat);
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
 export const getTipo = async (req, res) => {
   tipo.id = req.body.id;
 

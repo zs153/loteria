@@ -134,6 +134,44 @@ class Tipo {
 
     return ret;
   }
+  async getTiposByOrigen() {
+    let conn;
+    let ret;
+
+    try {
+      const conn = await oracledb.getConnection(connectionString);
+      const result = await conn.execute(
+        "SELECT * FROM tipos WHERE orgtip = :p_orgtip ORDER BY destip",
+        [this.origen],
+        {
+          outFormat: oracledb.OUT_FORMAT_OBJECT,
+        }
+      );
+
+      ret = {
+        err: undefined,
+        dat: result.rows,
+      };
+    } catch (error) {
+      ret = {
+        err: error,
+        dat: undefined,
+      };
+    } finally {
+      if (conn) {
+        try {
+          await conn.close();
+        } catch (error) {
+          ret = {
+            err: error,
+            dat: undefined,
+          };
+        }
+      }
+    }
+
+    return ret;
+  }
   async insert() {
     let conn;
     let ret;
@@ -160,7 +198,6 @@ class Tipo {
         dat: result.outBinds,
       };
     } catch (error) {
-      console.log(error);
       ret = {
         err: error,
         dat: undefined,

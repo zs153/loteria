@@ -51,6 +51,7 @@ import {
   deleteTipo,
   getTipo,
   getTipos,
+  getTiposByOrigen,
   insertTipo,
   updateTipo,
 } from "../controllers/tipo.controller";
@@ -107,6 +108,7 @@ apiRouter.post("/oficinas/delete", deleteOficina);
 
 // tipos
 apiRouter.get("/tipos", getTipos);
+apiRouter.post("/tipos/origen", getTiposByOrigen);
 apiRouter.post("/tipo/", getTipo);
 apiRouter.post("/tipos/insert", insertTipo);
 apiRouter.post("/tipos/update", updateTipo);
