@@ -18,20 +18,26 @@ export const getTipo = async (req, res) => {
   try {
     const { err, dat } = await tipo.getTipo();
 
-    return res.status(202).send(tipo);
+    if (err) {
+      res.status(403).json(err);
+    } else {
+      return res.status(202).json(tipo);
+    }
   } catch (error) {
     return res.status(404).json({ err });
   }
 };
 export const insertTipo = async (req, res) => {
-  const { descripcion, texto, usuarioMov } = req.body.tipo;
+  const { descripcion, texto, origen } = req.body.tipo;
+  const { usuarioMov, tipoMov } = req.body.movimiento;
 
   // tipo
   tipo.descripcion = descripcion;
   tipo.textoAyuda = texto;
+  tipo.origen = origen;
   // movimiento
   tipo.movimiento.usuario = usuarioMov;
-  tipo.movimiento.tipo = tiposMovimiento.crearTipo;
+  tipo.movimiento.tipo = tipoMov;
 
   try {
     const { err, dat } = await tipo.insert();
@@ -48,16 +54,18 @@ export const insertTipo = async (req, res) => {
   }
 };
 export const updateTipo = async (req, res) => {
-  const { id, descripcion, texto, usuarioMov } = req.body.tipo;
+  const { id, descripcion, texto, origen } = req.body.tipo;
+  const { usuarioMov, tipoMov } = req.body.movimiento;
 
   try {
     // tipo
     tipo.id = id;
     tipo.descripcion = descripcion;
     tipo.textoAyuda = texto;
+    tipo.origen = origen;
     // movimiento
     tipo.movimiento.usuario = usuarioMov;
-    tipo.movimiento.tipo = tiposMovimiento.modificarTipo;
+    tipo.movimiento.tipo = tipoMov;
 
     const { err, dat } = await tipo.update();
 
@@ -71,14 +79,15 @@ export const updateTipo = async (req, res) => {
   }
 };
 export const deleteTipo = async (req, res) => {
-  const { id, usuarioMov } = req.body.tipo;
+  const { id } = req.body.tipo;
+  const { usuarioMov, tipoMov } = req.body.movimiento;
 
   try {
     // tipo
     tipo.id = id;
     // movimiento
     tipo.movimiento.usuario = usuarioMov;
-    tipo.movimiento.tipo = tiposMovimiento.borrarTipo;
+    tipo.movimiento.tipo = tipoMov;
 
     const { err, dat } = await tipo.delete();
 

@@ -3,10 +3,11 @@ import Movimiento from "./movimiento.model";
 import { connectionString } from "../settings";
 
 class Tipo {
-  constructor(id, descripcion, texto) {
+  constructor(id, descripcion, texto, origen) {
     this.idtipo = id;
     this.destip = descripcion;
     this.ayutip = texto;
+    this.orgtip = origen;
 
     this.movi = new Movimiento();
   }
@@ -28,6 +29,12 @@ class Tipo {
   }
   set textoAyuda(value) {
     this.ayutip = value;
+  }
+  get origen() {
+    return this.orgtip;
+  }
+  set origen(value) {
+    this.orgtip = value;
   }
 
   // movimiento
@@ -57,6 +64,7 @@ class Tipo {
         this.id = result.rows[0].IDTIPO;
         this.descripcion = result.rows[0].DESTIP;
         this.textoAyuda = result.rows[0].AYUTIP;
+        this.origen = result.rows[0].ORGTIP;
 
         ret = {
           err: undefined,
@@ -133,11 +141,12 @@ class Tipo {
     try {
       const conn = await oracledb.getConnection(connectionString);
       const result = await conn.execute(
-        "BEGIN FORMULARIOS_PKG.INSERTTIPO(:p_destip, :p_ayutip, :p_usumov, :p_tipmov, :p_idtipo); END;",
+        "BEGIN FORMULARIOS_PKG.INSERTTIPO(:p_destip, :p_ayutip, :p_orgtip,  :p_usumov, :p_tipmov, :p_idtipo); END;",
         {
           // tipo
           p_destip: this.descripcion,
           p_ayutip: this.textoAyuda,
+          p_orgtip: this.origen,
           // movimiento
           p_usumov: this.movimiento.usuario,
           p_tipmov: this.movimiento.tipo,
@@ -151,6 +160,7 @@ class Tipo {
         dat: result.outBinds,
       };
     } catch (error) {
+      console.log(error);
       ret = {
         err: error,
         dat: undefined,
@@ -177,12 +187,13 @@ class Tipo {
     try {
       const conn = await oracledb.getConnection(connectionString);
       await conn.execute(
-        "BEGIN FORMULARIOS_PKG.UPDATETIPO(:p_idtipo, :p_destip, :p_ayutip, :p_usumov, :p_tipmov); END;",
+        "BEGIN FORMULARIOS_PKG.UPDATETIPO(:p_idtipo, :p_destip, :p_ayutip, :p_orgtip, :p_usumov, :p_tipmov); END;",
         {
           // tipo
           p_idtipo: this.id,
           p_destip: this.descripcion,
           p_ayutip: this.textoAyuda,
+          p_orgtip: this.origen,
           // movimiento
           p_usumov: this.movimiento.usuario,
           p_tipmov: this.movimiento.tipo,
