@@ -91,12 +91,10 @@ export const updateFraude = async (req, res) => {
   fraude.email = req.body.documento.emacon;
   fraude.telefono = req.body.documento.telcon;
   fraude.movil = req.body.documento.movcon;
-  fraude.referencia = req.body.documento.reffra;
   fraude.tipo = req.body.documento.tipfra;
   fraude.ejercicio = req.body.documento.ejefra;
   fraude.oficina = req.body.documento.ofifra;
   fraude.observaciones = req.body.documento.obsfra;
-  fraude.funcionario = req.body.documento.funfra;
   // movimiento
   fraude.movimiento.usuario = usuarioMov;
   fraude.movimiento.tipo = tipoMov;
@@ -110,11 +108,11 @@ export const updateFraude = async (req, res) => {
   }
 };
 export const deleteFraude = async (req, res) => {
+  const fraude = new Fraude();
   const { usuarioMov, tipoMov } = req.body.movimiento;
 
-  const fraude = new Fraude();
   // fraude
-  fraude.id = req.body.documento.id;
+  fraude.id = req.body.documento.idfrau;
   // movimiento
   fraude.movimiento.usuario = usuarioMov;
   fraude.movimiento.tipo = tipoMov;

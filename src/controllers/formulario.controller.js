@@ -91,12 +91,10 @@ export const updateFormulario = async (req, res) => {
   formulario.email = req.body.documento.emacon;
   formulario.telefono = req.body.documento.telcon;
   formulario.movil = req.body.documento.movcon;
-  formulario.referencia = req.body.documento.refdoc;
   formulario.tipo = req.body.documento.tipdoc;
   formulario.ejercicio = req.body.documento.ejedoc;
   formulario.oficina = req.body.documento.ofidoc;
   formulario.observaciones = req.body.documento.obsdoc;
-  formulario.funcionario = req.body.documento.fundoc;
   // movimiento
   formulario.movimiento.usuario = usuarioMov;
   formulario.movimiento.tipo = tipoMov;

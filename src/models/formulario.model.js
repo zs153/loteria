@@ -430,7 +430,7 @@ class Formulario {
     try {
       const conn = await oracledb.getConnection(connectionString);
       await conn.execute(
-        "BEGIN FORMULARIOS_PKG.UPDATEFORMULARIO(:p_iddocu, TO_DATE(:p_fecdoc,'YYYY-MM-DD'), :p_nifcon, :p_nomcon, :p_emacon, :p_telcon, :p_movcon, :p_refdoc, :p_tipdoc, :p_ejedoc, :p_ofidoc, :p_obsdoc, :p_usumov, :p_tipmov); END;",
+        "BEGIN FORMULARIOS_PKG.UPDATEFORMULARIO(:p_iddocu, TO_DATE(:p_fecdoc,'YYYY-MM-DD'), :p_nifcon, :p_nomcon, :p_emacon, :p_telcon, :p_movcon, :p_tipdoc, :p_ejedoc, :p_ofidoc, :p_obsdoc, :p_usumov, :p_tipmov); END;",
         {
           // formulario
           p_iddocu: this.id,
@@ -440,7 +440,6 @@ class Formulario {
           p_emacon: this.email,
           p_telcon: this.telefono,
           p_movcon: this.movil,
-          p_refdoc: this.referencia,
           p_tipdoc: this.tipo,
           p_ejedoc: this.ejercicio,
           p_ofidoc: this.oficina,
