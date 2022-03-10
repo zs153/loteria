@@ -79,7 +79,6 @@ export const updateTipo = async (req, res) => {
     tipo.movimiento.usuario = usuarioMov;
     tipo.movimiento.tipo = tipoMov;
 
-    console.log(tipo);
     const { err, dat } = await tipo.update();
 
     if (err) {

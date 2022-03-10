@@ -470,7 +470,6 @@ class Usuario {
         dat: result.outBinds,
       };
     } catch (error) {
-      console.log(error);
       ret = {
         err: error,
         dat: undefined,
