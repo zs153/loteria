@@ -216,11 +216,11 @@ export const smsFraude = async (req, res) => {
     const sms = new SMS();
 
     // sms
-    sms.texto = req.body.sms.texto;
-    sms.movil = req.body.sms.movil;
-    sms.estado = req.body.sms.estado;
+    sms.texto = req.body.sms.texfra;
+    sms.movil = req.body.sms.movfra;
+    sms.estado = req.body.sms.stafra;
     // documento
-    sms.idDocumento = req.body.sms.idDocumento;
+    sms.idDocumento = req.body.sms.idfrau;
     // movimiento
     sms.movimiento.usuario = usuarioMov;
     sms.movimiento.tipo = tipoMov;
