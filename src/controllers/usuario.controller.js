@@ -27,24 +27,22 @@ export const getUsuario = async (req, res) => {
   }
 };
 export const insertUsuario = async (req, res) => {
-  const { nombre, oficina, rol, userid, email, perfil, telefono, estado } =
-    req.body.usuario;
   const { usuarioMov, tipoMov } = req.body.movimiento;
 
   try {
     const passSalt = await bcrypt.genSalt(10);
-    const passHash = await bcrypt.hash(userid, passSalt);
+    const passHash = await bcrypt.hash(req.body.usuario.userid, passSalt);
 
     // usuario
-    usuario.nombre = nombre;
-    usuario.oficina = oficina;
-    usuario.rol = rol;
-    usuario.userID = userid;
-    usuario.email = email;
-    usuario.perfil = perfil;
-    usuario.telefono = telefono;
+    usuario.nombre = req.body.usuario.nomusu;
+    usuario.oficina = req.body.usuario.ofiusu;
+    usuario.rol = req.body.usuario.rolusu;
+    usuario.userID = req.body.usuario.userid;
+    usuario.email = req.body.usuario.emausu;
+    usuario.perfil = req.body.usuario.perusu;
+    usuario.telefono = req.body.usuario.telusu;
     usuario.password = passHash;
-    usuario.estado = estado;
+    usuario.estado = req.body.usuario.stausu;
     // movimiento
     usuario.movimiento.usuario = usuarioMov;
     usuario.movimiento.tipo = tipoMov;
@@ -63,20 +61,18 @@ export const insertUsuario = async (req, res) => {
   }
 };
 export const updateUsuario = async (req, res) => {
-  const { id, nombre, oficina, rol, userid, email, perfil, telefono, estado } =
-    req.body.usuario;
   const { usuarioMov, tipoMov } = req.body.movimiento;
 
   try {
-    usuario.id = id;
-    usuario.nombre = nombre;
-    usuario.oficina = oficina;
-    usuario.rol = rol;
-    usuario.userID = userid;
-    usuario.email = email;
-    usuario.perfil = perfil;
-    usuario.telefono = telefono;
-    usuario.estado = estado;
+    usuario.id = req.body.usuario.idusua;
+    usuario.nombre = req.body.usuario.nomusu;
+    usuario.oficina = req.body.usuario.ofiusu;
+    usuario.rol = req.body.usuario.rolusu;
+    usuario.userID = req.body.usuario.userid;
+    usuario.email = req.body.usuario.emausu;
+    usuario.perfil = req.body.usuario.perusu;
+    usuario.telefono = req.body.usuario.telusu;
+    usuario.estado = req.body.usuario.stausu;
     // movimiento
     usuario.movimiento.usuario = usuarioMov;
     usuario.movimiento.tipo = tipoMov;
@@ -93,12 +89,11 @@ export const updateUsuario = async (req, res) => {
   }
 };
 export const deleteUsuario = async (req, res) => {
-  const { id } = req.body.usuario;
   const { usuarioMov, tipoMov } = req.body.movimiento;
 
   try {
     // usuario
-    usuario.id = id;
+    usuario.id = req.body.usuario.idusua;
     // movimiento
     usuario.movimiento.usuario = usuarioMov;
     usuario.movimiento.tipo = tipoMov;
@@ -108,7 +103,7 @@ export const deleteUsuario = async (req, res) => {
     if (err) {
       res.status(404).json({ err });
     } else {
-      res.status(204).json("ok");
+      res.status(204).json(usuario);
     }
   } catch (error) {
     res.status(405).json(error);

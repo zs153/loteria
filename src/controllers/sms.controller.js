@@ -27,14 +27,13 @@ export const getSms = async (req, res) => {
   }
 };
 export const insertSms = async (req, res) => {
-  const { texto, estado } = req.body.sms;
   const { movil, idDocumento } = req.body.documento;
   const { usuarioMov, tipoMov } = req.body.movimiento;
 
   // Sms
-  sms.texto = texto;
+  sms.texto = req.body.sms.texsms;
   sms.movil = movil;
-  sms.estado = estado;
+  sms.estado = req.body.sms.stasms;
   // documento
   sms.idDocumento = idDocumento;
   // movimiento
@@ -50,13 +49,11 @@ export const insertSms = async (req, res) => {
 };
 export const updateSms = async (req, res) => {
   const { usuarioMov, tipoMov } = req.body.movimiento;
-  const { id, texto, movil, estado } = req.body.sms;
 
   // Sms
-  sms.id = id;
-  sms.texto = texto;
-  sms.movil = movil;
-  sms.estado = estado;
+  sms.id = req.body.sms.idsmss;
+  sms.texto = req.body.sms.texsms;
+  sms.estado = req.body.sms.stasms;
   // movimiento
   sms.movimiento.usuario = usuarioMov;
   sms.movimiento.tipo = tipoMov;
@@ -73,7 +70,7 @@ export const deleteSms = async (req, res) => {
   const { usuarioMov, tipoMov } = req.body.movimiento;
 
   // Sms
-  sms.id = req.body.sms.id;
+  sms.id = req.body.sms.idsmss;
   // movimiento
   sms.movimiento.usuario = usuarioMov;
   sms.movimiento.tipo = tipoMov;

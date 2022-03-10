@@ -539,6 +539,7 @@ class Fraude {
         dat: this.id,
       };
     } catch (error) {
+      console.log(error);
       ret = {
         err: error,
         dat: undefined,

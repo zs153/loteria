@@ -206,12 +206,11 @@ class SMS {
     try {
       const conn = await oracledb.getConnection(connectionString);
       await conn.execute(
-        "BEGIN FORMULARIOS_PKG.UPDATESMS(:p_idsmss, :p_texsms, :p_movsms, :p_stasms, :p_usumov, :p_tipmov); END;",
+        "BEGIN FORMULARIOS_PKG.UPDATESMS(:p_idsmss, :p_texsms, :p_stasms, :p_usumov, :p_tipmov); END;",
         {
           // sms
           p_idsmss: this.id,
           p_texsms: this.texto,
-          p_movsms: this.movil,
           p_stasms: this.estado,
           // movimiento
           p_usumov: this.movimiento.usuario,

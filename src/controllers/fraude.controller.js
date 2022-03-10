@@ -127,13 +127,12 @@ export const deleteFraude = async (req, res) => {
 };
 export const cambioEstadoFraude = async (req, res) => {
   const { usuarioMov, tipoMov } = req.body.movimiento;
-  const { id, liquidador, estado } = req.body.documento;
   const fraude = new Fraude();
 
   // fraude
-  fraude.id = id;
-  fraude.liquidador = liquidador;
-  fraude.estado = estado;
+  fraude.id = req.body.documento.idfrau;
+  fraude.liquidador = req.body.documento.liqfra;
+  fraude.estado = req.body.documento.stafra;
   // movimiento
   fraude.movimiento.usuario = usuarioMov;
   fraude.movimiento.tipo = tipoMov;
