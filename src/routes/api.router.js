@@ -62,6 +62,15 @@ import {
   updateSms,
   deleteSms,
 } from "../controllers/sms.controller";
+import {
+  getHito,
+  getHitos,
+  getHitosFraude,
+  insertHito,
+  updateHito,
+  deleteHito,
+} from "../controllers/hito.controller";
+
 const apiRouter = express.Router();
 
 // formularios
@@ -89,6 +98,14 @@ apiRouter.post("/fraudes/referencia", getFraudeByRef);
 apiRouter.post("/fraudes/sms", smsFraude);
 apiRouter.post("/fraudes/cambio", cambioPasswordFraude);
 apiRouter.post("/fraudes/updatePerfil", updatePerfilFraude);
+
+// hitos
+apiRouter.get("/fraudes/hitos", getHitos);
+apiRouter.post("/fraudes/hitosFraude", getHitosFraude);
+apiRouter.post("/fraudes/hito", getHito);
+apiRouter.post("/fraudes/hitos/insert", insertHito);
+apiRouter.post("/fraudes/hitos/update", updateHito);
+apiRouter.post("/fraudes/hitos/delete", deleteHito);
 
 // usuarios
 apiRouter.post("/usuarios", getUsuarios);
