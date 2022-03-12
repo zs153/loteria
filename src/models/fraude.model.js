@@ -36,7 +36,9 @@ class Fraude {
     this.liqfra = liquidador
     this.stafra = estado
 
+    // movimienot
     this.movi = new Movimiento()
+    //periodo
     this.peri = {
       desde: '',
       hasta: '',
@@ -141,7 +143,6 @@ class Fraude {
   set periodo(value) {
     this.peri = value
   }
-
   // movimiento
   get movimiento() {
     return this.movi

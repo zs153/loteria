@@ -18,7 +18,7 @@ export const getFraudes = async (req, res) => {
 }
 export const getFraude = async (req, res) => {
   const fraude = new Fraude()
-  fraude.id = req.body.id
+  fraude.id = req.body.idfrau
 
   try {
     const { err, dat } = await fraude.getFraude()
@@ -98,7 +98,7 @@ export const updateFraude = async (req, res) => {
   // movimiento
   fraude.movimiento.usuario = usuarioMov
   fraude.movimiento.tipo = tipoMov
-
+  console.log(fraude)
   const { err, dat } = await fraude.update()
 
   if (err) {

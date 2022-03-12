@@ -1,204 +1,204 @@
-import oracledb from "oracledb";
-import Movimiento from "./movimiento.model";
-import { connectionString } from "../settings";
+import oracledb from 'oracledb'
+import Movimiento from './movimiento.model'
+import { connectionString } from '../settings'
 
 class Hito {
   constructor(id, tipo, subtipo, observacion, importe) {
-    this.idhito = id;
-    this.tiphit = tipo;
-    this.subthi = subtipo;
-    this.imphit = importe;
-    this.obshit = observacion;
+    this.idhito = id
+    this.tiphit = tipo
+    this.subthi = subtipo
+    this.imphit = importe
+    this.obshit = observacion
 
     // fraude
-    this.idfrau = 0;
+    this.idfrau = 0
     // movimiento
-    this.movi = new Movimiento();
+    this.movi = new Movimiento()
   }
 
   get id() {
-    return this.idhito;
+    return this.idhito
   }
   set id(value) {
-    this.idhito = value;
+    this.idhito = value
   }
   get tipo() {
-    return this.tiphit;
+    return this.tiphit
   }
   set tipo(value) {
-    this.tiphit = value;
+    this.tiphit = value
   }
   get subTipo() {
-    return this.subthi;
+    return this.subthi
   }
   set subTipo(value) {
-    this.subthi = value;
+    this.subthi = value
   }
   get observaciones() {
-    return this.obshit;
+    return this.obshit
   }
   set observaciones(value) {
-    this.obshit = value;
+    this.obshit = value
   }
   get importe() {
-    return this.imphit;
+    return this.imphit
   }
   set importe(value) {
-    this.imphit = value;
+    this.imphit = value
   }
 
   // movimiento
   get movimiento() {
-    return this.movi;
+    return this.movi
   }
   set movimiento(value) {
-    this.movi = value;
+    this.movi = value
   }
   // fraude
   get idFraude() {
-    return this.idfrau;
+    return this.idfrau
   }
   set idFraude(value) {
-    this.idfrau = value;
+    this.idfrau = value
   }
 
   // procedimientos
   async getHito() {
-    let conn;
-    let ret;
+    let conn
+    let ret
 
     try {
-      const conn = await oracledb.getConnection(connectionString);
+      const conn = await oracledb.getConnection(connectionString)
       const result = await conn.execute(
-        "SELECT * FROM hitos WHERE idhito = :p_idhito",
+        'SELECT * FROM hitos WHERE idhito = :p_idhito',
         [this.id],
         {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
         }
-      );
+      )
 
       if (result) {
-        this.id = result.rows[0].IDHITO;
-        this.fecha = result.rows[0].FECHIT;
-        this.tipo = result.rows[0].TIPHIT;
-        this.subTipo = result.rows[0].SUBTHI;
-        this.observaciones = result.rows[0].OBSHIT;
-        this.importe = result.rows[0].IMPHIT;
+        this.id = result.rows[0].IDHITO
+        this.fecha = result.rows[0].FECHIT
+        this.tipo = result.rows[0].TIPHIT
+        this.subTipo = result.rows[0].SUBTHI
+        this.importe = result.rows[0].IMPHIT
+        this.observaciones = result.rows[0].OBSHIT
 
         ret = {
           err: undefined,
           dat: result.rows,
-        };
+        }
       } else {
         ret = {
           err: 1,
-          dat: "No hay registro",
-        };
+          dat: 'No hay registro',
+        }
       }
     } catch (error) {
       ret = {
         err: error,
         dat: undefined,
-      };
+      }
     } finally {
       if (conn) {
         try {
-          await conn.close();
+          await conn.close()
         } catch (error) {
           ret = {
             err: error,
             dat: undefined,
-          };
+          }
         }
       }
     }
 
-    return ret;
+    return ret
   }
   async getHitos() {
-    let conn;
-    let ret;
+    let conn
+    let ret
 
     try {
-      const conn = await oracledb.getConnection(connectionString);
+      const conn = await oracledb.getConnection(connectionString)
       const result = await conn.execute(
-        "SELECT * FROM hitos ORDER BY fechit",
+        'SELECT * FROM hitos ORDER BY fechit',
         [],
         {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
         }
-      );
+      )
 
       ret = {
         err: undefined,
         dat: result.rows,
-      };
+      }
     } catch (error) {
       ret = {
         err: error,
         dat: undefined,
-      };
+      }
     } finally {
       if (conn) {
         try {
-          await conn.close();
+          await conn.close()
         } catch (error) {
           ret = {
             err: error,
             dat: undefined,
-          };
+          }
         }
       }
     }
 
-    return ret;
+    return ret
   }
   async getHitosFraude() {
-    let conn;
-    let ret;
+    let conn
+    let ret
 
     try {
-      const conn = await oracledb.getConnection(connectionString);
+      const conn = await oracledb.getConnection(connectionString)
       const result = await conn.execute(
-        "SELECT * FROM hitosfraude hf INNER JOIN hitos hh ON hh.idhito = hf.idhito WHERE hf.idfrau = :p_idfrau ORDER BY fechit",
+        "SELECT hh.*, tt.destip, TO_CHAR(hh.fechit, 'DD/MM/YYYY') AS strfec FROM hitosfraude hf INNER JOIN hitos hh ON hh.idhito = hf.idhito INNER JOIN tipos tt ON tt.idtipo = hh.tiphit WHERE hf.idfrau = :p_idfrau ORDER BY fechit",
         [this.idFraude],
         {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
         }
-      );
+      )
 
       ret = {
         err: undefined,
         dat: result.rows,
-      };
+      }
     } catch (error) {
       ret = {
         err: error,
         dat: undefined,
-      };
+      }
     } finally {
       if (conn) {
         try {
-          await conn.close();
+          await conn.close()
         } catch (error) {
           ret = {
             err: error,
             dat: undefined,
-          };
+          }
         }
       }
     }
 
-    return ret;
+    return ret
   }
   async insert() {
-    let conn;
-    let ret;
+    let conn
+    let ret
 
     try {
-      const conn = await oracledb.getConnection(connectionString);
+      const conn = await oracledb.getConnection(connectionString)
       const result = await conn.execute(
-        "BEGIN FORMULARIOS_PKG.INSERTHITO(:p_tiphit, :p_subthi, :p_imphit, :p_obshit, :p_idfrau, :p_usumov, :p_tipmov, :p_idhito); END;",
+        'BEGIN FORMULARIOS_PKG.INSERTHITO(:p_tiphit, :p_subthi, :p_imphit, :p_obshit, :p_idfrau, :p_usumov, :p_tipmov, :p_idhito); END;',
         {
           // hito
           p_tiphit: this.tipo,
@@ -213,40 +213,40 @@ class Hito {
           // retorno
           p_idhito: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
         }
-      );
+      )
 
       ret = {
         err: undefined,
         dat: result.outBinds,
-      };
+      }
     } catch (error) {
       ret = {
         err: error,
         dat: undefined,
-      };
+      }
     } finally {
       if (conn) {
         try {
-          await conn.close();
+          await conn.close()
         } catch (error) {
           ret = {
             err: error,
             dat: undefined,
-          };
+          }
         }
       }
     }
 
-    return ret;
+    return ret
   }
   async update() {
-    let conn;
-    let ret;
+    let conn
+    let ret
 
     try {
-      const conn = await oracledb.getConnection(connectionString);
+      const conn = await oracledb.getConnection(connectionString)
       await conn.execute(
-        "BEGIN FORMULARIOS_PKG.UPDATEHITO(:p_idhito, :p_tiphit, :p_subthi, :p_imphit, :p_obshit, :p_usumov, :p_tipmov); END;",
+        'BEGIN FORMULARIOS_PKG.UPDATEHITO(:p_idhito, :p_tiphit, :p_subthi, :p_imphit, :p_obshit, :p_usumov, :p_tipmov); END;',
         {
           // hito
           p_idhito: this.id,
@@ -258,40 +258,40 @@ class Hito {
           p_usumov: this.movimiento.usuario,
           p_tipmov: this.movimiento.tipo,
         }
-      );
+      )
 
       ret = {
         err: undefined,
         dat: this.id,
-      };
+      }
     } catch (error) {
       ret = {
         err: error,
         dat: undefined,
-      };
+      }
     } finally {
       if (conn) {
         try {
-          await conn.close();
+          await conn.close()
         } catch (error) {
           ret = {
             err: error,
             dat: undefined,
-          };
+          }
         }
       }
     }
 
-    return ret;
+    return ret
   }
   async delete() {
-    let conn;
-    let ret;
+    let conn
+    let ret
 
     try {
-      conn = await oracledb.getConnection(connectionString);
+      conn = await oracledb.getConnection(connectionString)
       await conn.execute(
-        "BEGIN FORMULARIOS_PKG.DELETEHITO(:p_idhito, :p_usumov, :p_tipmov); END;",
+        'BEGIN FORMULARIOS_PKG.DELETEHITO(:p_idhito, :p_usumov, :p_tipmov); END;',
         {
           // hito
           p_idhito: this.id,
@@ -299,32 +299,32 @@ class Hito {
           p_usumov: this.movimiento.usuario,
           p_tipmov: this.movimiento.tipo,
         }
-      );
+      )
 
       ret = {
         err: undefined,
         dat: this.id,
-      };
+      }
     } catch (error) {
       ret = {
         err: error,
         dat: undefined,
-      };
+      }
     } finally {
       if (conn) {
         try {
-          await conn.close();
+          await conn.close()
         } catch (error) {
           ret = {
             err: error,
             dat: undefined,
-          };
+          }
         }
       }
     }
 
-    return ret;
+    return ret
   }
 }
 
-export default Hito;
+export default Hito
