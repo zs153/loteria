@@ -98,7 +98,7 @@ export const updateFraude = async (req, res) => {
   // movimiento
   fraude.movimiento.usuario = usuarioMov
   fraude.movimiento.tipo = tipoMov
-  console.log(fraude)
+
   const { err, dat } = await fraude.update()
 
   if (err) {

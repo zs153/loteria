@@ -4,20 +4,21 @@ import { connectionString } from '../settings'
 
 class Subtipo {
   constructor(id, descripcion) {
-    this.idsbut = id
+    this.idsubt = id
     this.dessub = descripcion
 
     // tipo
     this.idtipo = 0
+    this.idtold = 0
     // movimiento
     this.movi = new Movimiento()
   }
 
   get id() {
-    return this.idsbut
+    return this.idsubt
   }
   set id(value) {
-    this.idsbut = value
+    this.idsubt = value
   }
   get descripcion() {
     return this.dessub
@@ -33,6 +34,13 @@ class Subtipo {
   set idTipo(value) {
     this.idtipo = value
   }
+  get idTOld() {
+    return this.idtold
+  }
+  set idTOld(value) {
+    this.idtold = value
+  }
+
   // movimiento
   get movimiento() {
     return this.movi
@@ -49,7 +57,7 @@ class Subtipo {
     try {
       const conn = await oracledb.getConnection(connectionString)
       const result = await conn.execute(
-        'SELECT * FROM stipos WHERE idsbut = :p_idsbut',
+        'SELECT ss.*,st.idtipo FROM stipos ss INNER JOIN stipostipo st ON st.idsubt = ss.idsubt WHERE ss.idsubt = :p_idsubt',
         [this.id],
         {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
@@ -59,6 +67,7 @@ class Subtipo {
       if (result) {
         this.id = result.rows[0].IDSUBT
         this.descripcion = result.rows[0].DESSUB
+        this.idTipo = result.rows[0].IDTIPO
 
         ret = {
           err: undefined,
@@ -97,7 +106,7 @@ class Subtipo {
     try {
       const conn = await oracledb.getConnection(connectionString)
       const result = await conn.execute(
-        'SELECT * FROM stipos ORDER BY dessub',
+        'SELECT ss.*,tt.idtipo,tt.destip FROM stipos ss INNER JOIN stipostipo st ON st.idsubt = ss.idsubt INNER JOIN tipos tt ON tt.idtipo = st.idtipo ORDER BY ss.dessub',
         [],
         {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
@@ -211,7 +220,7 @@ class Subtipo {
     try {
       const conn = await oracledb.getConnection(connectionString)
       const result = await conn.execute(
-        'BEGIN FORMULARIOS_PKG.INSERTSTIPO(:p_dessub, :p_idtipo, :p_usumov, :p_tipmov, :p_idsbut); END;',
+        'BEGIN FORMULARIOS_PKG.INSERTSTIPO(:p_dessub, :p_idtipo, :p_usumov, :p_tipmov, :p_idsubt); END;',
         {
           // subtipo
           p_dessub: this.descripcion,
@@ -221,7 +230,7 @@ class Subtipo {
           p_usumov: this.movimiento.usuario,
           p_tipmov: this.movimiento.tipo,
           // retorno
-          p_idsbut: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
+          p_idsubt: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
         }
       )
 
@@ -256,11 +265,14 @@ class Subtipo {
     try {
       const conn = await oracledb.getConnection(connectionString)
       await conn.execute(
-        'BEGIN FORMULARIOS_PKG.UPDATESTIPO(:p_idsbut, :p_dessub, :p_usumov, :p_tipmov); END;',
+        'BEGIN FORMULARIOS_PKG.UPDATESTIPO(:p_idsubt, :p_dessub, :p_idtold, :p_idtipo, :p_usumov, :p_tipmov); END;',
         {
           // subtipo
-          p_idsbut: this.id,
+          p_idsubt: this.id,
           p_dessub: this.descripcion,
+          // tipo
+          p_idtold: this.idTOld,
+          p_idtipo: this.idTipo,
           // movimiento
           p_usumov: this.movimiento.usuario,
           p_tipmov: this.movimiento.tipo,
@@ -298,10 +310,10 @@ class Subtipo {
     try {
       conn = await oracledb.getConnection(connectionString)
       await conn.execute(
-        'BEGIN FORMULARIOS_PKG.DELETESTIPO(:p_idsbut, :p_usumov, :p_tipmov); END;',
+        'BEGIN FORMULARIOS_PKG.DELETESTIPO(:p_idsubt, :p_usumov, :p_tipmov); END;',
         {
           // tipo
-          p_idsbut: this.id,
+          p_idsubt: this.id,
           // movimiento
           p_usumov: this.movimiento.usuario,
           p_tipmov: this.movimiento.tipo,

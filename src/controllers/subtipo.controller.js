@@ -3,11 +3,10 @@ import Subtipo from '../models/subtipo.model'
 let subtipo = new Subtipo()
 
 export const getSubtipo = async (req, res) => {
-  subtipo.id = req.body.id
+  subtipo.id = req.body.idsubt
 
   try {
     const { err, dat } = await subtipo.getSubtipo()
-
     if (err) {
       res.status(403).json(err)
     } else {
@@ -58,6 +57,7 @@ export const insertSubtipo = async (req, res) => {
 
   // subtipo
   subtipo.descripcion = req.body.subtipo.dessub
+  subtipo.idTipo = req.body.subtipo.idtipo
   // movimiento
   subtipo.movimiento.usuario = usuarioMov
   subtipo.movimiento.tipo = tipoMov
@@ -83,6 +83,9 @@ export const updateSubtipo = async (req, res) => {
     // subtipo
     subtipo.id = req.body.subtipo.idsubt
     subtipo.descripcion = req.body.subtipo.dessub
+    // tipo
+    subtipo.idTOld = req.body.subtipo.idtold
+    subtipo.idTipo = req.body.subtipo.idtipo
     // movimiento
     subtipo.movimiento.usuario = usuarioMov
     subtipo.movimiento.tipo = tipoMov
