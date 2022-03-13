@@ -70,19 +70,18 @@ class Hito {
     try {
       const conn = await oracledb.getConnection(connectionString)
       const result = await conn.execute(
-        'SELECT * FROM hitos WHERE idhito = :p_idhito',
+        'SELECT hh.*,TO_CHAR(hh.imphit) AS strimp FROM hitos hh WHERE hh.idhito = :p_idhito',
         [this.id],
         {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
         }
       )
-
       if (result) {
         this.id = result.rows[0].IDHITO
         this.fecha = result.rows[0].FECHIT
         this.tipo = result.rows[0].TIPHIT
         this.subTipo = result.rows[0].SUBTHI
-        this.importe = result.rows[0].IMPHIT
+        this.importe = result.rows[0].STRIMP
         this.observaciones = result.rows[0].OBSHIT
 
         ret = {
@@ -122,7 +121,7 @@ class Hito {
     try {
       const conn = await oracledb.getConnection(connectionString)
       const result = await conn.execute(
-        'SELECT * FROM hitos ORDER BY fechit',
+        'SELECT *,TO_CHAR(hh.imphit) AS strimp FROM hitos ORDER BY fechit',
         [],
         {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
@@ -160,7 +159,7 @@ class Hito {
     try {
       const conn = await oracledb.getConnection(connectionString)
       const result = await conn.execute(
-        "SELECT hh.*, tt.destip, TO_CHAR(hh.fechit, 'DD/MM/YYYY') AS strfec FROM hitosfraude hf INNER JOIN hitos hh ON hh.idhito = hf.idhito INNER JOIN tipos tt ON tt.idtipo = hh.tiphit WHERE hf.idfrau = :p_idfrau ORDER BY fechit",
+        "SELECT hh.*,TO_CHAR(hh.imphit) AS strimp,tt.destip, TO_CHAR(hh.fechit, 'DD/MM/YYYY') AS strfec FROM hitosfraude hf INNER JOIN hitos hh ON hh.idhito = hf.idhito INNER JOIN tipos tt ON tt.idtipo = hh.tiphit WHERE hf.idfrau = :p_idfrau ORDER BY fechit",
         [this.idFraude],
         {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
@@ -265,6 +264,7 @@ class Hito {
         dat: this.id,
       }
     } catch (error) {
+      console.log(error)
       ret = {
         err: error,
         dat: undefined,
