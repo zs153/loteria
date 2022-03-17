@@ -163,18 +163,18 @@ export const estadisticaFormularios = async (req, res) => {
   }
 };
 export const cambioPasswordFormulario = async (req, res) => {
-  const { id, password } = req.body.usuario;
+  const { usuarioMov, tipoMov } = req.body.movimiento;
 
   try {
     const usuario = new Usuario();
     const passSalt = await bcrypt.genSalt(10);
-    const passHash = await bcrypt.hash(password, passSalt);
+    const passHash = await bcrypt.hash(req.body.usuario.password, passSalt);
 
-    usuario.id = id;
+    usuario.id = req.body.usuario.id;
     usuario.password = passHash;
     // movimiento
-    usuario.movimiento.usuario = id;
-    usuario.movimiento.tipo = tiposMovimiento.cambioPassword;
+    usuario.movimiento.usuario = usuarioMov;
+    usuario.movimiento.tipo = tipoMov;
 
     const { err, dat } = await usuario.cambioPassword();
 
@@ -188,17 +188,17 @@ export const cambioPasswordFormulario = async (req, res) => {
   }
 };
 export const updatePerfilFormulario = async (req, res) => {
-  const { id, nombre, email, telefono } = req.body.usuario;
+  const { usuarioMov, tipoMov } = req.body.movimiento;
 
   try {
     const usuario = new Usuario();
-    usuario.id = id;
-    usuario.nombre = nombre;
-    usuario.email = email;
-    usuario.telefono = telefono;
+    usuario.id = req.body.usuario.id;
+    usuario.nombre = req.body.usuario.nombre;
+    usuario.email = req.body.usuario.email;
+    usuario.telefono = req.body.usuario.telefono;
     // movimiento
-    usuario.movimiento.usuario = id;
-    usuario.movimiento.tipo = tiposMovimiento.modificarUsuario;
+    usuario.movimiento.usuario = usuarioMov;
+    usuario.movimiento.tipo = tipoMov;
 
     const { err, dat } = await usuario.updatePerfil();
 
