@@ -3,9 +3,9 @@ import Gente from "../models/gente.model";
 let gente = new Gente();
 
 export const getGente = async (req, res) => {
-  // gente.nif = req.body.nifgen;
-  gente.nif = req.params.nifgen + " 00";
-
+  gente.nif = req.body.nifgen + " 00";
+  //gente.nif = req.params.nifgen + " 00";
+  console.log(gente);
   try {
     const { err, dat } = await gente.getGenteByNif();
 
