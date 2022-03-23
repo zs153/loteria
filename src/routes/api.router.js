@@ -126,7 +126,7 @@ apiRouter.post("/usuarios/updatePerfil", updatePerfil);
 apiRouter.post("/usuarios/cambio", cambioPassword);
 
 // gentes
-apiRouter.post("/gentes/:nifgen", getGente);
+apiRouter.post("/gente", getGente);
 
 // oficinas
 apiRouter.get("/oficinas", getOficinas);
