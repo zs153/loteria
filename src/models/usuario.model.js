@@ -638,11 +638,12 @@ class Usuario {
     try {
       const conn = await oracledb.getConnection(connectionString);
       await conn.execute(
-        "BEGIN FORMULARIOS_PKG.UPDATEPERFILUSUARIO(:p_idusua, :p_nomusu, :p_emausu, :p_telusu, :p_usumov, :p_tipmov); END;",
+        "BEGIN FORMULARIOS_PKG.UPDATEPERFILUSUARIO(:p_idusua, :p_nomusu, :p_ofiusu, :p_emausu, :p_telusu, :p_usumov, :p_tipmov); END;",
         {
           // usuario
           p_idusua: this.id,
           p_nomusu: this.nombre,
+          p_ofiusu: this.oficina,
           p_emausu: this.email,
           p_telusu: this.telefono,
           // movimiento

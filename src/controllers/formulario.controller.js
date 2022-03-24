@@ -196,6 +196,7 @@ export const updatePerfilFormulario = async (req, res) => {
     usuario.nombre = req.body.usuario.nombre;
     usuario.email = req.body.usuario.email;
     usuario.telefono = req.body.usuario.telefono;
+    usuario.oficina = req.body.usuario.oficina;
     // movimiento
     usuario.movimiento.usuario = usuarioMov;
     usuario.movimiento.tipo = tipoMov;
