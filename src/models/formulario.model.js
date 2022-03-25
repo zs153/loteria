@@ -278,17 +278,15 @@ class Formulario {
     let ret
 
     let strSql =
-      "SELECT oo.desofi,tt.destip,dd.iddocu,TO_CHAR(dd.fecdoc, 'DD/MM/YYYY') AS strfec,dd.refdoc,dd.nifcon,dd.nomcon,dd.movcon,dd.obsdoc,dd.liqdoc,dd.stadoc FROM "
-    strSql +=
-      '(SELECT ofidoc, fecdoc, iddocu FROM documentos GROUP BY ofidoc, fecdoc, iddocu) zz '
-    strSql += 'INNER JOIN documentos dd ON dd.iddocu = zz.iddocu '
-    strSql += 'INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc '
-    strSql += 'INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc '
-    strSql += 'WHERE stadoc < :p_stadoc ORDER BY dd.ofidoc, dd.fecdoc'
+      "SELECT oo.desofi,tt.destip,dd.iddocu,TO_CHAR(dd.fecdoc, 'DD/MM/YYYY') AS strfec,dd.refdoc,dd.nifcon,dd.nomcon,dd.movcon,dd.obsdoc,dd.liqdoc,dd.stadoc FROM (SELECT ofidoc, fecdoc, iddocu FROM documentos GROUP BY ofidoc, fecdoc, iddocu) zz INNER JOIN documentos dd ON dd.iddocu = zz.iddocu INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc WHERE dd.stadoc <= :p_stadoc AND dd.ofidoc = :p_ofidoc ORDER BY dd.ofidoc, dd.fecdoc"
+    if (this.oficina === -1) {
+      strSql =
+        "SELECT oo.desofi,tt.destip,dd.iddocu,TO_CHAR(dd.fecdoc, 'DD/MM/YYYY') AS strfec,dd.refdoc,dd.nifcon,dd.nomcon,dd.movcon,dd.obsdoc,dd.liqdoc,dd.stadoc FROM (SELECT ofidoc, fecdoc, iddocu FROM documentos GROUP BY ofidoc, fecdoc, iddocu) zz INNER JOIN documentos dd ON dd.iddocu = zz.iddocu INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc WHERE dd.stadoc <= :p_stadoc AND dd.ofidoc <> :p_ofidoc ORDER BY dd.ofidoc, dd.fecdoc"
+    }
 
     try {
       const conn = await oracledb.getConnection(connectionString)
-      const result = await conn.execute(strSql, [this.estado], {
+      const result = await conn.execute(strSql, [this.estado, this.oficina], {
         outFormat: oracledb.OUT_FORMAT_OBJECT,
       })
 

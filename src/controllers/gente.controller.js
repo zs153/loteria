@@ -1,19 +1,19 @@
-import Gente from "../models/gente.model";
+import Gente from '../models/gente.model'
 
-let gente = new Gente();
+let gente = new Gente()
 
 export const getGente = async (req, res) => {
-  gente.nif = req.body.nifgen + " 00";
+  gente.nif = req.body.nifgen + '%'
 
   try {
-    const { err, dat } = await gente.getGenteByNif();
+    const { err, dat } = await gente.getGenteByNif()
 
     if (err) {
-      res.status(403).json(err);
+      res.status(403).json(err)
     } else {
-      return res.status(202).json(gente);
+      return res.status(200).json(dat)
     }
   } catch (error) {
-    return res.status(404).json({ err });
+    return res.status(404).json({ err })
   }
-};
+}
