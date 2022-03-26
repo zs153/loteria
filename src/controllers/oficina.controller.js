@@ -24,7 +24,7 @@ export const getOficina = async (req, res) => {
     if (err) {
       res.status(404).json(err)
     } else {
-      return res.status(202).send(oficina)
+      return res.status(200).send(oficina)
     }
   } catch (error) {
     return res.status(500).json({ err })
@@ -41,12 +41,16 @@ export const insertOficina = async (req, res) => {
   oficina.movimiento.usuario = usuarioMov
   oficina.movimiento.tipo = tipoMov
 
-  const { err, dat } = await oficina.insert()
+  try {
+    const { err, dat } = await oficina.insert()
 
-  if (err) {
-    res.status(403).json(err)
-  } else {
-    res.status(202).json(oficina)
+    if (err) {
+      res.status(403).json(err)
+    } else {
+      res.status(202).json(oficina)
+    }
+  } catch (error) {
+    res.status(500).json({ err })
   }
 }
 export const updateOficina = async (req, res) => {
@@ -60,12 +64,16 @@ export const updateOficina = async (req, res) => {
   oficina.movimiento.usuario = usuarioMov
   oficina.movimiento.tipo = tipoMov
 
-  const { err, dat } = await oficina.update()
+  try {
+    const { err, dat } = await oficina.update()
 
-  if (err) {
-    res.status(403).json(err)
-  } else {
-    res.status(202).json(oficina)
+    if (err) {
+      res.status(403).json(err)
+    } else {
+      res.status(202).json(oficina)
+    }
+  } catch (error) {
+    res.status(500).json({ err })
   }
 }
 export const deleteOficina = async (req, res) => {
@@ -78,11 +86,15 @@ export const deleteOficina = async (req, res) => {
   oficina.movimiento.usuario = usuarioMov
   oficina.movimiento.tipo = tipoMov
 
-  const { err, dat } = await oficina.delete()
+  try {
+    const { err, dat } = await oficina.delete()
 
-  if (err) {
-    res.status(403).json(err)
-  } else {
-    res.status(202).json(oficina)
+    if (err) {
+      res.status(403).json(err)
+    } else {
+      res.status(202).json(oficina)
+    }
+  } catch (error) {
+    res.status(500).json({ err })
   }
 }

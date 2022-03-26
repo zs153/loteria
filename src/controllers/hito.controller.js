@@ -6,10 +6,14 @@ let hito = new Hito()
 export const getHitos = async (req, res) => {
   const { err, dat } = await hito.getHitos()
 
-  if (err) {
-    return res.status(404).json({ err })
-  } else {
-    return res.status(200).json({ dat })
+  try {
+    if (err) {
+      return res.status(404).json({ err })
+    } else {
+      return res.status(200).json({ dat })
+    }
+  } catch (error) {
+    res.status(500).json(error)
   }
 }
 export const getHitosFraude = async (req, res) => {
@@ -21,7 +25,7 @@ export const getHitosFraude = async (req, res) => {
     if (err) {
       res.status(402).json(err)
     } else {
-      res.status(202).json(dat)
+      res.status(200).json(dat)
     }
   } catch (error) {
     res.status(500).json(error)
@@ -36,10 +40,10 @@ export const getHito = async (req, res) => {
     if (err) {
       res.status(403).json(err)
     } else {
-      return res.status(202).json(hito)
+      return res.status(200).json(hito)
     }
   } catch (error) {
-    return res.status(404).json({ err })
+    return res.status(500).json({ err })
   }
 }
 export const insertHito = async (req, res) => {
@@ -64,7 +68,7 @@ export const insertHito = async (req, res) => {
     } else {
       hito.id = dat.p_idhito
 
-      res.status(202).json(hito)
+      res.status(200).json(hito)
     }
   } catch (error) {
     res.status(500).json(error)
@@ -89,10 +93,10 @@ export const updateHito = async (req, res) => {
     if (err) {
       res.status(404).json(err)
     } else {
-      res.status(202).json(hito)
+      res.status(200).json(hito)
     }
   } catch (error) {
-    res.status(405).json(error)
+    res.status(500).json(error)
   }
 }
 export const deleteHito = async (req, res) => {
@@ -113,6 +117,6 @@ export const deleteHito = async (req, res) => {
       res.status(204).json(hito)
     }
   } catch (error) {
-    res.status(405).json(error)
+    res.status(500).json(error)
   }
 }

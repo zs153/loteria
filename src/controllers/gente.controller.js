@@ -14,6 +14,6 @@ export const getGente = async (req, res) => {
       return res.status(200).json(dat)
     }
   } catch (error) {
-    return res.status(404).json({ err })
+    res.status(500).json({ err })
   }
 }

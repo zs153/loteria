@@ -1,10 +1,5 @@
 import Usuario from '../models/usuario.model'
-import {
-  estadosUsuario,
-  tiposMovimiento,
-  tiposPerfil,
-  tiposRol,
-} from '../public/js/enumeraciones'
+import { tiposMovimiento } from '../public/js/enumeraciones'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { secret } from '../settings'
@@ -42,7 +37,7 @@ export const verifyLogin = async (req, res) => {
           const { pasusu, ...resto } = usuario
           res
             .header('authorization', accessToken)
-            .status(202)
+            .status(200)
             .json({ ...resto, accessToken })
         }
       })
@@ -62,7 +57,7 @@ export const verifyLogout = async (req, res) => {
   res.clearCookie('x-access_token')
   res.cookie('auth', undefined, options)
 
-  res.status(201).json('Ha finalizado la sesión')
+  res.status(200).json('Ha finalizado la sesión')
 }
 export const forgotPassword = async (req, res) => {
   const { email } = req.body.user
@@ -91,11 +86,11 @@ export const forgotPassword = async (req, res) => {
       if (err) {
         res.status(401).json('No se ha podido generar nueva contraseña')
       } else {
-        res.status(201).json('Se ha generado una nueva contraseña')
+        res.status(200).json('Se ha generado una nueva contraseña')
       }
     }
   } catch (error) {
-    res.status(500).json('No se ha podido conectar con el servidor')
+    res.status(500).json(error)
   }
 }
 export const crearRegistro = async (req, res) => {
@@ -126,7 +121,7 @@ export const crearRegistro = async (req, res) => {
     if (err) {
       res.status(401).json(err)
     } else {
-      res.status(201).json('Se ha generado una nueva contraseña')
+      res.status(200).json('Se ha generado una nueva contraseña')
     }
   } catch (error) {
     res.status(500).json('No se ha podido conectar con el servidor')

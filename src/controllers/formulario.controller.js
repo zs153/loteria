@@ -1,7 +1,6 @@
+import Formulario from '../models/formulario.model'
 import Usuario from '../models/usuario.model'
 import SMS from '../models/sms.model'
-import Formulario from '../models/formulario.model'
-import { tiposMovimiento } from '../public/js/enumeraciones'
 import bcrypt from 'bcrypt'
 
 export const getFormularios = async (req, res) => {
@@ -15,7 +14,7 @@ export const getFormularios = async (req, res) => {
     if (err) {
       return res.status(404).json({ err })
     } else {
-      return res.status(201).json({ dat })
+      return res.status(200).json({ dat })
     }
   } catch (error) {
     res.status(500).json(error)
@@ -31,7 +30,7 @@ export const getFormulario = async (req, res) => {
     if (err) {
       res.status(404).send(err)
     } else {
-      res.status(201).send(formulario)
+      res.status(200).send(formulario)
     }
   } catch (error) {
     res.status(500).json(error)
@@ -47,7 +46,7 @@ export const getFormularioByRef = async (req, res) => {
     if (err) {
       res.status(404).send(err)
     } else {
-      res.status(201).send(formulario)
+      res.status(200).send(formulario)
     }
   } catch (error) {
     res.status(500).json(error)
@@ -76,12 +75,16 @@ export const insertFormulario = async (req, res) => {
   formulario.movimiento.usuario = usuarioMov
   formulario.movimiento.tipo = tipoMov
 
-  const { err, dat } = await formulario.insert()
+  try {
+    const { err, dat } = await formulario.insert()
 
-  if (err) {
-    res.status(408).json(err)
-  } else {
-    res.status(202).json(formulario)
+    if (err) {
+      res.status(408).json(err)
+    } else {
+      res.status(200).json(formulario)
+    }
+  } catch (error) {
+    res.status(500).json(error)
   }
 }
 export const updateFormulario = async (req, res) => {
@@ -104,12 +107,16 @@ export const updateFormulario = async (req, res) => {
   formulario.movimiento.usuario = usuarioMov
   formulario.movimiento.tipo = tipoMov
 
-  const { err, dat } = await formulario.update()
+  try {
+    const { err, dat } = await formulario.update()
 
-  if (err) {
-    res.status(403).json(err)
-  } else {
-    res.status(202).json(formulario)
+    if (err) {
+      res.status(403).json(err)
+    } else {
+      res.status(200).json(formulario)
+    }
+  } catch (error) {
+    res.status(500).json(error)
   }
 }
 export const deleteFormulario = async (req, res) => {
@@ -122,12 +129,16 @@ export const deleteFormulario = async (req, res) => {
   formulario.movimiento.usuario = usuarioMov
   formulario.movimiento.tipo = tipoMov
 
-  const { err, dat } = await formulario.delete()
+  try {
+    const { err, dat } = await formulario.delete()
 
-  if (err) {
-    res.status(403).json(err)
-  } else {
-    res.status(202).json(formulario)
+    if (err) {
+      res.status(403).json(err)
+    } else {
+      res.status(200).json(formulario)
+    }
+  } catch (error) {
+    res.status(500).json(error)
   }
 }
 export const cambioEstado = async (req, res) => {
@@ -143,12 +154,16 @@ export const cambioEstado = async (req, res) => {
   formulario.movimiento.usuario = usuarioMov
   formulario.movimiento.tipo = tipoMov
 
-  const { err, dat } = await formulario.cambioEstado()
+  try {
+    const { err, dat } = await formulario.cambioEstado()
 
-  if (err) {
-    res.status(403).json(err)
-  } else {
-    res.status(202).json(formulario)
+    if (err) {
+      res.status(403).json(err)
+    } else {
+      res.status(200).json(formulario)
+    }
+  } catch (error) {
+    res.status(500).json(error)
   }
 }
 export const estadisticaFormularios = async (req, res) => {
@@ -159,111 +174,114 @@ export const estadisticaFormularios = async (req, res) => {
     hasta,
   }
 
-  const { err, dat } = await formulario.estadistica()
+  try {
+    const { err, dat } = await formulario.estadistica()
 
-  if (err) {
-    return res.status(404).json(err)
-  } else {
-    return res.status(201).json(dat)
+    if (err) {
+      return res.status(404).json(err)
+    } else {
+      return res.status(200).json(dat)
+    }
+  } catch (error) {
+    res.status(500).json(error)
   }
 }
 export const cambioPasswordFormulario = async (req, res) => {
   const { usuarioMov, tipoMov } = req.body.movimiento
+  const passSalt = await bcrypt.genSalt(10)
+  const passHash = await bcrypt.hash(req.body.usuario.password, passSalt)
+  const usuario = new Usuario()
+
+  usuario.id = req.body.usuario.id
+  usuario.password = passHash
+  // movimiento
+  usuario.movimiento.usuario = usuarioMov
+  usuario.movimiento.tipo = tipoMov
 
   try {
-    const usuario = new Usuario()
-    const passSalt = await bcrypt.genSalt(10)
-    const passHash = await bcrypt.hash(req.body.usuario.password, passSalt)
-
-    usuario.id = req.body.usuario.id
-    usuario.password = passHash
-    // movimiento
-    usuario.movimiento.usuario = usuarioMov
-    usuario.movimiento.tipo = tipoMov
-
     const { err, dat } = await usuario.cambioPassword()
 
     if (err) {
       res.status(404).json(err)
     } else {
-      res.status(202).json(usuario)
+      res.status(200).json(usuario)
     }
   } catch (error) {
-    res.status(405).json(error)
+    res.status(500).json(error)
   }
 }
 export const updatePerfilFormulario = async (req, res) => {
   const { usuarioMov, tipoMov } = req.body.movimiento
+  const usuario = new Usuario()
+
+  usuario.id = req.body.usuario.id
+  usuario.nombre = req.body.usuario.nombre
+  usuario.email = req.body.usuario.email
+  usuario.telefono = req.body.usuario.telefono
+  usuario.oficina = req.body.usuario.oficina
+  // movimiento
+  usuario.movimiento.usuario = usuarioMov
+  usuario.movimiento.tipo = tipoMov
 
   try {
-    const usuario = new Usuario()
-    usuario.id = req.body.usuario.id
-    usuario.nombre = req.body.usuario.nombre
-    usuario.email = req.body.usuario.email
-    usuario.telefono = req.body.usuario.telefono
-    usuario.oficina = req.body.usuario.oficina
-    // movimiento
-    usuario.movimiento.usuario = usuarioMov
-    usuario.movimiento.tipo = tipoMov
-
     const { err, dat } = await usuario.updatePerfil()
 
     if (err) {
       res.status(404).json(err)
     } else {
-      res.status(202).json(usuario)
+      res.status(200).json(usuario)
     }
   } catch (error) {
-    res.status(405).json(error)
+    res.status(500).json(error)
   }
 }
 export const sms = async (req, res) => {
   const { usuarioMov, tipoMov } = req.body.movimiento
+  const sms = new SMS()
+
+  // sms
+  sms.texto = req.body.sms.texsms
+  sms.movil = req.body.sms.movsms
+  sms.estado = req.body.sms.stasms
+  // documento
+  sms.idDocumento = req.body.sms.iddocu
+  // movimiento
+  sms.movimiento.usuario = usuarioMov
+  sms.movimiento.tipo = tipoMov
+
   try {
-    const sms = new SMS()
-
-    // sms
-    sms.texto = req.body.sms.texsms
-    sms.movil = req.body.sms.movsms
-    sms.estado = req.body.sms.stasms
-    // documento
-    sms.idDocumento = req.body.sms.iddocu
-    // movimiento
-    sms.movimiento.usuario = usuarioMov
-    sms.movimiento.tipo = tipoMov
-
     const { err, dat } = await sms.insert()
 
     if (err) {
       res.status(403).json(err)
     } else {
-      res.status(202).json(sms)
+      res.status(200).json(sms)
     }
   } catch (error) {
-    res.status(500).json('No se ha podido insertar el mensaje sms')
+    res.status(500).json(error)
   }
 }
 export const referenciaSms = async (req, res) => {
   const { referencia } = req.body.referencia
+  const sms = new SMS()
+
+  // sms
+  sms.texto = req.body.sms.texto
+  sms.movil = req.body.sms.movil
+  sms.estado = req.body.sms.estado
+  // documento
+  sms.idDocumento = req.body.sms.idDocumento
+  // movimiento
+  sms.movimiento.usuario = usuarioMov
+  sms.movimiento.tipo = tipoMov
+
   try {
-    const sms = new SMS()
-
-    // sms
-    sms.texto = req.body.sms.texto
-    sms.movil = req.body.sms.movil
-    sms.estado = req.body.sms.estado
-    // documento
-    sms.idDocumento = req.body.sms.idDocumento
-    // movimiento
-    sms.movimiento.usuario = usuarioMov
-    sms.movimiento.tipo = tipoMov
-
     const { err, dat } = await sms.insert()
 
     if (err) {
       res.status(403).json(err)
     } else {
-      res.status(202).json(sms)
+      res.status(200).json(sms)
     }
   } catch (error) {
     res.status(500).json('No se ha podido insertar el mensaje sms')

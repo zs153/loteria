@@ -3,23 +3,28 @@ import Tipo from '../models/tipo.model'
 let tipo = new Tipo()
 
 export const getTipos = async (req, res) => {
-  const { err, dat } = await tipo.getTipos()
+  try {
+    const { err, dat } = await tipo.getTipos()
 
-  if (err) {
-    return res.status(404).json({ err })
-  } else {
-    return res.status(200).json({ dat })
+    if (err) {
+      return res.status(404).json({ err })
+    } else {
+      return res.status(200).json({ dat })
+    }
+  } catch (error) {
+    res.status(500).json(error)
   }
 }
 export const getTiposByOrigen = async (req, res) => {
   tipo.origen = req.body.origen
+
   try {
     const { err, dat } = await tipo.getTiposByOrigen()
 
     if (err) {
       res.status(402).json(err)
     } else {
-      res.status(202).json(dat)
+      res.status(200).json(dat)
     }
   } catch (error) {
     res.status(500).json(error)
@@ -34,10 +39,10 @@ export const getTipo = async (req, res) => {
     if (err) {
       res.status(403).json(err)
     } else {
-      return res.status(202).json(tipo)
+      return res.status(200).json(tipo)
     }
   } catch (error) {
-    return res.status(404).json({ err })
+    return res.status(500).json({ err })
   }
 }
 export const insertTipo = async (req, res) => {
@@ -59,7 +64,7 @@ export const insertTipo = async (req, res) => {
     } else {
       tipo.id = dat.p_idtipo
 
-      res.status(202).json(tipo)
+      res.status(200).json(tipo)
     }
   } catch (error) {
     res.status(500).json(error)
@@ -83,30 +88,30 @@ export const updateTipo = async (req, res) => {
     if (err) {
       res.status(404).json(err)
     } else {
-      res.status(202).json(tipo)
+      res.status(200).json(tipo)
     }
   } catch (error) {
-    res.status(405).json(error)
+    res.status(500).json(error)
   }
 }
 export const deleteTipo = async (req, res) => {
   const { usuarioMov, tipoMov } = req.body.movimiento
 
-  try {
-    // tipo
-    tipo.id = req.body.tipo.idtipo
-    // movimiento
-    tipo.movimiento.usuario = usuarioMov
-    tipo.movimiento.tipo = tipoMov
+  // tipo
+  tipo.id = req.body.tipo.idtipo
+  // movimiento
+  tipo.movimiento.usuario = usuarioMov
+  tipo.movimiento.tipo = tipoMov
 
+  try {
     const { err, dat } = await tipo.delete()
 
     if (err) {
       res.status(404).json(err)
     } else {
-      res.status(204).json(tipo)
+      res.status(200).json(tipo)
     }
   } catch (error) {
-    res.status(405).json(error)
+    res.status(500).json(error)
   }
 }
