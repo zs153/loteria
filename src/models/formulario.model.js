@@ -278,23 +278,28 @@ class Formulario {
     let ret
 
     let strSql =
-      "SELECT oo.desofi,tt.destip,dd.iddocu,TO_CHAR(dd.fecdoc, 'DD/MM/YYYY') AS strfec,dd.refdoc,dd.nifcon,dd.nomcon,dd.movcon,dd.obsdoc,dd.liqdoc,dd.stadoc FROM (SELECT ofidoc, fecdoc, iddocu FROM documentos GROUP BY ofidoc, fecdoc, iddocu) zz INNER JOIN documentos dd ON dd.iddocu = zz.iddocu INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc WHERE dd.stadoc <= :p_stadoc AND dd.ofidoc = :p_ofidoc ORDER BY dd.ofidoc, dd.fecdoc"
-    if (this.oficina === -1) {
+      "SELECT oo.desofi,tt.destip,dd.*,TO_CHAR(dd.fecdoc,'DD-MM-YYYY') AS strfec from documentos dd INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc WHERE (dd.liqdoc = :p_liqdoc AND dd.stadoc <= :p_stadoc) OR dd.stadoc = 0 ORDER BY dd.ofidoc, dd.fecdoc"
+    if (this.liquidador === 'ADMIN') {
       strSql =
-        "SELECT oo.desofi,tt.destip,dd.iddocu,TO_CHAR(dd.fecdoc, 'DD/MM/YYYY') AS strfec,dd.refdoc,dd.nifcon,dd.nomcon,dd.movcon,dd.obsdoc,dd.liqdoc,dd.stadoc FROM (SELECT ofidoc, fecdoc, iddocu FROM documentos GROUP BY ofidoc, fecdoc, iddocu) zz INNER JOIN documentos dd ON dd.iddocu = zz.iddocu INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc WHERE dd.stadoc <= :p_stadoc AND dd.ofidoc <> :p_ofidoc ORDER BY dd.ofidoc, dd.fecdoc"
+        "SELECT oo.desofi,tt.destip,dd.*,TO_CHAR(dd.fecdoc,'DD-MM-YYYY') AS strfec from documentos dd INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc WHERE dd.liqdoc <> :p_liqdoc AND dd.stadoc <= :p_stadoc ORDER BY dd.ofidoc, dd.fecdoc"
     }
 
     try {
       const conn = await oracledb.getConnection(connectionString)
-      const result = await conn.execute(strSql, [this.estado, this.oficina], {
-        outFormat: oracledb.OUT_FORMAT_OBJECT,
-      })
+      const result = await conn.execute(
+        strSql,
+        [this.liquidador, this.estado],
+        {
+          outFormat: oracledb.OUT_FORMAT_OBJECT,
+        }
+      )
 
       ret = {
         err: undefined,
         dat: result.rows,
       }
     } catch (error) {
+      console.log(error)
       ret = {
         err: error,
         dat: undefined,

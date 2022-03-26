@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt'
 export const getFormularios = async (req, res) => {
   const formulario = new Formulario()
   formulario.estado = req.body.documento.stadoc
-  formulario.oficina = req.body.documento.ofidoc
+  formulario.liquidador = req.body.documento.liqdoc
 
   try {
     const { err, dat } = await formulario.getFormularios()
