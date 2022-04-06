@@ -79,6 +79,11 @@ import {
   updateSubtipo,
 } from "../controllers/subtipo.controller";
 import { getGente } from "../controllers/gente.controller";
+import {
+  cambioEstadoCita,
+  getCita,
+  getCitas,
+} from "../controllers/cita.controller";
 
 const apiRouter = express.Router();
 
@@ -107,6 +112,13 @@ apiRouter.post("/fraudes/referencia", getFraudeByRef);
 apiRouter.post("/fraudes/sms", smsFraude);
 apiRouter.post("/fraudes/cambio", cambioPasswordFraude);
 apiRouter.post("/fraudes/updatePerfil", updatePerfilFraude);
+
+// citas
+apiRouter.post("/citas", getCitas);
+apiRouter.post("/cita", getCita);
+apiRouter.post("/citas/cambioEstado", cambioEstadoCita);
+// apiRouter.post("/citas/cambio", cambioPasswordCita);
+// apiRouter.post("/citas/updatePerfil", updatePerfilCita);
 
 // hitos
 apiRouter.get("/fraudes/hitos", getHitos);
