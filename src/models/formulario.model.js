@@ -285,7 +285,7 @@ class Formulario {
     //     "SELECT oo.desofi,tt.destip,dd.*,TO_CHAR(dd.fecdoc,'DD-MM-YYYY') AS strfec from documentos dd INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc WHERE dd.liqdoc <> :p_liqdoc AND dd.stadoc <= :p_stadoc ORDER BY dd.ofidoc, dd.fecdoc";
     // }
     const strSql =
-      "SELECT oo.desofi,tt.destip,dd.*,TO_CHAR(dd.fecdoc,'DD-MM-YYYY') AS strfec from documentos dd INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc WHERE dd.liqdoc <> :p_liqdoc AND dd.stadoc <= :p_stadoc ORDER BY dd.ofidoc, dd.fecdoc";
+      "SELECT oo.desofi,tt.destip,dd.*,TO_CHAR(dd.fecdoc,'DD-MM-YYYY') AS strfec FROM documentos dd INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc WHERE dd.stadoc <= :p_stadoc ORDER BY dd.ofidoc, dd.fecdoc";
 
     try {
       const conn = await oracledb.getConnection(connectionString);
