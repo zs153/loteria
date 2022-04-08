@@ -289,13 +289,9 @@ class Formulario {
 
     try {
       const conn = await oracledb.getConnection(connectionString);
-      const result = await conn.execute(
-        strSql,
-        [this.liquidador, this.estado],
-        {
-          outFormat: oracledb.OUT_FORMAT_OBJECT,
-        }
-      );
+      const result = await conn.execute(strSql, [this.estado], {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      });
 
       ret = {
         err: undefined,
