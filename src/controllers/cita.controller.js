@@ -37,11 +37,15 @@ export const insertCita = async (req, res) => {
   const { usuarioMov, tipoMov } = req.body.movimiento;
 
   // cita
+  cita.origen = req.body.documento.orgcit;
+  cita.oficina = req.body.documento.oficit;
   cita.fecha = req.body.documento.feccit;
+  cita.hora = req.body.documento.horcit;
   cita.nif = req.body.documento.nifcon;
   cita.nombre = req.body.documento.nomcon;
   cita.telefono = req.body.documento.telcon;
-  cita.oficina = req.body.documento.oficit;
+  cita.descripcion = req.body.documento.descit;
+  cita.notas = req.body.documento.notcit;
   cita.observaciones = req.body.documento.obscit;
   cita.estado = req.body.documento.stacit;
   // movimiento
@@ -66,13 +70,7 @@ export const updateCita = async (req, res) => {
 
   // cita
   cita.id = req.body.documento.idcita;
-  cita.fecha = req.body.documento.feccit;
-  cita.nif = req.body.documento.nifcon;
-  cita.nombre = req.body.documento.nomcon;
-  cita.telefono = req.body.documento.telcon;
-  cita.oficina = req.body.documento.oficit;
   cita.observaciones = req.body.documento.obscit;
-  cita.estado = req.body.documento.stacit;
   // movimiento
   cita.movimiento.usuario = usuarioMov;
   cita.movimiento.tipo = tipoMov;
@@ -111,20 +109,54 @@ export const deleteCita = async (req, res) => {
     res.status(500).json(error);
   }
 };
-export const cambioEstadoCita = async (req, res) => {
+export const asignarCita = async (req, res) => {
   const cita = new Cita();
   const { usuarioMov, tipoMov } = req.body.movimiento;
-  const { id, estado } = req.body.documento;
+  const {
+    idcita,
+    fecdoc,
+    nifcon,
+    nomcon,
+    emacon,
+    telcon,
+    movcon,
+    refdoc,
+    tipdoc,
+    ejedoc,
+    ofidoc,
+    obsdoc,
+    fundoc,
+    liqdoc,
+    stadoc,
+    stacit,
+  } = req.body.documento;
 
   // cita
-  cita.id = id;
-  cita.estado = estado;
+  cita.id = idcita;
+  cita.estado = stacit;
   // movimiento
   cita.movimiento.usuario = usuarioMov;
   cita.movimiento.tipo = tipoMov;
+  // formulario
+  const formulario = {
+    fecdoc,
+    nifcon,
+    nomcon,
+    emacon,
+    telcon,
+    movcon,
+    refdoc,
+    tipdoc,
+    ejedoc,
+    ofidoc,
+    obsdoc,
+    fundoc,
+    liqdoc,
+    stadoc,
+  };
 
   try {
-    const { err, dat } = await cita.cambioEstado();
+    const { err, dat } = await cita.asignar(formulario);
 
     if (err) {
       res.status(403).json(err);

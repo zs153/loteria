@@ -80,9 +80,10 @@ import {
 } from "../controllers/subtipo.controller";
 import { getGente } from "../controllers/gente.controller";
 import {
-  cambioEstadoCita,
+  asignarCita,
   getCita,
   getCitas,
+  updateCita,
 } from "../controllers/cita.controller";
 
 const apiRouter = express.Router();
@@ -116,7 +117,8 @@ apiRouter.post("/fraudes/updatePerfil", updatePerfilFraude);
 // citas
 apiRouter.post("/citas", getCitas);
 apiRouter.post("/cita", getCita);
-apiRouter.post("/citas/cambioEstado", cambioEstadoCita);
+apiRouter.post("/citas/update", updateCita);
+apiRouter.post("/citas/asignar", asignarCita);
 // apiRouter.post("/citas/cambio", cambioPasswordCita);
 // apiRouter.post("/citas/updatePerfil", updatePerfilCita);
 

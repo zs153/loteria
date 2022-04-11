@@ -284,14 +284,23 @@ class Formulario {
     //   strSql =
     //     "SELECT oo.desofi,tt.destip,dd.*,TO_CHAR(dd.fecdoc,'DD-MM-YYYY') AS strfec from documentos dd INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc WHERE dd.liqdoc <> :p_liqdoc AND dd.stadoc <= :p_stadoc ORDER BY dd.ofidoc, dd.fecdoc";
     // }
-    const strSql =
-      "SELECT oo.desofi,tt.destip,dd.*,TO_CHAR(dd.fecdoc,'DD-MM-YYYY') AS strfec FROM documentos dd INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc WHERE dd.stadoc <= :p_stadoc ORDER BY dd.ofidoc, dd.fecdoc";
+    let strSql =
+      "SELECT oo.desofi,tt.destip,dd.*,TO_CHAR(dd.fecdoc,'DD-MM-YYYY') AS strfec FROM documentos dd INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc LEFT JOIN tipos tt ON tt.idtipo = dd.tipdoc WHERE dd.stadoc <= :p_stadoc ORDER BY dd.ofidoc, dd.fecdoc";
+
+    if (this.estado === -1) {
+      strSql =
+        "SELECT oo.desofi,tt.destip,dd.*,TO_CHAR(dd.fecdoc,'DD-MM-YYYY') AS strfec FROM documentos dd INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc LEFT JOIN tipos tt ON tt.idtipo = dd.tipdoc ORDER BY dd.ofidoc, dd.fecdoc";
+    }
 
     try {
       const conn = await oracledb.getConnection(connectionString);
-      const result = await conn.execute(strSql, [this.estado], {
-        outFormat: oracledb.OUT_FORMAT_OBJECT,
-      });
+      const result = await conn.execute(
+        strSql,
+        this.estado === -1 ? [] : [this.estado],
+        {
+          outFormat: oracledb.OUT_FORMAT_OBJECT,
+        }
+      );
 
       ret = {
         err: undefined,
