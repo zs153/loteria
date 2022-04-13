@@ -146,7 +146,7 @@ class Cita {
     try {
       const conn = await oracledb.getConnection(connectionString);
       const result = await conn.execute(
-        "SELECT cc.*,oo.*,TO_CHAR(feccit,'YYYY-MM-DD') AS strfec FROM citas cc INNER JOIN oficinas oo ON oo.idofic = cc.oficit WHERE cc.idcita = :p_idcita",
+        "SELECT cc.*,oo.*,TO_CHAR(feccit,'DD/MM/YYYY') AS strfec FROM citas cc INNER JOIN oficinas oo ON oo.idofic = cc.oficit WHERE cc.idcita = :p_idcita",
         [this.id],
         {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
@@ -205,10 +205,10 @@ class Cita {
     let ret;
 
     let strSql =
-      "SELECT cc.*,oo.desofi,TO_CHAR(cc.feccit,'DD-MM-YYYY') AS strfec, CASE WHEN gg.nifcog IS NULL THEN 'Sí' ELSE 'No' END AS comple FROM citas cc INNER JOIN oficinas oo ON oo.idofic = cc.oficit  LEFT JOIN cognos gg ON gg.nifcog = cc.nifcon WHERE cc.stacit < :p_stacit AND cc.feccit >= TRUNC(SYSDATE) ORDER BY cc.oficit, cc.feccit";
+      "SELECT cc.*,oo.desofi,TO_CHAR(cc.feccit,'DD/MM/YYYY') AS strfec,CASE WHEN gg.nifcog IS NULL THEN 'Sí' ELSE 'No' END AS comple FROM citas cc INNER JOIN oficinas oo ON oo.idofic = cc.oficit LEFT JOIN cognos gg ON gg.nifcog = cc.nifcon WHERE cc.stacit < :p_stacit AND cc.feccit >= TRUNC(SYSDATE) AND cc.feccit <= TRUNC(SYSDATE) + 7 ORDER BY cc.oficit, cc.feccit";
     if (this.estado === -1) {
       strSql =
-        "SELECT cc.*,oo.desofi,TO_CHAR(cc.feccit,'DD-MM-YYYY') AS strfec, CASE WHEN gg.nifcog IS NULL THEN 'Sí' ELSE 'No' END AS comple FROM citas cc INNER JOIN oficinas oo ON oo.idofic = cc.oficit  LEFT JOIN cognos gg ON gg.nifcog = cc.nifcon ORDER BY cc.oficit, cc.feccit";
+        "SELECT cc.*,oo.desofi,TO_CHAR(cc.feccit,'DD/MM/YYYY') AS strfec, CASE WHEN gg.nifcog IS NULL THEN 'Sí' ELSE 'No' END AS comple FROM citas cc INNER JOIN oficinas oo ON oo.idofic = cc.oficit  LEFT JOIN cognos gg ON gg.nifcog = cc.nifcon ORDER BY cc.oficit, cc.feccit";
     }
 
     try {
