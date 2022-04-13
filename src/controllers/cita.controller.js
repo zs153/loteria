@@ -6,6 +6,7 @@ import {
   tiposMovimiento,
   tiposVisualizacion,
   tiposRol,
+  tiposPerfil,
 } from "../public/js/enumeraciones";
 
 export const mainPage = async (req, res) => {
@@ -23,6 +24,7 @@ export const mainPage = async (req, res) => {
     const datos = {
       citas: result.data.dat,
       tiposRol,
+      tiposPerfil,
       estadosCita,
       verTodo,
     };
