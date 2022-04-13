@@ -173,13 +173,13 @@
                       <thead>
                       <tr>
                         <th class="w-4"></th>
-                        <th class="w-7">Origen</th>
+                        <th class="w-6">Origen</th>
                         <th class="w-8">Oficina</th>
                         <th class="w-6">Fecha</th>
                         <th class="w-5">Hora</th>
-                        <th class="w-7">NIF</th>
+                        <th class="w-6">NIF</th>
                         <th>Nombre</th>
-                        <th class="w-6">Teléfono</th>
+                        <!-- <th class="w-6">Teléfono</th> -->
                         <th>Descripción</th>
                         <th>Observaciones</th>
                         <th class="w-4">C</th>
@@ -202,10 +202,10 @@
                                   <% } %>
                               </div>
                             </td>
-                            <td class="w-7">
+                            <td class="w-6">
                               <div class="d-flex py-1 align-items-center">
                                 <div class="flex-fill">
-                                  <div class="font-weight-medium"><%- element.ORGCIT %></div>
+                                  <div class="font-weight-medium"><%- element.ORGCIT.slice(0,8) %></div>
                                 </div>
                               </div>
                             </td>                            
@@ -230,7 +230,7 @@
                                 </div>
                               </div>
                             </td>
-                            <td class="w-7">
+                            <td class="w-6">
                               <div class="d-flex py-1 align-items-center">
                                 <div class="flex-fill">
                                   <div class="font-weight-medium"><%- element.NIFCON %></div>
@@ -244,13 +244,13 @@
                                 </div>
                               </div>
                             </td>
-                            <td class="w-6">
+                            <!-- <td class="w-6">
                               <div class="d-flex py-1 align-items-center">
                                 <div class="flex-fill">
                                   <div class="font-weight-medium"><%- element.TELCON %></div>
                                 </div>
                               </div>
-                            </td>                            
+                            </td>  -->
                             <td>
                               <div class="d-flex py-1 align-items-center">
                                 <div class="flex-fill">
@@ -368,7 +368,7 @@
               <path d="M12 9v2m0 4v.01"></path>
               <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
             </svg>
-            <h3>Asignar cita</h3>
+            <h3>Generar formulario desde cita</h3>
             <div id="texasi"></div>
           </div>
           <div class="modal-footer">
@@ -380,7 +380,7 @@
                 <div class="col">
                   <form action="/admin/citas/asignar" method="POST">
                     <input type="hidden" id="asign" name="idcita" value="">
-                    <button type="submit" class="btn btn-primary w-100">Asignar cita</button>
+                    <button type="submit" class="btn btn-primary w-100">Generar formulario</button>
                   </form>
                 </div>
               </div>
