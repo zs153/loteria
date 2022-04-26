@@ -171,7 +171,7 @@
                   <div class="card-body">
                     <table class="table table-vcenter table-striped table-fixHead sortable" id="tblCitas">
                       <thead>
-                      <tr>
+                      <tr class="header">
                         <th class="w-4"></th>
                         <th class="w-6">Origen</th>
                         <th class="w-8">Oficina</th>
@@ -418,30 +418,20 @@
       })
     </script>     
     <script>
-      function filtroCitas() {
-        const input = document.getElementById("buscarCitBox");
-        const filter = input.value.toUpperCase();
-        const table = document.getElementById("tblCitas");
-        const tr = table.getElementsByTagName("tr");
-        let arrTd
-        let td
-        let match = true
-
-        for (let i = 0; i < tr.length; i++) {
-          arrTd = tr[i].getElementsByTagName("td");
-          for(let j = 0; j < arrTd.length; j++) {
-            td = arrTd[j]
-            if (td) {
-              if (td.innerText.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-                break
-              } else {
-                tr[i].style.display = "none";
-              }
-            }
-          }
+      const filtroCitas = () => {
+        const trs = document.querySelectorAll('#tblCitas tr:not(.header)')
+        const filter = document.querySelector('#buscarCitBox').value
+        const regex = new RegExp(filter, 'i')
+        const isFoundInTds = td => regex.test(td.innerHTML)
+        const isFound = childrenArr => childrenArr.some(isFoundInTds)
+        const setTrStyleDisplay = ({ style, children }) => {
+          style.display = isFound([
+            ...children
+          ]) ? '' : 'none' 
         }
-      }
+        
+        trs.forEach(setTrStyleDisplay)
+      }      
     </script>
     <script>
       function sortTableByColumn(table, column, asc = true) {
@@ -475,6 +465,7 @@
           const currentIsAscending = headerCell.classList.contains("th-sort-asc");
 
           sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
+
         });
       });
     </script>
