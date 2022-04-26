@@ -203,12 +203,18 @@ class Cita {
   async getCitas() {
     let conn;
     let ret;
+    const esViernes = new Date().getDay() === 5;
 
     let strSql =
-      "SELECT cc.*,oo.desofi,TO_CHAR(cc.feccit,'DD/MM/YYYY') AS strfec,CASE WHEN gg.nifcog IS NULL THEN 'Sí' ELSE 'No' END AS comple FROM citas cc INNER JOIN oficinas oo ON oo.idofic = cc.oficit LEFT JOIN cognos gg ON gg.nifcog = cc.nifcon WHERE cc.stacit < :p_stacit AND cc.feccit BETWEEN TRUNC(SYSDATE) +1 +8/24 AND TRUNC(SYSDATE) +3 +24/24 ORDER BY cc.oficit, cc.feccit, cc.horcit";
+      "SELECT cc.*,oo.desofi,TO_CHAR(cc.feccit,'DD/MM/YYYY') AS strfec,CASE WHEN gg.nifcog IS NULL THEN 'Sí' ELSE 'No' END AS comple FROM citas cc INNER JOIN oficinas oo ON oo.idofic = cc.oficit LEFT JOIN cognos gg ON gg.nifcog = cc.nifcon WHERE cc.stacit < :p_stacit AND cc.feccit BETWEEN TRUNC(SYSDATE) -1 +8/24 AND TRUNC(SYSDATE) +2 +24/24 ORDER BY cc.oficit, cc.feccit, cc.horcit";
+
+    if (esViernes) {
+      strSql =
+        "SELECT cc.*,oo.desofi,TO_CHAR(cc.feccit,'DD/MM/YYYY') AS strfec,CASE WHEN gg.nifcog IS NULL THEN 'Sí' ELSE 'No' END AS comple FROM citas cc INNER JOIN oficinas oo ON oo.idofic = cc.oficit LEFT JOIN cognos gg ON gg.nifcog = cc.nifcon WHERE cc.stacit < :p_stacit AND cc.feccit BETWEEN TRUNC(SYSDATE) -1 +8/24 AND TRUNC(SYSDATE) +3 +24/24 ORDER BY cc.oficit, cc.feccit, cc.horcit";
+    }
     if (this.estado === -1) {
       strSql =
-        "SELECT cc.*,oo.desofi,TO_CHAR(cc.feccit,'DD/MM/YYYY') AS strfec, CASE WHEN gg.nifcog IS NULL THEN 'Sí' ELSE 'No' END AS comple FROM citas cc INNER JOIN oficinas oo ON oo.idofic = cc.oficit  LEFT JOIN cognos gg ON gg.nifcog = cc.nifcon WHERE cc.feccit BETWEEN TRUNC(SYSDATE) +1 +8/24 AND TRUNC(SYSDATE) +3 +24/24 ORDER BY cc.oficit, cc.feccit, cc.horcit";
+        "SELECT cc.*,oo.desofi,TO_CHAR(cc.feccit,'DD/MM/YYYY') AS strfec, CASE WHEN gg.nifcog IS NULL THEN 'Sí' ELSE 'No' END AS comple FROM citas cc INNER JOIN oficinas oo ON oo.idofic = cc.oficit  LEFT JOIN cognos gg ON gg.nifcog = cc.nifcon WHERE cc.feccit BETWEEN TRUNC(SYSDATE) -1 +8/24 AND TRUNC(SYSDATE) +2 +24/24 ORDER BY cc.oficit, cc.feccit, cc.horcit";
     }
 
     try {
