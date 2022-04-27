@@ -162,11 +162,14 @@
                       <div class="d-flex">
                         <div class="input-icon me-3">
                           <span class="input-icon-addon"><i class="bi bi-search"></i></span>
-                          <input type="text" class="form-control d-inline-block me-3" id="buscarCitBox" onkeyup="filtroCitas();" placeholder="Buscar..."
-                            aria-label="Buscar en citas">
+                          <% if (filtro == 'undefined') { %>                             
+                            <input type="text" class="form-control d-inline-block me-3" id="buscarCitBox" name="buscarCitBox" value ="" onkeyup="filtroCitas();" placeholder="Buscar..." aria-label="Buscar en citas">
+                          <% } else { %>
+                            <input type="text" class="form-control d-inline-block me-3" id="buscarCitBox" name="buscarCitBox" value="<%- filtro %>" onkeyup="filtroCitas();" placeholder="Buscar..." aria-label="Buscar en citas">
+                          <% } %>
                         </div>
                       </div>
-                    </div>                    
+                    </div>
                   </div>
                   <div class="card-body">
                     <table class="table table-vcenter table-striped table-fixHead sortable" id="tblCitas">
@@ -420,7 +423,7 @@
     <script>
       const filtroCitas = () => {
         const trs = document.querySelectorAll('#tblCitas tr:not(.header)')
-        const filter = document.querySelector('#buscarCitBox').value
+        const filter = document.querySelector('#buscarCitBox').value        
         const regex = new RegExp(filter, 'i')
         const isFoundInTds = td => regex.test(td.innerHTML)
         const isFound = childrenArr => childrenArr.some(isFoundInTds)
@@ -429,9 +432,22 @@
             ...children
           ]) ? '' : 'none' 
         }
+        setCookie('filtro', filter, .5) // medio dia
         
         trs.forEach(setTrStyleDisplay)
-      }      
+      }
+      function setCookie(name,value,days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days*24*60*60*1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (encodeURIComponent(value) || "")  + expires + "; path=/";
+      }
+      function deleteCookie() {
+        document.cookie = 'filtro=; expires=Thu, 01 Jan 1970 00:00:01 GMT; Path=/;'
+      }
     </script>
     <script>
       function sortTableByColumn(table, column, asc = true) {
@@ -465,7 +481,6 @@
           const currentIsAscending = headerCell.classList.contains("th-sort-asc");
 
           sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
-
         });
       });
     </script>

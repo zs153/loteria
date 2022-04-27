@@ -28,8 +28,9 @@ export const mainPage = async (req, res) => {
       estadosCita,
       verTodo,
     };
+    const filtro = decodeURIComponent(req.cookies.filtro);
 
-    res.render("admin/citas", { user, datos });
+    res.render("admin/citas", { user, datos, filtro });
   } catch (error) {
     const msg = "No se ha podido acceder a los datos de la aplicación.";
 
