@@ -1,100 +1,109 @@
-import Oficina from '../models/oficina.model'
+import * as DAL from '../models/oficina.model'
 
-let oficina = new Oficina()
+const insertFromRec = (req) => {
+  const oficina = {
+    desofi: req.body.oficina.desofi,
+    codofi: req.body.oficina.codofi,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.usumov,
+    tipmov: req.body.movimiento.tipmov,
+  }
 
-export const getOficinas = async (req, res) => {
+  return Object.assign(oficina, movimiento)
+}
+const updateFromRec = (req) => {
+  const oficina = {
+    idofic: req.body.oficina.idofic,
+    desofi: req.body.oficina.desofi,
+    codofi: req.body.oficina.codofi,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.usumov,
+    tipmov: req.body.movimiento.tipmov,
+  }
+
+  return Object.assign(oficina, movimiento)
+}
+const deleteFromRec = (req) => {
+  const oficina = {
+    idofic: req.body.oficina.idofic,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.usumov,
+    tipmov: req.body.movimiento.tipmov,
+  }
+
+  return Object.assign(oficina, movimiento)
+}
+
+export const oficina = async (req, res) => {
+  const context = req.body.oficina
+
   try {
-    const { err, dat } = await oficina.getOficinas()
+    const result = await DAL.find(context)
 
-    if (err) {
-      return res.status(404).json({ err })
+    if (result.length === 1) {
+      return res.status(200).json(result[0])
     } else {
-      return res.status(201).json({ dat })
+      res.status(404).end()
     }
-  } catch (error) {
-    res.status(500).status(error)
+  } catch (err) {
+    res.status(500).end()
   }
 }
-export const getOficina = async (req, res) => {
-  oficina.id = req.body.idofic
+export const oficinas = async (req, res) => {
+  const context = req.body.oficina
 
   try {
-    const { err, dat } = await oficina.getOficina()
+    const result = await DAL.findAll(context)
 
-    if (err) {
-      res.status(404).json(err)
+    if (result !== null) {
+      res.status(200).json(result)
     } else {
-      return res.status(200).send(oficina)
+      res.status(404).end()
     }
-  } catch (error) {
-    return res.status(500).json({ err })
+  } catch (err) {
+    res.status(500).end()
   }
 }
-export const insertOficina = async (req, res) => {
-  const { usuarioMov, tipoMov } = req.body.movimiento
-  const user = req.body.user
 
-  // oficina
-  oficina.descripcion = req.body.oficina.desofi
-  oficina.codigo = req.body.oficina.codofi
-  // movimiento
-  oficina.movimiento.usuario = usuarioMov
-  oficina.movimiento.tipo = tipoMov
-
+export const crear = async (req, res) => {
   try {
-    const { err, dat } = await oficina.insert()
+    const result = await DAL.insert(insertFromRec(req))
 
-    if (err) {
-      res.status(403).json(err)
+    if (result !== null) {
+      res.status(200).json(result)
     } else {
-      res.status(202).json(oficina)
+      res.status(404).end()
     }
-  } catch (error) {
-    res.status(500).json({ err })
+  } catch (err) {
+    res.status(500).end()
   }
 }
-export const updateOficina = async (req, res) => {
-  const { usuarioMov, tipoMov } = req.body.movimiento
-
-  // oficina
-  oficina.id = req.body.oficina.idofic
-  oficina.descripcion = req.body.oficina.desofi
-  oficina.codigo = req.body.oficina.codofi
-  // movimiento
-  oficina.movimiento.usuario = usuarioMov
-  oficina.movimiento.tipo = tipoMov
-
+export const modificar = async (req, res) => {
   try {
-    const { err, dat } = await oficina.update()
+    const result = await DAL.update(updateFromRec(req))
 
-    if (err) {
-      res.status(403).json(err)
+    if (result !== null) {
+      res.status(200).json(result)
     } else {
-      res.status(202).json(oficina)
+      res.status(404).end()
     }
-  } catch (error) {
-    res.status(500).json({ err })
+  } catch (err) {
+    res.status(500).end()
   }
 }
-export const deleteOficina = async (req, res) => {
-  const { usuarioMov, tipoMov } = req.body.movimiento
-  const user = req.body.user
-
-  // oficina
-  oficina.id = req.body.oficina.idofic
-  // movimiento
-  oficina.movimiento.usuario = usuarioMov
-  oficina.movimiento.tipo = tipoMov
-
+export const borrar = async (req, res) => {
   try {
-    const { err, dat } = await oficina.delete()
+    const result = await DAL.remove(deleteFromRec(req))
 
-    if (err) {
-      res.status(403).json(err)
+    if (result !== null) {
+      res.status(200).json(result)
     } else {
-      res.status(202).json(oficina)
+      res.status(404).end()
     }
-  } catch (error) {
-    res.status(500).json({ err })
+  } catch (err) {
+    res.status(500).end()
   }
 }

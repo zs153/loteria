@@ -1,289 +1,211 @@
-import Formulario from '../models/formulario.model'
-import Usuario from '../models/usuario.model'
-import SMS from '../models/sms.model'
-import bcrypt from 'bcrypt'
+import * as DAL from '../models/documento.model'
 
-export const getFormularios = async (req, res) => {
-  const formulario = new Formulario()
-  formulario.estado = req.body.documento.stadoc
-  formulario.liquidador = req.body.documento.liqdoc
+const insertFromRec = (req) => {
+  const documento = {
+    fecdoc: req.body.documento.FECDOC,
+    nifcon: req.body.documento.NIFDOC,
+    nomcon: req.body.documento.NOMCON,
+    emacon: req.body.documento.EMACON,
+    telcon: req.body.documento.TELCON,
+    movcon: req.body.documento.MOVCON,
+    refdoc: req.body.documento.REFDOC,
+    tipdoc: req.body.documento.TIPDOC,
+    ejedoc: req.body.documento.EJEDOC,
+    ofidoc: req.body.documento.OFIDOC,
+    obsdoc: req.body.documento.OBSDOC,
+    fundoc: req.body.documento.FUNDOC,
+    liqdoc: req.body.documento.LIQDOC,
+    stadoc: req.body.documento.STADOC,
+    }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(documento, movimiento)
+}
+const updateFromRec = (req) => {
+  const documento = {
+    iddocu: req.body.documento.IDDOCU,
+    fecdoc: req.body.documento.FECDOC,
+    nifcon: req.body.documento.NIFDOC,
+    nomcon: req.body.documento.NOMCON,
+    emacon: req.body.documento.EMACON,
+    telcon: req.body.documento.TELCON,
+    movcon: req.body.documento.MOVCON,
+    refdoc: req.body.documento.REFDOC,
+    tipdoc: req.body.documento.TIPDOC,
+    ejedoc: req.body.documento.EJEDOC,
+    ofidoc: req.body.documento.OFIDOC,
+    obsdoc: req.body.documento.OBSDOC,
+    fundoc: req.body.documento.FUNDOC,
+    liqdoc: req.body.documento.LIQDOC,
+    stadoc: req.body.documento.STADOC,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(documento, movimiento)
+}
+const deleteFromRec = (req) => {
+  const documento = {
+    iddocu: req.body.documento.IDDOCU,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(documento, movimiento)
+}
+const asignarFromRec = (req) => {
+  const documento = {
+    iddocu: req.body.fraude.IDDOCU,
+    liqdoc: req.body.fraude.LIQDOC,
+    stadoc: req.body.fraude.STADOC,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(documento, movimiento)
+}
+const unasignarFromRec = (req) => {
+  const documento = {
+    IDDOCU: req.body.documento.IDDOCU,
+    LIQDOC: req.body.documento.LIQDOC,
+    STADOC: req.body.documento.STADOC,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(documento, movimiento)
+}
+const resolverFromRec = (req) => {
+  const documento = {
+    IDDOCU: req.body.documento.IDDOCU,
+    LIQDOC: req.body.documento.LIQDOC,
+    STADOC: req.body.documento.STADOC,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(documento, movimiento)
+}
+
+export const documento = async (req, res) => {
+  const context = req.body.documento
 
   try {
-    const { err, dat } = await formulario.getFormularios()
+    const result = await DAL.find(context)
 
-    if (err) {
-      return res.status(404).json({ err })
+    if (result.length === 1) {
+      return res.status(200).json(result[0])
     } else {
-      return res.status(200).json({ dat })
+      res.status(404).end()
     }
-  } catch (error) {
-    res.status(500).json(error)
+  } catch (err) {
+    res.status(500).end()
   }
 }
-export const getFormulario = async (req, res) => {
-  const formulario = new Formulario()
-  formulario.id = req.body.id
+export const documentos = async (req, res) => {
+  const context = req.body.documento
 
   try {
-    const { err, dat } = await formulario.getFormulario()
+    const result = await DAL.findAll(context)
 
-    if (err) {
-      res.status(404).send(err)
+    if (result !== null) {
+      res.status(200).json(result)
     } else {
-      res.status(200).send(formulario)
+      res.status(404).end()
     }
-  } catch (error) {
-    res.status(500).json(error)
+  } catch (err) {
+    res.status(500).end()
   }
 }
-export const getFormularioByRef = async (req, res) => {
-  const formulario = new Formulario()
-  formulario.referencia = req.body.referencia
 
+export const crear = async (req, res) => {
   try {
-    const { err, dat } = await formulario.getFormularioByRef()
+    const result = await DAL.insert(insertFromRec(req))
 
-    if (err) {
-      res.status(404).send(err)
+    if (result !== null) {
+      res.status(200).json(result)
     } else {
-      res.status(200).send(formulario)
+      res.status(404).end()
     }
-  } catch (error) {
-    res.status(500).json(error)
+  } catch (err) {
+    res.status(500).end()
   }
 }
-export const insertFormulario = async (req, res) => {
-  const { usuarioMov, tipoMov } = req.body.movimiento
-  const formulario = new Formulario()
-
-  // formulario
-  formulario.fecha = req.body.documento.fecdoc
-  formulario.nif = req.body.documento.nifcon
-  formulario.nombre = req.body.documento.nomcon
-  formulario.email = req.body.documento.emacon
-  formulario.telefono = req.body.documento.telcon
-  formulario.movil = req.body.documento.movcon
-  formulario.referencia = req.body.documento.refdoc
-  formulario.tipo = req.body.documento.tipdoc
-  formulario.ejercicio = req.body.documento.ejedoc
-  formulario.oficina = req.body.documento.ofidoc
-  formulario.observaciones = req.body.documento.obsdoc
-  formulario.funcionario = req.body.documento.fundoc
-  formulario.liquidador = req.body.documento.liqdoc
-  formulario.estado = req.body.documento.stadoc
-  // movimiento
-  formulario.movimiento.usuario = usuarioMov
-  formulario.movimiento.tipo = tipoMov
-
+export const modificar = async (req, res) => {
   try {
-    const { err, dat } = await formulario.insert()
+    const result = await DAL.update(updateFromRec(req))
 
-    if (err) {
-      res.status(408).json(err)
+    if (result !== null) {
+      res.status(200).json(result)
     } else {
-      res.status(200).json(formulario)
+      res.status(404).end()
     }
-  } catch (error) {
-    res.status(500).json(error)
+  } catch (err) {
+    res.status(500).end()
   }
 }
-export const updateFormulario = async (req, res) => {
-  const formulario = new Formulario()
-  const { usuarioMov, tipoMov } = req.body.movimiento
-
-  // formulario
-  formulario.id = req.body.documento.iddocu
-  formulario.fecha = req.body.documento.fecdoc
-  formulario.nif = req.body.documento.nifcon
-  formulario.nombre = req.body.documento.nomcon
-  formulario.email = req.body.documento.emacon
-  formulario.telefono = req.body.documento.telcon
-  formulario.movil = req.body.documento.movcon
-  formulario.tipo = req.body.documento.tipdoc
-  formulario.ejercicio = req.body.documento.ejedoc
-  formulario.oficina = req.body.documento.ofidoc
-  formulario.observaciones = req.body.documento.obsdoc
-  // movimiento
-  formulario.movimiento.usuario = usuarioMov
-  formulario.movimiento.tipo = tipoMov
-
+export const borrar = async (req, res) => {
   try {
-    const { err, dat } = await formulario.update()
+    const result = await DAL.remove(deleteFromRec(req))
 
-    if (err) {
-      res.status(403).json(err)
+    if (result !== null) {
+      res.status(200).json(result)
     } else {
-      res.status(200).json(formulario)
+      res.status(404).end()
     }
-  } catch (error) {
-    res.status(500).json(error)
+  } catch (err) {
+    res.status(500).end()
   }
 }
-export const deleteFormulario = async (req, res) => {
-  const { usuarioMov, tipoMov } = req.body.movimiento
-
-  const formulario = new Formulario()
-  // formulario
-  formulario.id = req.body.documento.id
-  // movimiento
-  formulario.movimiento.usuario = usuarioMov
-  formulario.movimiento.tipo = tipoMov
-
+export const asignar = async (req, res) => {
   try {
-    const { err, dat } = await formulario.delete()
+    const result = await DAL.asignar(asignarFromRec(req))
 
-    if (err) {
-      res.status(403).json(err)
+    if (result !== null) {
+      res.status(200).json(result)
     } else {
-      res.status(200).json(formulario)
+      res.status(404).end()
     }
-  } catch (error) {
-    res.status(500).json(error)
+  } catch (err) {
+    res.status(500).end()
   }
 }
-export const cambioEstado = async (req, res) => {
-  const { usuarioMov, tipoMov } = req.body.movimiento
-  const { id, liquidador, estado } = req.body.documento
-  const formulario = new Formulario()
-
-  // formulario
-  formulario.id = id
-  formulario.liquidador = liquidador
-  formulario.estado = estado
-  // movimiento
-  formulario.movimiento.usuario = usuarioMov
-  formulario.movimiento.tipo = tipoMov
-
+export const unasignar = async (req, res) => {
   try {
-    const { err, dat } = await formulario.cambioEstado()
+    const result = await DAL.unasing(unasignFromRec(req))
 
-    if (err) {
-      res.status(403).json(err)
+    if (result !== null) {
+      res.status(200).json(result)
     } else {
-      res.status(200).json(formulario)
+      res.status(404).end()
     }
-  } catch (error) {
-    res.status(500).json(error)
+  } catch (err) {
+    res.status(500).end()
   }
 }
-export const estadisticaFormularios = async (req, res) => {
-  const { desde, hasta } = req.body.periodo
-  const formulario = new Formulario()
-  formulario.periodo = {
-    desde,
-    hasta,
-  }
-
+export const resolver = async (req, res) => {
   try {
-    const { err, dat } = await formulario.estadistica()
+    const result = await DAL.cerrar(resolverFromRec(req))
 
-    if (err) {
-      return res.status(404).json(err)
+    if (result !== null) {
+      res.status(200).json(result)
     } else {
-      return res.status(200).json(dat)
+      res.status(404).end()
     }
-  } catch (error) {
-    res.status(500).json(error)
-  }
-}
-export const cambioPasswordFormulario = async (req, res) => {
-  const { usuarioMov, tipoMov } = req.body.movimiento
-  const passSalt = await bcrypt.genSalt(10)
-  const passHash = await bcrypt.hash(req.body.usuario.password, passSalt)
-  const usuario = new Usuario()
-
-  usuario.id = req.body.usuario.id
-  usuario.password = passHash
-  // movimiento
-  usuario.movimiento.usuario = usuarioMov
-  usuario.movimiento.tipo = tipoMov
-
-  try {
-    const { err, dat } = await usuario.cambioPassword()
-
-    if (err) {
-      res.status(404).json(err)
-    } else {
-      res.status(200).json(usuario)
-    }
-  } catch (error) {
-    res.status(500).json(error)
-  }
-}
-export const updatePerfilFormulario = async (req, res) => {
-  const { usuarioMov, tipoMov } = req.body.movimiento
-  const usuario = new Usuario()
-
-  usuario.id = req.body.usuario.id
-  usuario.nombre = req.body.usuario.nombre
-  usuario.email = req.body.usuario.email
-  usuario.telefono = req.body.usuario.telefono
-  usuario.oficina = req.body.usuario.oficina
-  // movimiento
-  usuario.movimiento.usuario = usuarioMov
-  usuario.movimiento.tipo = tipoMov
-
-  try {
-    const { err, dat } = await usuario.updatePerfil()
-
-    if (err) {
-      res.status(404).json(err)
-    } else {
-      res.status(200).json(usuario)
-    }
-  } catch (error) {
-    res.status(500).json(error)
-  }
-}
-export const sms = async (req, res) => {
-  const { usuarioMov, tipoMov } = req.body.movimiento
-  const sms = new SMS()
-
-  // sms
-  sms.texto = req.body.sms.texsms
-  sms.movil = req.body.sms.movsms
-  sms.estado = req.body.sms.stasms
-  // documento
-  sms.idDocumento = req.body.sms.iddocu
-  // movimiento
-  sms.movimiento.usuario = usuarioMov
-  sms.movimiento.tipo = tipoMov
-
-  try {
-    const { err, dat } = await sms.insert()
-
-    if (err) {
-      res.status(403).json(err)
-    } else {
-      res.status(200).json(sms)
-    }
-  } catch (error) {
-    res.status(500).json(error)
-  }
-}
-export const referenciaSms = async (req, res) => {
-  const { referencia } = req.body.referencia
-  const sms = new SMS()
-
-  // sms
-  sms.texto = req.body.sms.texto
-  sms.movil = req.body.sms.movil
-  sms.estado = req.body.sms.estado
-  // documento
-  sms.idDocumento = req.body.sms.idDocumento
-  // movimiento
-  sms.movimiento.usuario = usuarioMov
-  sms.movimiento.tipo = tipoMov
-
-  try {
-    const { err, dat } = await sms.insert()
-
-    if (err) {
-      res.status(403).json(err)
-    } else {
-      res.status(200).json(sms)
-    }
-  } catch (error) {
-    res.status(500).json('No se ha podido insertar el mensaje sms')
+  } catch (err) {
+    res.status(500).end()
   }
 }

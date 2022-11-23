@@ -1,259 +1,96 @@
-import oracledb from "oracledb";
-import Movimiento from "./movimiento.model";
-import { connectionString } from "../settings";
+import oracledb from 'oracledb'
+import { simpleExecute } from '../services/database.js'
 
-class Oficina {
-  constructor(id, descripcion, codigo) {
-    this.idofic = id;
-    this.desofi = descripcion;
-    this.codofi = codigo;
+const baseQuery = `SELECT 
+    idofic,
+    desofi,
+    codofi
+  FROM oficinas
+`
+const insertSql = `BEGIN FRAUDE_PKG.INSERTOFICINA(
+    :desofi, 
+    :codofi,
+    :usumov,
+    :tipmov,
+    :idofic
+  ); END;
+`
+const updateSql = `BEGIN FRAUDE_PKG.UPDATEOFICINA(
+  :idofic,
+  :desofi, 
+  :codofi,
+  :usumov,
+  :tipmov
+); END;
+`
+const deleteSql = `BEGIN FRAUDE_PKG.DELETEOFICINA(
+    :idofic,
+    :usumov,
+    :tipmov 
+  ); END;
+`
 
-    this.movi = new Movimiento();
+export const find = async (context) => {
+  let query = baseQuery
+  let binds = {}
+
+  if (context.idofic) {
+    binds.idofic = context.idofic
+    query += `WHERE idofic = :idofic`
+  }
+  if (context.codofi) {
+    binds.codofi = context.codofi
+    query += `WHERE codofi = :codofi`
   }
 
-  get id() {
-    return this.idofic;
-  }
-  set id(value) {
-    this.idofic = value;
-  }
-  get descripcion() {
-    return this.desofi;
-  }
-  set descripcion(value) {
-    this.desofi = value;
-  }
-  get codigo() {
-    return this.codofi;
-  }
-  set codigo(value) {
-    this.codofi = value;
-  }
-
-  // movimiento
-  get movimiento() {
-    return this.movi;
-  }
-  set movimiento(value) {
-    this.movi = value;
-  }
-
-  // procedimientos
-  async getOficina() {
-    let conn;
-    let ret;
-
-    try {
-      const conn = await oracledb.getConnection(connectionString);
-      const result = await conn.execute(
-        "SELECT * FROM oficinas WHERE idofic = :p_idofic",
-        [this.id],
-        {
-          outFormat: oracledb.OUT_FORMAT_OBJECT,
-        }
-      );
-
-      if (result) {
-        this.id = result.rows[0].IDOFIC;
-        this.descripcion = result.rows[0].DESOFI;
-        this.codigo = result.rows[0].CODOFI;
-
-        ret = {
-          err: undefined,
-          dat: result.rows,
-        };
-      } else {
-        ret = {
-          err: 1,
-          dat: "No hay registro",
-        };
-      }
-    } catch (error) {
-      ret = {
-        err: error,
-        dat: undefined,
-      };
-    } finally {
-      if (conn) {
-        try {
-          await conn.close();
-        } catch (error) {
-          ret = {
-            err: error,
-            dat: undefined,
-          };
-        }
-      }
-    }
-
-    return ret;
-  }
-  async getOficinas() {
-    let conn;
-    let ret;
-
-    try {
-      const conn = await oracledb.getConnection(connectionString);
-      const result = await conn.execute(
-        "SELECT * FROM oficinas ORDER BY desofi",
-        [],
-        {
-          outFormat: oracledb.OUT_FORMAT_OBJECT,
-        }
-      );
-
-      ret = {
-        err: undefined,
-        dat: result.rows,
-      };
-    } catch (error) {
-      ret = {
-        err: error,
-        dat: undefined,
-      };
-    } finally {
-      if (conn) {
-        try {
-          await conn.close();
-        } catch (error) {
-          ret = {
-            err: error,
-            dat: undefined,
-          };
-        }
-      }
-    }
-
-    return ret;
-  }
-  async insert() {
-    let conn;
-    let ret;
-
-    try {
-      const conn = await oracledb.getConnection(connectionString);
-      const result = await conn.execute(
-        "BEGIN FORMULARIOS_PKG.INSERTOFICINA(:p_desofi, :p_codofi, :p_usumov, :p_tipmov, :p_idofic); END;",
-        {
-          // Oficina
-          p_desofi: this.descripcion,
-          p_codofi: this.codigo,
-          // movimiento
-          p_usumov: this.movimiento.usuario,
-          p_tipmov: this.movimiento.tipo,
-          // retorno
-          p_idofic: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
-        }
-      );
-
-      ret = {
-        err: undefined,
-        dat: result.outBinds,
-      };
-    } catch (error) {
-      ret = {
-        err: error,
-        dat: undefined,
-      };
-    } finally {
-      if (conn) {
-        try {
-          await conn.close();
-        } catch (error) {
-          ret = {
-            err: error,
-            dat: undefined,
-          };
-        }
-      }
-    }
-
-    return ret;
-  }
-  async update() {
-    let conn;
-    let ret;
-
-    try {
-      const conn = await oracledb.getConnection(connectionString);
-      await conn.execute(
-        "BEGIN FORMULARIOS_PKG.UPDATEOFICINA(:p_idofic, :p_desofi, :p_codofi, :p_usumov, :p_tipmov); END;",
-        {
-          // Oficina
-          p_idofic: this.id,
-          p_desofi: this.descripcion,
-          p_codofi: this.codigo,
-          // movimiento
-          p_usumov: this.movimiento.usuario,
-          p_tipmov: this.movimiento.tipo,
-        }
-      );
-
-      ret = {
-        err: undefined,
-        dat: this.id,
-      };
-    } catch (error) {
-      ret = {
-        err: error,
-        dat: undefined,
-      };
-    } finally {
-      if (conn) {
-        try {
-          await conn.close();
-        } catch (error) {
-          ret = {
-            err: error,
-            dat: undefined,
-          };
-        }
-      }
-    }
-
-    return ret;
-  }
-  async delete() {
-    let conn;
-    let ret;
-
-    try {
-      conn = await oracledb.getConnection(connectionString);
-      await conn.execute(
-        "BEGIN FORMULARIOS_PKG.DELETEOFICINA(:p_idofic, :p_usumov, :p_tipmov); END;",
-        {
-          // Oficina
-          p_idofic: this.id,
-          // movimiento
-          p_usumov: this.movimiento.usuario,
-          p_tipmov: this.movimiento.tipo,
-        }
-      );
-
-      ret = {
-        err: undefined,
-        dat: this.id,
-      };
-    } catch (error) {
-      ret = {
-        err: error,
-        dat: undefined,
-      };
-    } finally {
-      if (conn) {
-        try {
-          await conn.close();
-        } catch (error) {
-          ret = {
-            err: error,
-            dat: undefined,
-          };
-        }
-      }
-    }
-
-    return ret;
-  }
+  const result = await simpleExecute(query, binds)
+  return result.rows
 }
+export const findAll = async () => {
+  let query = baseQuery
 
-export default Oficina;
+  const result = await simpleExecute(query)
+  return result.rows
+}
+export const insert = async (bind) => {
+  bind.idofic = {
+    dir: oracledb.BIND_OUT,
+    type: oracledb.NUMBER,
+  }
+
+  try {
+    const result = await simpleExecute(insertSql, bind)
+
+    bind.idofic = await result.outBinds.idofic
+  } catch (error) {
+    bind = null
+  }
+
+  return bind
+}
+export const update = async (bind) => {
+  let result
+
+  try {
+    await simpleExecute(updateSql, bind)
+
+    result = bind
+  } catch (error) {
+    result = null
+  }
+
+  return result
+}
+export const remove = async (bind) => {
+  let result
+
+  try {
+    await simpleExecute(deleteSql, bind)
+
+    result = bind
+  } catch (error) {
+    result = null
+  }
+
+  return result
+}

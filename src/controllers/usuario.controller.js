@@ -1,164 +1,234 @@
-import Usuario from '../models/usuario.model'
-import bcrypt from 'bcrypt'
+import * as DAL from '../models/usuario.model'
 
-let usuario = new Usuario()
+const insertFromRec = (req) => {
+  const usuario = {
+    nomusu: req.body.usuario.NOMUSU,
+    ofiusu: req.body.usuario.OFIUSU,
+    rolusu: req.body.usuario.ROLUSU,
+    userid: req.body.usuario.USERID,
+    emausu: req.body.usuario.EMAUSU,
+    perusu: req.body.usuario.PERUSU,
+    telusu: req.body.usuario.TELUSU,
+    pwdusu: req.body.usuario.PWDUSU,
+    stausu: req.body.usuario.STAUSU,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
 
-export const getUsuarios = async (req, res) => {
+  return Object.assign(usuario, movimiento)
+}
+const updateFromRec = (req) => {
+  const usuario = {
+    idusua: req.body.usuario.IDUSUA,
+    nomusu: req.body.usuario.NOMUSU,
+    ofiusu: req.body.usuario.OFIUSU,
+    rolusu: req.body.usuario.ROLUSU,
+    userid: req.body.usuario.USERID,
+    emausu: req.body.usuario.EMAUSU,
+    perusu: req.body.usuario.PERUSU,
+    telusu: req.body.usuario.TELUSU,
+    stausu: req.body.usuario.STAUSU,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(usuario, movimiento)
+}
+const deleteFromRec = (req) => {
+  const usuario = {
+    idusua: req.body.usuario.IDUSUA,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(usuario, movimiento)
+}
+const registroFromRec = (req) => {
+  const usuario = {
+    nomusu: req.body.usuario.NOMUSU,
+    ofiusu: req.body.usuario.OFIUSU,
+    rolusu: req.body.usuario.ROLUSU,
+    userid: req.body.usuario.USERID,
+    emausu: req.body.usuario.EMAUSU,
+    perusu: req.body.usuario.PERUSU,
+    telusu: req.body.usuario.TELUSU,
+    stausu: req.body.usuario.STAUSU,
+    pwdusu: req.body.usuario.PWDUSU,
+    tipmov: req.body.usuario.TIPMOV,
+  }
+  const movimiento = {
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+  const passwd = {
+    saltus: req.body.passwd.SALTUS,
+  }
+
+  return Object.assign(usuario, movimiento, passwd)
+}
+const cambioFromRec = (req) => {
+  const cambio = {
+    idusua: req.body.usuario.IDUSUA,
+    pwdusu: req.body.usuario.PWDUSU,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(cambio, movimiento)
+}
+const olvidoFromRec = (req) => {
+  const usuario = {
+    emausu: req.body.usuario.EMAUSU,
+    pwdusu: req.body.usuario.PWDUSU,
+  }
+  const movimiento = {
+    tipmov: req.body.movimiento.TIPMOV,
+    saltus: req.body.movimiento.SALTUS,
+  }
+
+  return Object.assign(usuario, movimiento)
+}
+const perfilFromRec = (req) => {
+  const perfil = {
+    idusua: req.body.usuario.IDUSUA,
+    nomusu: req.body.usuario.NOMUSU,
+    ofiusu: req.body.usuario.OFIUSU,
+    rolusu: req.body.usuario.ROLUSU,
+    userid: req.body.usuario.USERID,
+    emausu: req.body.usuario.EMAUSU,
+    perusu: req.body.usuario.PERUSU,
+    telusu: req.body.usuario.TELUSU,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(perfil, movimiento)
+}
+
+export const usuario = async (req, res) => {
+  const context = req.body.usuario
+
   try {
-    const { err, dat } = await usuario.getUsuarios()
+    const rows = await DAL.find(context)
 
-    if (err) {
-      return res.status(404).json({ err })
+    if (rows.length === 1) {
+      return res.status(200).json(rows[0])
     } else {
-      return res.status(200).json({ dat })
+      res.status(404).end()
     }
-  } catch (error) {
-    res.status(500).json(error)
+  } catch (err) {
+    res.status(500).end()
   }
 }
-export const getUsuario = async (req, res) => {
-  usuario.userid = req.body.userid
-  try {
-    const { err, dat } = await usuario.getUsuarioByUserID()
+export const usuarios = async (req, res) => {
+  const context = req.body.usuario
 
-    if (err) {
-      res.status(412).send(err)
-    } else {
-      res.status(200).send(usuario)
-    }
-  } catch (error) {
-    return res.status(500).json(err)
+  try {
+    const rows = await DAL.findAll(context)
+
+    res.status(200).json(rows)
+  } catch (err) {
+    res.status(400).end()
   }
 }
-export const insertUsuario = async (req, res) => {
-  const { usuarioMov, tipoMov } = req.body.movimiento
 
-  const passSalt = await bcrypt.genSalt(10)
-  const passHash = await bcrypt.hash(req.body.usuario.userid, passSalt)
-
-  // usuario
-  usuario.nombre = req.body.usuario.nomusu
-  usuario.oficina = req.body.usuario.ofiusu
-  usuario.rol = req.body.usuario.rolusu
-  usuario.userID = req.body.usuario.userid
-  usuario.email = req.body.usuario.emausu
-  usuario.perfil = req.body.usuario.perusu
-  usuario.telefono = req.body.usuario.telusu
-  usuario.password = passHash
-  usuario.estado = req.body.usuario.stausu
-  // movimiento
-  usuario.movimiento.usuario = usuarioMov
-  usuario.movimiento.tipo = tipoMov
-
+export const insert = async (req, res) => {
   try {
-    const { err, dat } = await usuario.insert()
+    const result = await DAL.insert(insertFromRec(req))
 
-    if (err) {
-      res.status(404).json(err)
+    if (result !== null) {
+      res.status(200).json(result)
     } else {
-      usuario.id = dat.p_idusua
-
-      res.status(200).json(usuario)
+      res.status(404).end()
     }
-  } catch (error) {
-    res.status(500).json(error)
+  } catch (err) {
+    res.status(500).end()
   }
 }
-export const updateUsuario = async (req, res) => {
-  const { usuarioMov, tipoMov } = req.body.movimiento
-
-  usuario.id = req.body.usuario.idusua
-  usuario.nombre = req.body.usuario.nomusu
-  usuario.oficina = req.body.usuario.ofiusu
-  usuario.rol = req.body.usuario.rolusu
-  usuario.userID = req.body.usuario.userid
-  usuario.email = req.body.usuario.emausu
-  usuario.perfil = req.body.usuario.perusu
-  usuario.telefono = req.body.usuario.telusu
-  usuario.estado = req.body.usuario.stausu
-  // movimiento
-  usuario.movimiento.usuario = usuarioMov
-  usuario.movimiento.tipo = tipoMov
-
+export const update = async (req, res) => {
   try {
-    const { err, dat } = await usuario.update()
+    const result = await DAL.update(updateFromRec(req))
 
-    if (err) {
-      res.status(404).json(err)
+    if (result !== null) {
+      res.status(200).json(result)
     } else {
-      res.status(200).json(usuario)
+      res.status(404).end()
     }
-  } catch (error) {
-    res.status(500).json(error)
+  } catch (err) {
+    res.status(500).end()
   }
 }
-export const deleteUsuario = async (req, res) => {
-  const { usuarioMov, tipoMov } = req.body.movimiento
-
-  // usuario
-  usuario.id = req.body.usuario.idusua
-  // movimiento
-  usuario.movimiento.usuario = usuarioMov
-  usuario.movimiento.tipo = tipoMov
-
+export const remove = async (req, res) => {
   try {
-    const { err, dat } = await usuario.delete()
+    const result = await DAL.remove(deleteFromRec(req))
 
-    if (err) {
-      res.status(404).json({ err })
+    if (result !== null) {
+      res.status(200).json(result)
     } else {
-      res.status(200).json(usuario)
+      res.status(404).end()
     }
-  } catch (error) {
-    res.status(500).json(error)
+  } catch (err) {
+    res.status(500).end()
+  }
+}
+export const registro = async (req, res) => {
+  try {
+    const result = await DAL.register(registroFromRec(req))
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(403).end()
   }
 }
 export const cambioPassword = async (req, res) => {
-  const { id, password } = req.body.usuario
-  const { usuarioMov, tipoMov } = req.body.movimiento
-
-  const passSalt = await bcrypt.genSalt(10)
-  const passHash = await bcrypt.hash(password, passSalt)
-
-  usuario.id = id
-  usuario.password = passHash
-  // movimiento
-  usuario.movimiento.usuario = usuarioMov
-  usuario.movimiento.tipo = tipoMov
-
   try {
-    const { err, dat } = await usuario.cambioPassword()
+    const result = await DAL.change(cambioFromRec(req))
 
-    if (err) {
-      res.status(404).json(err)
+    if (result !== null) {
+      res.status(200).json(result)
     } else {
-      res.status(200).json(usuario)
+      res.status(404).end()
     }
-  } catch (error) {
-    res.status(500).json(error)
+  } catch (err) {
+    res.status(500).end()
   }
 }
-export const updatePerfil = async (req, res) => {
-  const { id, nombre, email, telefono } = req.body.usuario
-  const { usuarioMov, tipoMov } = req.body.movimiento
-
-  usuario.id = id
-  usuario.nombre = nombre
-  usuario.email = email
-  usuario.telefono = telefono
-  // movimiento
-  usuario.movimiento.usuario = usuarioMov
-  usuario.movimiento.tipo = tipoMov
-
+export const olvidoPassword = async (req, res) => {
   try {
-    const { err, dat } = await usuario.updatePerfil()
+    const result = await DAL.forgot(olvidoFromRec(req))
 
-    if (err) {
-      res.status(404).json(err)
+    if (result !== null) {
+      res.status(200).json(result)
     } else {
-      res.status(200).json(usuario)
+      res.status(404).end()
     }
-  } catch (error) {
-    res.status(500).json(error)
+  } catch (err) {
+    res.status(403).end()
+  }
+}
+export const perfil = async (req, res) => {
+  try {
+    const result = await DAL.profile(perfilFromRec(req))
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
   }
 }
