@@ -7,13 +7,7 @@ import mainRouter from "./routes/main.router";
 import adminRouter from "./routes/admin.router";
 import loginRouter from "./routes/login.router";
 import usuarioRouter from "./routes/usuario.router";
-import tipoRouter from "./routes/tipo.router";
-import oficinaRouter from "./routes/oficina.router";
 import formularioRouter from "./routes/formulario.router";
-import fraudeRouter from "./routes/fraude.router";
-import citaRouter from "./routes/citas.router";
-import smsRouter from "./routes/sms.router";
-import subtipoRouter from "./routes/subtipo.router";
 
 const app = express();
 
@@ -31,13 +25,12 @@ app.use(express.static(path.join(__dirname, "/public")));
 app.use("/", mainRouter);
 app.use("/admin", adminRouter);
 app.use("/admin", usuarioRouter);
-app.use("/admin", tipoRouter);
-app.use("/admin", oficinaRouter);
+// app.use("/admin", tipoRouter);
+// app.use("/admin", oficinaRouter);
 app.use("/admin", formularioRouter);
-app.use("/admin", fraudeRouter);
-app.use("/admin", citaRouter);
-app.use("/admin", smsRouter);
-app.use("/admin", subtipoRouter);
+// app.use("/admin", citaRouter);
+// app.use("/admin", smsRouter);
+// app.use("/admin", subtipoRouter);
 app.use("/log", loginRouter);
 
 export default app;

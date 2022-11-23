@@ -12,13 +12,15 @@ import {
 
 const loginRouter = express.Router();
 
-// auth
+// pages
 loginRouter.get("/login", loginPage);
-loginRouter.get("/logout", verifyLogout);
 loginRouter.get("/forgot", forgotPage);
 loginRouter.get("/registro", registroPage);
 loginRouter.get("/ok", okPage);
+
+// proc
 loginRouter.post("/login", verifyLogin);
+loginRouter.get("/logout", verifyLogout);
 loginRouter.post("/forgot", forgotPassword);
 loginRouter.post("/registro", crearRegistro);
 

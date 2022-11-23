@@ -3,33 +3,26 @@ import jwt from "jsonwebtoken";
 import {
   estadosDocumento,
   estadosSms,
-  origenTipo,
   tiposMovimiento,
-  tiposVisualizacion,
   tiposRol,
 } from "../public/js/enumeraciones";
 
 export const mainPage = async (req, res) => {
   const user = req.user;
   const documento = {
-    stadoc: tiposVisualizacion.pendientes,
-    liqdoc: user.rol === tiposRol.admin ? "ADMIN" : user.userID,
+    LIQDOC: user.userID,
+    STADOC: estadosDocumento.pendiente + estadosDocumento.asignado,
   };
-  const verTodo = false;
+  const verTodo = false
 
   try {
     const result = await axios.post("http://localhost:8000/api/formularios", {
       documento,
     });
-    const resultOficinas = await axios.get(
-      "http://localhost:8000/api/oficinas"
-    );
-
     const datos = {
-      documentos: result.data.dat,
-      arrOficinas: resultOficinas.data.dat,
-      tiposRol,
+      documentos: JSON.stringify(result.data),
       estadosDocumento,
+      tiposRol,
       verTodo,
     };
 
@@ -41,50 +34,21 @@ export const mainPage = async (req, res) => {
       alerts: [{ msg }],
     });
   }
-};
+}
 export const addPage = async (req, res) => {
   const user = req.user;
   const fecha = new Date();
 
   try {
-    const resultTipos = await axios.post(
-      "http://localhost:8000/api/tipos/origen",
-      {
-        origen: origenTipo.formulario,
-      }
-    );
-    let arrTipos = resultTipos.data;
-    arrTipos.unshift({
-      IDTIPO: 0,
-      DESTIP: "SELECCIONE UN TIPO",
-      AYUTIP: "",
-      ORGTIP: 0,
-    });
-
-    const resultOficinas = await axios.get(
-      "http://localhost:8000/api/oficinas"
-    );
     const documento = {
-      iddocu: 0,
-      fecdoc: fecha.toISOString().slice(0, 10),
-      nifcon: "",
-      nomcon: "",
-      emacon: "",
-      telcon: "",
-      movcon: "",
-      refdoc: "",
-      tipdoc: 0,
-      ejedoc: fecha.getFullYear() - 1,
-      ofidoc: user.oficina,
-      obsdoc: "",
-      fundoc: user.userID,
-      liqdoc: "",
-      stadoc: estadosDocumento.pendiente,
+      STRFEC: fecha.toISOString().slice(0, 10),
+      EJEFRA: fecha.getFullYear() - 1,
+      OFIDOC: user.oficina,
+      FUNDOC: user.userID,
+      STADOC: estadosDocumento.pendiente,
     };
     const datos = {
       documento,
-      arrTipos,
-      arrOficinas: resultOficinas.data.dat,
     };
 
     res.render("admin/formularios/add", { user, datos });
@@ -95,51 +59,20 @@ export const addPage = async (req, res) => {
       alerts: [{ msg }],
     });
   }
-};
+}
 export const editPage = async (req, res) => {
   const user = req.user;
+  const documento = {
+    IDDOCU: req.params.iddocu,
+  };
 
   try {
-    const resultTipos = await axios.post(
-      "http://localhost:8000/api/tipos/origen",
-      {
-        origen: origenTipo.formulario,
-      }
-    );
-    let arrTipos = resultTipos.data;
-    arrTipos.unshift({
-      IDTIPO: 0,
-      DESTIP: "SELECCIONE UN TIPO",
-      AYUTIP: "",
-      ORGTIP: 0,
-    });
-    const resultOficinas = await axios.get(
-      "http://localhost:8000/api/oficinas"
-    );
     const result = await axios.post("http://localhost:8000/api/formulario", {
-      id: req.params.id,
-    });
-
-    const documento = {
-      iddocu: result.data.iddocu,
-      fecdoc: result.data.fecdoc,
-      nifcon: result.data.nifcon,
-      nomcon: result.data.nomcon,
-      emacon: result.data.emacon,
-      telcon: result.data.telcon,
-      movcon: result.data.movcon,
-      refdoc: result.data.refdoc,
-      tipdoc: result.data.tipdoc,
-      ejedoc: result.data.ejedoc,
-      ofidoc: result.data.ofidoc,
-      obsdoc: result.data.obsdoc,
-      fundoc: result.data.fundoc,
-      liqdoc: result.data.liqdoc,
-    };
-    const datos = {
       documento,
-      arrTipos,
-      arrOficinas: resultOficinas.data.dat,
+    });
+    const datos = {
+      documento: result.data,
+      tiposRol,
     };
 
     res.render("admin/formularios/edit", { user, datos });
@@ -150,29 +83,106 @@ export const editPage = async (req, res) => {
       alerts: [{ msg }],
     });
   }
-};
-export const insertFormulario = async (req, res) => {
+}
+
+// otros
+export const ejercicioPage = async (req, res) => {
   const user = req.user;
-  const referencia = "IW" + randomString(9, "1234567890YMGS");
+  const fecha = new Date();
+  let documento = {
+    IDDOCU: req.params.iddocu,
+  };
+
+  try {
+    // fraude
+    const result = await axios.post("http://localhost:8000/api/formulario", {
+      documento,
+    })
+
+    documento = result.data
+    documento.FECHA = fecha.toISOString().substring(0, 10)
+    documento.EJEDOC = fecha.getFullYear()
+    documento.FUNDOC = user.userID
+    documento.LIQDOC = user.userID
+    documento.STADOC = estadosDocumento.asignado
+
+    const datos = {
+      documento,
+    };
+
+    res.render("admin/formularios/ejercicio", { user, datos });
+  } catch (error) {
+    const msg =
+      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+export const relacionPage = async (req, res) => {
+  const user = req.user;
+  const fecha = new Date();
+  let documento = {
+    IDDOCU: req.params.iddocu,
+  };
+
+  try {
+    // formulario
+    const result = await axios.post("http://localhost:8000/api/formulario", {
+      documento,
+    });
+
+    documento = result.data
+    documento.NIFCON = ''
+    documento.NOMCON = ''
+    documento.EMACON = ''
+    documento.TELCON = ''
+    documento.MOVCON = ''
+    documento.OBSDOC = ''
+    documento.EJEDOC = fecha.getFullYear()
+    documento.FUNDOC = user.userID
+    documento.LIQDOC = user.userID
+    documento.STADOC = estadosDocumento.asignado
+
+    const datos = {
+      documento,
+    };
+
+    res.render("admin/formularios/relacion", { user, datos });
+  } catch (error) {
+    const msg =
+      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+
+// procs formulario
+export const insert = async (req, res) => {
+  const user = req.user;
+  const referencia = "Z" + randomString(10, "1234567890YMGS");
   const documento = {
-    fecdoc: req.body.fecdoc,
-    nifcon: req.body.nifcon,
-    nomcon: req.body.nomcon,
-    emacon: req.body.emacon,
-    telcon: req.body.telcon,
-    movcon: req.body.movcon,
-    refdoc: referencia,
-    tipdoc: req.body.tipdoc,
-    ejedoc: req.body.ejedoc,
-    ofidoc: req.body.ofidoc,
-    obsdoc: req.body.obsdoc,
-    fundoc: req.body.fundoc,
-    liqdoc: "PEND",
-    stadoc: estadosDocumento.pendiente,
+    FECDOC: req.body.fecdoc,
+    NIFCON: req.body.nifcon.toUpperCase(),
+    NOMCON: req.body.nomcon.toUpperCase(),
+    EMACON: req.body.emacon,
+    TELCON: req.body.telcon,
+    MOVCON: req.body.movcon,
+    REFDOC: referencia,
+    TIPDOC: req.body.tipdoc,
+    EJEDOC: req.body.ejedoc,
+    OFIDOC: req.body.ofidoc,
+    OBSDOC: req.body.obsdoc,
+    FUNDOC: req.body.fundoc,
+    LIQDOC: "PEND",
+    STADOC: estadosDocumento.pendiente,
   };
   const movimiento = {
-    usuarioMov: user.id,
-    tipoMov: tiposMovimiento.crearDocumento,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.crearFormulario,
   };
 
   try {
@@ -186,36 +196,35 @@ export const insertFormulario = async (req, res) => {
 
     res.redirect("/admin/formularios");
   } catch (error) {
-    let msg = "No se ha podido crear el formulario.";
+    let msg = "No se ha podido crear el documento.";
 
     if (error.response.data.errorNum === 20100) {
-      msg = "El formulario ya existe.";
+      msg = "El documento ya existe.";
     }
 
     res.render("admin/error400", {
       alerts: [{ msg }],
     });
   }
-};
-export const updateFormulario = async (req, res) => {
+}
+export const update = async (req, res) => {
   const user = req.user;
-
   const documento = {
-    iddocu: req.body.iddocu,
-    fecdoc: req.body.fecdoc,
-    nifcon: req.body.nifcon,
-    nomcon: req.body.nomcon,
-    emacon: req.body.emacon,
-    telcon: req.body.telcon,
-    movcon: req.body.movcon,
-    tipdoc: req.body.tipdoc,
-    ejedoc: req.body.ejedoc,
-    ofidoc: req.body.ofidoc,
-    obsdoc: req.body.obsdoc,
+    IDDOCU: req.body.idfrau,
+    FECDOC: req.body.fecdoc,
+    NIFCON: req.body.nifcon.toUpperCase(),
+    NOMCON: req.body.nomcon.toUpperCase(),
+    EMACON: req.body.emacon,
+    TELCON: req.body.telcon,
+    MOVCON: req.body.movcon,
+    TIPDOC: req.body.tipdoc,
+    EJEDOC: req.body.ejedoc,
+    OFIDOC: req.body.ofidoc,
+    OBSDOC: req.body.obsdoc,
   };
   const movimiento = {
-    usuarioMov: user.id,
-    tipoMov: tiposMovimiento.modificarDocumento,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.modificarFormulario,
   };
 
   try {
@@ -229,25 +238,25 @@ export const updateFormulario = async (req, res) => {
 
     res.redirect("/admin/formularios");
   } catch (error) {
-    let msg = "No se ha podido actualizar el formulario.";
+    let msg = "No se ha podido actualizar el documento.";
 
     if (error.response.data.errorNum === 20100) {
-      msg = "El formulario ya existe. Verifique nif, tipo y/o ejercicio";
+      msg = "El documento ya existe. Verifique los datos introducidos";
     }
 
     res.render("admin/error400", {
       alerts: [{ msg }],
     });
   }
-};
-export const deleteFormulario = async (req, res) => {
+}
+export const remove = async (req, res) => {
   const user = req.user;
   const documento = {
-    id: req.body.iddocu,
+    IDDOCU: req.body.iddocu,
   };
   const movimiento = {
-    usuarioMov: user.id,
-    tipoMov: tiposMovimiento.borrarDocumento,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.borrarFormulario,
   };
 
   try {
@@ -261,34 +270,37 @@ export const deleteFormulario = async (req, res) => {
 
     res.redirect("/admin/formularios");
   } catch (error) {
-    const msg =
-      "No se ha podido elminar el formulario. El error puede deberse a que el documento ya no existe.";
+    const msg = "No se ha podido elminar el documento.";
 
     res.render("admin/error400", {
       alerts: [{ msg }],
     });
   }
-};
-export const asignarFormulario = async (req, res) => {
+}
+export const asignar = async (req, res) => {
   const user = req.user;
-  const documento = {
-    id: req.body.iddocu,
-    liquidador: user.userID,
-    estado: estadosDocumento.asignado,
-  };
-  const movimiento = {
-    usuarioMov: user.id,
-    tipoMov: tiposMovimiento.asignarFormulario,
+  let documento = {
+    IDDOCU: req.body.iddocu,
   };
 
   try {
-    const resul = await axios.post("http://localhost:8000/api/formulario", {
-      id: req.body.iddocu,
+    const result = await axios.post("http://localhost:8000/api/formulario", {
+      documento,
     });
 
-    if (resul.data.stadoc === estadosDocumento.pendiente) {
+    documento = {
+      IDDOCU: result.data.IDDOCU,
+      LIQDOC: user.userID,
+      STADOC: estadosDocumento.asignado,
+    };
+    const movimiento = {
+      USUMOV: user.id,
+      TIPMOV: tiposMovimiento.asignarFormulario,
+    };
+
+    if (result.data.STADOC === estadosDocumento.pendiente) {
       const result = await axios.post(
-        "http://localhost:8000/api/formularios/cambioEstado",
+        "http://localhost:8000/api/fraudes/cambio",
         {
           documento,
           movimiento,
@@ -298,169 +310,105 @@ export const asignarFormulario = async (req, res) => {
       res.redirect("/admin/formularios");
     }
   } catch (error) {
-    const msg =
-      "No se ha podido asignar el formulario. El error puede deberse a que el documento ya no existe.";
+    const msg = "No se ha podido asignar el documento.";
 
     res.render("admin/error400", {
       alerts: [{ msg }],
     });
   }
-};
-export const resolverFormulario = async (req, res) => {
+}
+export const resolver = async (req, res) => {
   const user = req.user;
-  const documento = {
-    id: req.body.iddocu,
-    liquidador: user.userID,
-    estado: estadosDocumento.resuelto,
+  let documento = {
+    IDDOCU: req.body.iddocu,
+    LIQDOC: user.userID,
+    STADOC: estadosDocumento.resuelto,
   };
   const movimiento = {
-    usuarioMov: user.id,
-    tipoMov: tiposMovimiento.resolverFormulario,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.resolverFormulario,
   };
 
   try {
-    const resul = await axios.post("http://localhost:8000/api/formulario", {
-      id: req.body.iddocu,
+    const result = await axios.post("http://localhost:8000/api/formulario", {
+      documento,
     });
 
-    if (resul.data.stadoc === estadosDocumento.asignado) {
+    if (result.data.STADOC === estadosDocumento.asignado) {
       const result = await axios.post(
-        "http://localhost:8000/api/formularios/cambioEstado",
+        "http://localhost:8000/api/formularios/resolver",
         {
           documento,
           movimiento,
         }
       );
-
-      /// envio sms
-      if (req.body.chkenv) {
-        const sms = {
-          texsms: req.body.texsms,
-          movsms: req.body.movsms,
-          stasms: estadosSms.pendiente,
-          iddocu: req.body.iddocu,
-        };
-        const movimiento = {
-          usuarioMov: user.id,
-          tipoMov: tiposMovimiento.crearSms,
-        };
-
-        try {
-          await axios.post("http://localhost:8000/api/formularios/sms", {
-            sms,
-            movimiento,
-          });
-        } catch (error) {
-          const msg =
-            "No se ha podido enviar el sms. El envio tendrá que realizarse manualmente.";
-
-          res.render("admin/error400", {
-            alerts: [{ msg, error }],
-          });
-        }
-      }
     }
 
-    res.redirect("/admin/formularios");
+    res.redirect("/admin/fraudes");
   } catch (error) {
-    const msg = "No se ha podido resolver el formulario.";
+    const msg = "No se ha podido resolver el documento.";
 
     res.render("admin/error400", {
       alerts: [{ msg }],
     });
   }
-};
-export const remitirFormulario = async (req, res) => {
+}
+export const unasignar = async (req, res) => {
   const user = req.user;
   const documento = {
-    id: req.body.iddocu,
-    liquidador: user.userID,
-    estado: estadosDocumento.remitido,
+    IDDOCU: req.body.iddocu,
+    LIQDOC: "PEND",
+    STADOC: estadosDocumento.pendiente,
   };
   const movimiento = {
-    usuarioMov: user.id,
-    tipoMov: tiposMovimiento.remitirFormulario,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.desasignarFormulario,
   };
 
   try {
     const resul = await axios.post("http://localhost:8000/api/formulario", {
-      id: req.body.iddocu,
-    });
-
-    if (resul.data.stadoc === estadosDocumento.asignado) {
-      await axios.post("http://localhost:8000/api/formularios/cambioEstado", {
-        documento,
-        movimiento,
-      });
-    }
-
-    res.redirect("/admin/formularios");
-  } catch (error) {
-    const msg = "No se ha podido remitir el fraude.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
-  }
-};
-export const desadjudicarFormulario = async (req, res) => {
-  const user = req.user;
-  const documento = {
-    id: req.body.iddocu,
-    liquidador: "PEND",
-    estado: estadosDocumento.pendiente,
-  };
-  const movimiento = {
-    usuarioMov: user.id,
-    tipoMov: tiposMovimiento.desasignarFormulario,
-  };
-
-  try {
-    const resul = await axios.post("http://localhost:8000/api/formulario", {
-      id: req.body.iddocu,
+      documento,
     });
 
     if (
-      resul.data.stadoc === estadosDocumento.asignado ||
-      resul.data.stadoc === estadosDocumento.resuelto ||
-      resul.data.stadoc === estadosDocumento.remitido
+      resul.data.STADOC === estadosDocumento.asignado ||
+      resul.data.STADOC === estadosDocumento.resuelto
     ) {
-      await axios.post("http://localhost:8000/api/formularios/cambioEstado", {
+      await axios.post("http://localhost:8000/api/formularios/unasignar", {
         documento,
         movimiento,
       });
     }
 
-    res.redirect("/admin/formularios");
+    res.redirect("/admin/fraudes");
   } catch (error) {
-    const msg = "No se ha podido desadjudicar el formulario.";
+    const msg = "No se ha podido desasignar el documento.";
 
     res.render("admin/error400", {
       alerts: [{ msg }],
     });
   }
-};
+}
 export const verTodo = async (req, res) => {
   const user = req.user;
   const documento = {
-    stadoc: tiposVisualizacion.todos,
-    liqdoc: user.rol === tiposRol.admin ? "ADMIN" : user.userID,
+    LIQDOC: user.userID,
+    STADOC: estadosDocumento.resuelto,
   };
   const verTodo = true;
+
+  if (user.rol === tiposRol.admin) {
+    delete documento.LIQDOC
+  }
 
   try {
     const result = await axios.post("http://localhost:8000/api/formularios", {
       documento,
     });
-    const resultOficinas = await axios.get(
-      "http://localhost:8000/api/oficinas"
-    );
-
     const datos = {
-      documentos: result.data.dat,
-      arrOficinas: resultOficinas.data.dat,
-      tiposRol,
+      documento: JSON.stringify(result.data),
       estadosDocumento,
+      tiposRol,
       verTodo,
     };
 
@@ -472,22 +420,25 @@ export const verTodo = async (req, res) => {
       alerts: [{ msg }],
     });
   }
-};
+}
 export const sms = async (req, res) => {
   const user = req.user;
+  const documento = {
+    IDDOCU: req.body.iddocu,
+  };
   const sms = {
-    iddocu: req.body.docsms,
-    texsms: req.body.texsms,
-    movsms: req.body.movsms,
-    stasms: estadosSms.pendiente,
+    TEXSMS: req.body.texsms,
+    MOVSMS: req.body.movsms,
+    STASMS: estadosSms.pendiente,
   };
   const movimiento = {
-    usuarioMov: user.id,
-    tipoMov: tiposMovimiento.crearSms,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.crearSms,
   };
 
   try {
-    await axios.post("http://localhost:8000/api/formularios/sms", {
+    await axios.post("http://localhost:8000/api/sms/insert", {
+      documento,
       sms,
       movimiento,
     });
@@ -500,92 +451,84 @@ export const sms = async (req, res) => {
       alerts: [{ msg }],
     });
   }
-};
-export const updatePerfil = async (req, res) => {
+}
+
+// procs otros
+export const ejercicio = async (req, res) => {
   const user = req.user;
-  const usuario = {
-    id: user.id,
-    userid: req.body.userid,
-    nombre: req.body.nomusu,
-    email: req.body.emausu,
-    rol: user.rol,
-    oficina: req.body.ofiusu,
-    telefono: req.body.telusu,
+  const fecha = new Date()
+  const documento = {
+    FECDOC: fecha.toISOString().slice(0, 10),
+    NIFCON: req.body.nifcon,
+    NOMCON: req.body.nomcon,
+    EMACON: req.body.emacon,
+    TELCON: req.body.telcon,
+    MOVCON: req.body.movcon,
+    REFDOC: req.body.refdoc,
+    TIPDOC: req.body.tipdoc,
+    EJEDOC: req.body.ejedoc,
+    OFIDOC: user.oficina,
+    OBSDOC: req.body.obsdoc,
+    FUNDOC: user.userID,
+    LIQDOC: user.userID,
+    STADOC: estadosDocumento.asignado,
   };
   const movimiento = {
-    usuarioMov: user.id,
-    tipoMov: tiposMovimiento.modificarPerfil,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.nuevoEjercicioFormularios,
   };
 
   try {
-    await axios.post("http://localhost:8000/api/formularios/updatePerfil", {
-      usuario,
-      movimiento,
-    });
-
-    const accessToken = jwt.sign(
-      {
-        id: usuario.id,
-        nombre: usuario.nombre,
-        userID: usuario.userid,
-        email: usuario.email,
-        rol: usuario.rol,
-        oficina: usuario.oficina,
-        telefono: usuario.telefono,
-      },
-      `${process.env.ACCESS_TOKEN_SECRET}`,
-      { expiresIn: "8h" }
-    );
-    const options = {
-      path: "/",
-      sameSite: true,
-      maxAge: 1000 * 60 * 60 * 8, // 8 horas
-      httpOnly: true,
-    };
-
-    res.cookie("auth", accessToken, options);
-    res.redirect("/admin/formularios");
-  } catch (error) {
-    const msg = "No se ha podido actualizar el perfil de usuario";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
-  }
-};
-export const changePassword = async (req, res) => {
-  const user = req.user;
-
-  const usuario = {
-    id: user.id,
-    password: req.body.pwdusu,
-  };
-  const movimiento = {
-    usuarioMov: user.id,
-    tipoMov: tiposMovimiento.cambioPassword,
-  };
-
-  try {
-    await axios.post("http://localhost:8000/api/formularios/cambio", {
-      usuario,
+    await axios.post("http://localhost:8000/api/formularios/insert", {
+      documento,
       movimiento,
     });
 
     res.redirect("/admin/formularios");
   } catch (error) {
-    const msg = "No se ha podido actualizar la contraseña.";
+    const msg = "No se ha podido insertar el nuevo ejercicio.";
 
     res.render("admin/error400", {
       alerts: [{ msg }],
     });
   }
-};
+}
+export const relacion = async (req, res) => {
+  const user = req.user;
+  const fecha = new Date()
+  const documento = {
+    FECDOC: fecha.toISOString().slice(0, 10),
+    NIFCON: req.body.nifcon,
+    NOMCON: req.body.nomcon,
+    EMACON: req.body.emacon,
+    TELCON: req.body.telcon,
+    MOVCON: req.body.movcon,
+    REFDOC: req.body.refdoc,
+    TIPDOC: req.body.tipdoc,
+    EJEDOC: req.body.ejedoc,
+    OFIDOC: user.oficina,
+    OBSDOC: req.body.obsdoc,
+    FUNDOC: user.userID,
+    LIQDOC: user.userID,
+    STADOC: estadosDocumento.asignado,
+  };
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.nuevoRelacionadoFormularios,
+  };
 
-// helpers
-function randomString(long, chars) {
-  let result = "";
-  for (let i = long; i > 0; --i) {
-    result += chars[Math.floor(Math.random() * chars.length)];
+  try {
+    await axios.post("http://localhost:8000/api/formularios/insert", {
+      documento,
+      movimiento,
+    });
+
+    res.redirect("/admin/formularios");
+  } catch (error) {
+    const msg = "No se ha podido insertar el relacionado.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
   }
-  return result;
 }
