@@ -38,19 +38,23 @@ export const mainPage = async (req, res) => {
 export const addPage = async (req, res) => {
   const user = req.user;
   const fecha = new Date();
+  const documento = {
+    STRFEC: fecha.toISOString().slice(0, 10),
+    EJEFRA: fecha.getFullYear() - 1,
+    OFIDOC: user.oficina,
+    FUNDOC: user.userID,
+    STADOC: estadosDocumento.pendiente,
+  };
 
   try {
-    const documento = {
-      STRFEC: fecha.toISOString().slice(0, 10),
-      EJEFRA: fecha.getFullYear() - 1,
-      OFIDOC: user.oficina,
-      FUNDOC: user.userID,
-      STADOC: estadosDocumento.pendiente,
-    };
+    const tipos = await axios.post("http://localhost:8000/api/tipos")
+    const oficinas = await axios.post("http://localhost:8000/api/oficinas")
     const datos = {
       documento,
-    };
-
+      tipos: tipos.data,
+      oficinas: oficinas.data,
+    }
+console.log(datos)
     res.render("admin/formularios/add", { user, datos });
   } catch (error) {
     const msg = "No se ha podido acceder a los datos de la aplicación.";
@@ -531,4 +535,15 @@ export const relacion = async (req, res) => {
       alerts: [{ msg }],
     });
   }
+}
+
+// helpers
+function randomString(long, chars) {
+  let result = "";
+
+  for (let i = long; i > 0; --i) {
+    result += chars[Math.floor(Math.random() * chars.length)];
+  }
+
+  return result;
 }

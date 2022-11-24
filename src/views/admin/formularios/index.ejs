@@ -50,69 +50,69 @@
   <body class="antialiased">
     <div class="wrapper">
     <%- include('../../partials/header') %>
-      <%- include('../../partials/navbar', {opcion: 'FORMULARIO' }) %>
-        <div class="page-wrapper">
-          <div class="page-body">
-            <div class="container-xl">
-              <div class="row row-deck row-cards">
-                <div class="col-12">
-                  <div class="card">
-                    <div class="card-header">
-                      <h3 class="card-title">Formularios</h3>
-                      <div class="col-auto ms-auto">
-                        <div class="d-flex">
-                          <div class="input-icon me-3">
-                            <span class="input-icon-addon"><i class="bi bi-search"></i></span>
-                            <input type="text" class="form-control d-inline-block me-3" id="buscarFormBox"
-                              onkeyup="arrayFilter();" placeholder="Buscar..." aria-label="Buscar en formularios">
-                          </div>
-                          <a href="#" class="btn btn-warning" onclick="checkItem(this)">
-                            <% if (datos.verTodo ) { %>
-                              <i class='bi bi-eye-slash dropdown-item-icon'></i>Pendientes
-                              <% } else { %>
-                                <i class='bi bi-eye dropdown-item-icon'></i>Resueltos
-                                <% } %>
-                          </a>
-                          <a href="/admin/formularios/add" class="btn btn-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
-                              stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                              stroke-linejoin="round">
-                              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                              <line x1="12" y1="5" x2="12" y2="19"></line>
-                              <line x1="5" y1="12" x2="19" y2="12"></line>
-                            </svg>
-                            Nuevo
-                          </a>
-                        </div>
+    <%- include('../../partials/navbar', {opcion: 'FORMULARIO' }) %>
+    <div class="page-wrapper">
+      <div class="page-body">
+        <div class="container-xl">
+          <div class="row row-deck row-cards">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Formularios</h3>
+                  <div class="col-auto ms-auto">
+                    <div class="d-flex">
+                      <div class="input-icon me-3">
+                        <span class="input-icon-addon"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control d-inline-block me-3" id="buscarFormBox"
+                          onkeyup="arrayFilter();" placeholder="Buscar..." aria-label="Buscar en formularios">
                       </div>
-                    </div>
-                    <div class="card-body">
-                      <table class="table table-vcenter table-striped sortable" id="tblFormularios">
-                        <thead>
-                          <tr class="header">
-                            <th class="w-4"></th>
-                            <th class="w-8">Oficina</th>
-                            <th class="w-6">Fecha</th>
-                            <th class="w-5">Ejerc</th>
-                            <th class="w-8">NIF</th>
-                            <th>Nombre</th>
-                            <th>Tipo</th>
-                            <th>Observaciones</th>
-                            <th class="w-5"></th>
-                          </tr>
-                        </thead>
-                        <tbody id="table-body">
-                        </tbody>
-                      </table>
-                      <div id="pagination-wrapper" class="pagination py-1"></div>
+                      <a href="#" class="btn btn-warning" onclick="checkItem(this)">
+                        <% if (datos.verTodo ) { %>
+                          <i class='bi bi-eye-slash dropdown-item-icon'></i>Pendientes
+                        <% } else { %>
+                          <i class='bi bi-eye dropdown-item-icon'></i>Resueltos
+                        <% } %>
+                      </a>
+                      <a href="/admin/formularios/add" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+                          stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                          stroke-linejoin="round">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                          <line x1="12" y1="5" x2="12" y2="19"></line>
+                          <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Nuevo
+                      </a>
                     </div>
                   </div>
+                </div>
+                <div class="card-body">
+                  <table class="table table-vcenter table-striped sortable" id="tblFormularios">
+                    <thead>
+                      <tr class="header">
+                        <th class="w-4"></th>
+                        <th class="w-8">Oficina</th>
+                        <th class="w-6">Fecha</th>
+                        <th class="w-5">Ejerc</th>
+                        <th class="w-8">NIF</th>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Observaciones</th>
+                        <th class="w-5"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="table-body">
+                    </tbody>
+                  </table>
+                  <div id="pagination-wrapper" class="pagination py-1"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <%- include('../../partials/footer') %>
+      </div>
+    </div>
+    <%- include('../../partials/footer') %>
     </div>
     
     <div class="modal modal-blur fade" id="modal-borrar" tabindex="-1" role="dialog" aria-hidden="true">
@@ -377,7 +377,7 @@
         window.location.href = 'http://localhost:4000/admin/formularios/vertodo'
       <% } %>
     }
-    </script>
+  </script>
   <script>
     function focoRes() {
       const ele = document.getElementById('texsms')
@@ -504,6 +504,7 @@
       element.classList.add('is-invalid');
       inputControl.classList.remove('is-valid');
     }
+  }
   </script>
   <script>
     const orgList = <%- datos.documentos %>
@@ -691,7 +692,7 @@
           cell = document.createElement('td')
           cell.innerHTML = `<div class="d-flex py-1 align-items-center">
               <div class="flex-fill">
-                <div class="font-weight-medium">${element.DESTIP}</div>
+                <div class="font-weight-medium">${element.DESTIP.length > 30 ? element.DESTIP.slice(0, 30) + '...' : element.DESTIP}</div>
               </div>
             </div>`
           row.appendChild(cell)
@@ -744,12 +745,12 @@
                   <ul>
                     <li class="nav-item ">
                       <a href="/admin/formularios/hitoseventos/readonly/${element.IDDOCU}" class="nav-link">
-                        <i class="bi bi-flag dropdown-item-icon"></i>Hitos / Eventos
+                        <i class="bi bi-pencil dropdown-item-icon"></i>Editar
                       </a>
                     </li>
                     <li class="nav-item">
                       <a href="#" class="nav-link" onclick="{document.getElementById('deshacer').value ='${element.IDDOCU}', document.getElementById('texcie').innerHTML ='<p>${element.REFDOC}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-deshacer">
-                        <i class="bi bi-x-square dropdown-item-icon"></i>Deshacer cierre
+                        <i class="bi bi-reply dropdown-item-icon"></i>Desasignar
                       </a>
                     </li>
                     <li class="nav-item list-divider"></li>
@@ -771,17 +772,17 @@
                   <ul>
                     <li class="nav-item">
                       <a href="/admin/formularios/edit/${element.IDDOCU}" class="nav-link">
-                        <i class="bi bi-pencil dropdown-item-icon"></i>Editar formulario
+                        <i class="bi bi-pencil dropdown-item-icon"></i>Editar
                       </a>
                     </li>
                     <li class="nav-item">
                       <a href="/admin/formularios/resolver/${element.IDDOCU}" class="nav-link">
-                        <i class="bi bi-check2 dropdown-item-icon"></i>Resolver formulario
+                        <i class="bi bi-check2 dropdown-item-icon"></i>Resolver
                       </a>
                     </li>
                     <li class="nav-item">
                       <a href="#" class="nav-link" onclick="{document.getElementById('desasig').value ='${element.IDDOCU}', document.getElementById('texdes').innerHTML ='<p>${element.REFDOC}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-desasignar">
-                        <i class="bi bi-x-square dropdown-item-icon"></i>Desasignar formulario
+                        <i class="bi bi-x-square dropdown-item-icon"></i>Desasignar
                       </a>
                     </li>
                     <li class="nav-item">
@@ -792,11 +793,6 @@
                     <li class="nav-item">
                       <a href="/admin/formularios/relacionado/${element.IDDOCU}" class="nav-link">
                         <i class="bi bi-people dropdown-item-icon"></i>Nuevo relacionado
-                      </a>
-                    </li>
-                    <li class="nav-item ">
-                      <a href="/admin/formularios/hitoseventos/${element.IDDOCU}" class="nav-link">
-                        <i class="bi bi-flag dropdown-item-icon"></i>Hitos / Eventos
                       </a>
                     </li>
                     <li class="nav-item list-divider"></li>
