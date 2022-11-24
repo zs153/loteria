@@ -6,6 +6,9 @@ import cors from 'cors'
 import { port } from '../config/settings'
 import apiOficinaRouter from '../routes/oficina.router'
 import apiUsuarioRouter from '../routes/usuario.router'
+import apiFormularioRouter from '../routes/formulario.router'
+import apiTipoRouter from '../routes/tipo.router'
+import apiGenteRouter from '../routes/gente.router'
 
 let httpServer
 
@@ -24,6 +27,9 @@ function initialize() {
     // routes
     app.use('/api', apiOficinaRouter)
     app.use('/api', apiUsuarioRouter)
+    app.use('/api', apiFormularioRouter)
+    app.use('/api', apiTipoRouter)
+    app.use('/api', apiGenteRouter)
 
     // server
     httpServer

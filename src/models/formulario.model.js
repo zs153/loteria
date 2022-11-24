@@ -2,22 +2,13 @@ import oracledb from 'oracledb'
 import { simpleExecute } from '../services/database.js'
 
 const baseQuery = `SELECT 
-    iddocu,
-    fecdoc,
-    nifcon,
-    nomcon,
-    emacon,
-    telcon,
-    movcon,
-    refdoc,
-    tipdoc,
-    ejedoc,
-    ofidoc,
-    obsdoc,
-    fundoc,
-    liqdoc,
-    stadoc
-  FROM documentos
+    oo.desofi,
+    tt.destip,
+    dd.*,
+    TO_CHAR(dd.fecdoc, 'DD/MM/YYYY') "STRFEC"
+FROM documentos dd
+INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc
+INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc
 `
 const insertSql = `BEGIN FORMULARIOS_PKG.INSERTDOCUMENTO(
   :fecdoc,
@@ -94,15 +85,35 @@ export const find = async (context) => {
   let query = baseQuery
   let binds = {}
 
-  if (context.iddocu) {
-    binds.idofic = context.idofic
+  if (context.IDDOCU) {
+    binds.iddocu = context.iddocu
     query += `WHERE iddocu = :iddocu`
-  }
-  if (context.refdoc) {
-    binds.codofi = context.codofi
+  } else if (context.REFDOC) {
+    binds.refdoc = context.REFDOC
     query += `WHERE refdoc = :refdoc`
+  } else if (context.liqdoc) {
+    binds.liqdoc = context.LIQDOC
+    if (context.STADOC === 1) {
+      query += `WHERE dd.liqdoc = :liqdoc
+          AND BITAND(dd.stadoc,1) > 0
+        UNION
+        SELECT
+          oo.desofi,
+          tt.destip,
+          dd.*,
+          TO_CHAR(dd.fecdoc, 'DD/MM/YYYY') "STRFEC"
+        FROM documentos dd
+        INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc
+        INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc
+        WHERE dd.stadoc = 0
+      `
+    } else {
+      query += `WHERE dd.liqdoc = :liqdoc 
+        AND BITAND(dd.stadoc,2) > 0)
+      `
+    }
   }
-
+console.log(query,binds)
   const result = await simpleExecute(query, binds)
   return result.rows
 }

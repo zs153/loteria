@@ -1,117 +1,107 @@
-import Tipo from '../models/tipo.model'
+import * as DAL from "../models/tipo.model";
 
-let tipo = new Tipo()
+const insertFromRec = (req) => {
+  const tipo = {
+    destip: req.body.tipo.DESTIP,
+    ayutip: req.body.tipo.AYUTIP,
+  };
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  };
 
-export const getTipos = async (req, res) => {
-  try {
-    const { err, dat } = await tipo.getTipos()
+  return Object.assign(tipo, movimiento);
+};
+const updateFromRec = (req) => {
+  const tipo = {
+    idtipo: req.body.tipo.IDTIPO,
+    destip: req.body.tipo.DESTIP,
+    ayutip: req.body.tipo.AYUTIP,
+  };
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  };
 
-    if (err) {
-      return res.status(404).json({ err })
-    } else {
-      return res.status(200).json({ dat })
-    }
-  } catch (error) {
-    res.status(500).json(error)
-  }
-}
-export const getTiposByOrigen = async (req, res) => {
-  tipo.origen = req.body.origen
+  return Object.assign(tipo, movimiento);
+};
+const deleteFromRec = (req) => {
+  const tipo = {
+    idtipo: req.body.tipo.IDTIPO,
+  };
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  };
 
-  try {
-    const { err, dat } = await tipo.getTiposByOrigen()
+  return Object.assign(tipo, movimiento);
+};
 
-    if (err) {
-      res.status(402).json(err)
-    } else {
-      res.status(200).json(dat)
-    }
-  } catch (error) {
-    res.status(500).json(error)
-  }
-}
-export const getTipo = async (req, res) => {
-  tipo.id = req.body.id
-
-  try {
-    const { err, dat } = await tipo.getTipo()
-
-    if (err) {
-      res.status(403).json(err)
-    } else {
-      return res.status(200).json(tipo)
-    }
-  } catch (error) {
-    return res.status(500).json({ err })
-  }
-}
-export const insertTipo = async (req, res) => {
-  const { usuarioMov, tipoMov } = req.body.movimiento
-
-  // tipo
-  tipo.descripcion = req.body.tipo.destip
-  tipo.textoAyuda = req.body.tipo.ayutip
-  tipo.origen = req.body.tipo.orgtip
-  // movimiento
-  tipo.movimiento.usuario = usuarioMov
-  tipo.movimiento.tipo = tipoMov
+export const tipo = async (req, res) => {
+  const context = req.body.tipo;
 
   try {
-    const { err, dat } = await tipo.insert()
+    const result = await DAL.find(context);
 
-    if (err) {
-      res.status(404).json(err)
+    if (result.length === 1) {
+      return res.status(200).json(result[0]);
     } else {
-      tipo.id = dat.p_idtipo
-
-      res.status(200).json(tipo)
+      res.status(404).end();
     }
-  } catch (error) {
-    res.status(500).json(error)
+  } catch (err) {
+    res.status(500).end();
   }
-}
-export const updateTipo = async (req, res) => {
-  const { usuarioMov, tipoMov } = req.body.movimiento
-
+};
+export const tipos = async (req, res) => {
   try {
-    // tipo
-    tipo.id = req.body.tipo.idtipo
-    tipo.descripcion = req.body.tipo.destip
-    tipo.textoAyuda = req.body.tipo.ayutip
-    tipo.origen = req.body.tipo.orgtip
-    // movimiento
-    tipo.movimiento.usuario = usuarioMov
-    tipo.movimiento.tipo = tipoMov
+    const result = await DAL.find();
 
-    const { err, dat } = await tipo.update()
-
-    if (err) {
-      res.status(404).json(err)
+    if (result !== null) {
+      res.status(200).json(result);
     } else {
-      res.status(200).json(tipo)
+      res.status(404).end();
     }
-  } catch (error) {
-    res.status(500).json(error)
+  } catch (err) {
+    res.status(500).end();
   }
-}
-export const deleteTipo = async (req, res) => {
-  const { usuarioMov, tipoMov } = req.body.movimiento
+};
 
-  // tipo
-  tipo.id = req.body.tipo.idtipo
-  // movimiento
-  tipo.movimiento.usuario = usuarioMov
-  tipo.movimiento.tipo = tipoMov
-
+export const crear = async (req, res) => {
   try {
-    const { err, dat } = await tipo.delete()
+    const result = await DAL.insert(insertFromRec(req));
 
-    if (err) {
-      res.status(404).json(err)
+    if (result !== null) {
+      res.status(200).json(result);
     } else {
-      res.status(200).json(tipo)
+      res.status(404).end();
     }
-  } catch (error) {
-    res.status(500).json(error)
+  } catch (err) {
+    res.status(500).end();
   }
-}
+};
+export const modificar = async (req, res) => {
+  try {
+    const result = await DAL.update(updateFromRec(req));
+
+    if (result !== null) {
+      res.status(200).json(result);
+    } else {
+      res.status(404).end();
+    }
+  } catch (err) {
+    res.status(500).end();
+  }
+};
+export const borrar = async (req, res) => {
+  try {
+    const result = await DAL.remove(deleteFromRec(req));
+
+    if (result !== null) {
+      res.status(200).json(result);
+    } else {
+      res.status(404).end();
+    }
+  } catch (err) {
+    res.status(500).end();
+  }
+};

@@ -103,7 +103,6 @@ const perfilSql = `BEGIN FORMULARIOS_PKG.UPDATEPERFILUSUARIO(
 export const find = async (context) => {
   let query = baseQuery;
   let binds = {};
-
   if (context.IDUSUA) {
     binds.idusua = context.IDUSUA;
     query += "WHERE idusua = :idusua";
@@ -116,7 +115,8 @@ export const find = async (context) => {
     binds.emausu = context.EMAUSU;
     query += "WHERE emausu = :emausu";
   }
-
+  
+  console.log(query,binds)
   const result = await simpleExecute(query, binds);
   return result.rows;
 };
@@ -223,4 +223,4 @@ export const profile = async (bind) => {
   }
 
   return result;
-};
+}

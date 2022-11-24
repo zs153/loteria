@@ -1,4 +1,4 @@
-import * as DAL from '../models/documento.model'
+import * as DAL from '../models/formulario.model'
 
 const insertFromRec = (req) => {
   const documento = {
@@ -119,7 +119,7 @@ export const documentos = async (req, res) => {
   const context = req.body.documento
 
   try {
-    const result = await DAL.findAll(context)
+    const result = await DAL.find(context)
 
     if (result !== null) {
       res.status(200).json(result)
@@ -127,6 +127,7 @@ export const documentos = async (req, res) => {
       res.status(404).end()
     }
   } catch (err) {
+    console.log(err)
     res.status(500).end()
   }
 }
