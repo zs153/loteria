@@ -54,7 +54,7 @@ export const addPage = async (req, res) => {
       tipos: tipos.data,
       oficinas: oficinas.data,
     }
-console.log(datos)
+
     res.render("admin/formularios/add", { user, datos });
   } catch (error) {
     const msg = "No se ha podido acceder a los datos de la aplicación.";
@@ -98,7 +98,7 @@ export const ejercicioPage = async (req, res) => {
   };
 
   try {
-    // fraude
+    // formulario
     const result = await axios.post("http://localhost:8000/api/formulario", {
       documento,
     })
@@ -304,7 +304,7 @@ export const asignar = async (req, res) => {
 
     if (result.data.STADOC === estadosDocumento.pendiente) {
       const result = await axios.post(
-        "http://localhost:8000/api/fraudes/cambio",
+        "http://localhost:8000/api/formularios/cambio",
         {
           documento,
           movimiento,
@@ -348,7 +348,7 @@ export const resolver = async (req, res) => {
       );
     }
 
-    res.redirect("/admin/fraudes");
+    res.redirect("/admin/formularios");
   } catch (error) {
     const msg = "No se ha podido resolver el documento.";
 
@@ -384,7 +384,7 @@ export const unasignar = async (req, res) => {
       });
     }
 
-    res.redirect("/admin/fraudes");
+    res.redirect("/admin/formularios");
   } catch (error) {
     const msg = "No se ha podido desasignar el documento.";
 

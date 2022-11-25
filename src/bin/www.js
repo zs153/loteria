@@ -5,7 +5,6 @@
 import debug from "debug";
 import http from "http";
 import app from "../app";
-import { Server } from "socket.io";
 
 /**
  * Normalize a port into a number, string, or false.
@@ -65,22 +64,6 @@ const onListening = () => {
   const bind = typeof addr === "string" ? `pipe ${addr}` : `port ${addr.port}`;
   debug(`Listening on ${bind}`);
 };
-
-/**
- * socket.io
- */
-const io = new Server(server);
-
-io.on("connection", (socket) => {
-  console.log("user connected", socket.id);
-  socket.on("send-message", (message) => {
-    socket.broadcast.emit("receive-message", message);
-    //socket.emit('receive-message', message)
-  });
-  socket.on("disconnect", () => {
-    console.log("Desconectado");
-  });
-});
 
 /**
  * Listen on provided port, on all network interfaces.

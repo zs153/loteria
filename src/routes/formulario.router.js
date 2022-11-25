@@ -24,7 +24,7 @@ formularioRouter.get('/formularios/add', authRoutes, addPage)
 formularioRouter.get('/formularios/edit/:id', authRoutes, editPage)
 
 // procedures get
-formularioRouter.get("/fraudes/vertodo", authRoutes, verTodo);
+formularioRouter.get("/formularios/vertodo", authRoutes, verTodo);
 
 // procedures post
 formularioRouter.post("/formularios/insert", authRoutes, insert);

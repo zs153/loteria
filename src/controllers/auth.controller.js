@@ -25,7 +25,6 @@ export const login = async (req, res) => {
               id: usuario.id,
               userID: usuario.userid,
               rol: usuario.rol,
-              perfil: usuario.perfil,
               oficina: usuario.oficina,
             },
             `${process.env.ACCESS_TOKEN_SECRET}`,

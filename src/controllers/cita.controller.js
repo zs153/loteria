@@ -219,12 +219,9 @@ export const updatePerfil = async (req, res) => {
     const accessToken = jwt.sign(
       {
         id: usuario.id,
-        nombre: usuario.nombre,
         userID: usuario.userid,
-        email: usuario.email,
         rol: usuario.rol,
         oficina: usuario.oficina,
-        telefono: usuario.telefono,
       },
       `${process.env.ACCESS_TOKEN_SECRET}`,
       { expiresIn: "8h" }

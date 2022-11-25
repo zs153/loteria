@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Perfil usuario</title>
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="/css/bootstrap-icons.css">
+  <!-- custom -->
+  <link rel="stylesheet" href="/css/estilos.min.css">
+  <link rel="stylesheet" href="/css/navbar.css">
+  <style>
+    #tabs #tabContent1,
+    #tabs #tabContent2 {
+      display: none;
+    }
+
+    #tabs input[type=radio] {
+      display: none;
+    }
+
+    #tabs label {
+      display: inline-block;
+      margin: 0;
+      padding: 8px;
+      font-weight: 500;
+      color: #232e3c
+    }
+
+    #tabs label::before {
+      font-weight: normal;
+      margin-right: 20px;
+    }
+
+    #tabs label:hover {
+      color: #888;
+      cursor: pointer;
+    }
+
+    #tabs input:checked+label {
+      color: rgb(35, 46, 60, 0.7);
+      border-bottom: 2px solid #206bc4;
+    }
+
+    #tab1:checked~.contents #tabContent1,
+    #tab2:checked~.contents #tabContent2 {
+      display: block;
+    }
+
+    .hr {
+      border-top: 1px solid rgb(217, 217, 217);
+    }
+
+    .subtitulo {
+      margin: 0;
+      align-items: center;
+      justify-content: center;
+      color: #656d77;
+      pointer-events: none;
+      font-size: 1em;
+    }
+  </style>
+</head>
+
+<body class="antialiased">
+  <div class="wrapper">
+    <%- include('../partials/header') %>
+      <div class="page-wrapper">
+        <div class="page-body">
+          <div class="container-xl">
+            <div id="tabs">
+              <input type="radio" id="tab1" name="tabs" checked>
+              <label for="tab1">Perfil de usuario</label>
+              <input type="radio" id="tab2" name="tabs">
+              <label for="tab2">Cambiar contraseña</label>
+              <div class="contents hr">
+                <div id="tabContent1">
+                  <div class="card">
+                    <div class="card-header d-inline-block">
+                      <h3 class="card-title">Perfil de usuario</h3>
+                      <p class="subtitulo text-muted">
+                        Aviso: La actualización del perfil de usuario implica la finalización de la sesión.
+                      </p>
+                    </div>
+                    <form action="/admin/perfil" method="POST" onsubmit="return validate();">
+                      <input type="hidden" name="idusua" id="idusua" value="<%- datos.usuario.IDUSUA %>">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-2">
+                            <div class="mb-1">
+                              <label class="form-label">UserID</label>
+                              <input type="text" name="userid" id="userid" class="form-control"
+                                style="text-transform: lowercase;" value="<%- datos.usuario.USERID %>" readonly />
+                            </div>
+                          </div>
+                          <div class="col-10">
+                            <div class="mb-1">
+                              <div class="input-control">
+                                <label class="form-label required">Nombre</label>
+                                <input type="text" name="nomusu" id="nomusu" class="form-control"
+                                  style="text-transform: uppercase;" value="<%- datos.usuario.NOMUSU %>" autofocus />
+                                <div class="invalid-feedback"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-10">
+                            <div class="mb-1">
+                              <div class="input-control">
+                                <label class="form-label required">Correo electrónico</label>
+                                <input type="text" name="emausu" id="emausu" class="form-control"
+                                  value="<%- datos.usuario.EMAUSU %>" />
+                                <div class="invalid-feedback"></div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-2">
+                            <div class="mb-1">
+                              <div class="input-control">
+                                <label class="form-label required">Teléfono</label>
+                                <input type="text" name="telusu" id="telusu" class="form-control"
+                                  value="<%- datos.usuario.TELUSU %>" />
+                                <div class="invalid-feedback"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <div class="mb-1">
+                              <div class="form-label">Oficina</div>
+                              <select class="form-select" id="cboofi" name="ofiusu" value="<%- datos.usuario.OFIUSU %>">
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-footer text-end">
+                        <div class="d-flex">
+                          <input class="btn btn-link" action="action" onclick="window.history.go(-1); return false;"
+                            type="submit" value="Cancelar" />
+                          <button type="submit" class="btn btn-primary ms-auto" id="btnUpdate">Actualizar
+                            perfil</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <div id="tabContent2">
+                  <div class="row">
+                    <div class="col-3"></div>
+                    <div class="col-6">
+                      <div class="card">
+                        <div class="card-header d-inline-block">
+                          <h3 class="card-title">Perfil de usuario</h3>
+                          <p class="subtitulo text-muted">
+                            Aviso: La actualización de la contraseña de usuario implica la finalización de la sesión.
+                          </p>
+                        </div>
+                        <form action="/admin/cambio" method="POST" onsubmit="return validate();">
+                          <input type="hidden" name="idusua" id="idusua" value="<%- datos.usuario.IDUSUA %>">
+                          <div class="card-body">
+                            <div class="mb-1">
+                              <label class="form-label required">Nueva contraseña</label>
+                              <div class="input-group input-group-flat">
+                                <input type="password" name="pwdusu" id="pwdusu" class="form-control" value=""
+                                  autocomplete="off" autofocus />
+                                <span class="input-group-text">
+                                  <a href="#" class="input-group-link"><i id="togglePassword"
+                                      class="bi bi-eye-slash"></i></a>
+                                </span>
+                                <div class="invalid-feedback"></div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="card-footer text-end">
+                            <div class="d-flex">
+                              <input class="btn btn-primary" action="action"
+                                onclick="window.history.go(-1); return false;" type="submit" value="Cancelar" />
+                              <button type="submit" class="btn btn-primary ms-auto" id="btnPassword">Actualizar
+                                contraseña</button>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                    <div class="col-3"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%- include('../partials/footer') %>
+  </div>
+
+  <script src="/js/ayuda.min.js"></script>
+  <script>
+    const togglePassword = document.querySelector('#togglePassword');
+
+    togglePassword.addEventListener('click', function (e) {
+      const type = pwdusu.getAttribute('type') === 'password' ? 'text' : 'password';
+      pwdusu.setAttribute('type', type);
+      this.classList.toggle("bi-eye");
+    });
+  </script>
+  <script>
+    const nomusu = document.getElementById('nomusu')
+    const emausu = document.getElementById('emausu')
+    const telusu = document.getElementById('telusu')
+    const pwdusu = document.getElementById('pwdusu')
+
+    const validate = () => {
+      const nomusuValue = nomusu.value.trim()
+      const emausuValue = emausu.value.trim()
+      const telusuValue = telusu.value.trim()
+      const pwdusuValue = pwdusu.value.trim()
+
+      if (document.getElementById('tab1').checked) {
+        if (nomusuValue === '') {
+          setError(nomusu, 'Nombre requerido')
+          setTimeout(function () {
+            setSuccess(nomusu)
+          }, 3000)
+          return false
+        } else {
+          setSuccess(nomusu)
+        }
+        if (emausuValue === '') {
+          setError(emausu, 'Email requerido')
+          setTimeout(function () {
+            setSuccess(emausu)
+          }, 3000)
+          return false
+        } else {
+          setSuccess(emausu)
+        }
+        if (telusuValue === '') {
+          setError(telusu, 'Teléfono requerido')
+          setTimeout(function () {
+            setSuccess(telusu)
+          }, 3000)
+          return false
+        } else {
+          setSuccess(telusu)
+        }
+      } else {
+        if (pwdusuValue === '') {
+          setError(pwdusu, 'Contraseña requerida')
+          setTimeout(function () {
+            setSuccess(pwdusu)
+          }, 3000)
+          return false
+        } else {
+          setSuccess(pwdusu)
+        }
+      }
+
+      return true
+    }
+
+    const setSuccess = (element) => {
+      const inputControl = element.parentElement;
+      const errorDisplay = inputControl.querySelector('.invalid-feedback');
+
+      errorDisplay.innerText = '';
+      inputControl.classList.add('is-valid');
+      element.classList.remove('is-invalid');
+    }
+    const setError = (element, message) => {
+      const inputControl = element.parentElement;
+      const errorDisplay = inputControl.querySelector('.invalid-feedback');
+
+      errorDisplay.innerText = message;
+      element.classList.add('is-invalid');
+      inputControl.classList.remove('is-valid');
+    }
+  </script>
+</body>
+
+</html>
