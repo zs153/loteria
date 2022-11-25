@@ -62,9 +62,9 @@ const deleteFromRec = (req) => {
 }
 const asignarFromRec = (req) => {
   const documento = {
-    iddocu: req.body.fraude.IDDOCU,
-    liqdoc: req.body.fraude.LIQDOC,
-    stadoc: req.body.fraude.STADOC,
+    iddocu: req.body.formulario.IDDOCU,
+    liqdoc: req.body.formulario.LIQDOC,
+    stadoc: req.body.formulario.STADOC,
   }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
@@ -127,7 +127,6 @@ export const documentos = async (req, res) => {
       res.status(404).end()
     }
   } catch (err) {
-    console.log(err)
     res.status(500).end()
   }
 }

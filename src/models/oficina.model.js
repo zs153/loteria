@@ -7,7 +7,7 @@ const baseQuery = `SELECT
     codofi
   FROM oficinas
 `
-const insertSql = `BEGIN FRAUDE_PKG.INSERTOFICINA(
+const insertSql = `BEGIN FORMULARIOS_PKG.INSERTOFICINA(
     :desofi, 
     :codofi,
     :usumov,
@@ -15,7 +15,7 @@ const insertSql = `BEGIN FRAUDE_PKG.INSERTOFICINA(
     :idofic
   ); END;
 `
-const updateSql = `BEGIN FRAUDE_PKG.UPDATEOFICINA(
+const updateSql = `BEGIN FORMULARIOS_PKG.UPDATEOFICINA(
   :idofic,
   :desofi, 
   :codofi,
@@ -23,7 +23,7 @@ const updateSql = `BEGIN FRAUDE_PKG.UPDATEOFICINA(
   :tipmov
 ); END;
 `
-const deleteSql = `BEGIN FRAUDE_PKG.DELETEOFICINA(
+const deleteSql = `BEGIN FORMULARIOS_PKG.DELETEOFICINA(
     :idofic,
     :usumov,
     :tipmov 
@@ -38,18 +38,8 @@ export const find = async (context) => {
     binds.idofic = context.idofic
     query += `WHERE idofic = :idofic`
   }
-  if (context.codofi) {
-    binds.codofi = context.codofi
-    query += `WHERE codofi = :codofi`
-  }
 
   const result = await simpleExecute(query, binds)
-  return result.rows
-}
-export const findAll = async () => {
-  let query = baseQuery
-
-  const result = await simpleExecute(query)
   return result.rows
 }
 export const insert = async (bind) => {

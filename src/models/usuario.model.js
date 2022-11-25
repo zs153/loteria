@@ -116,7 +116,6 @@ export const find = async (context) => {
     query += "WHERE emausu = :emausu";
   }
   
-  console.log(query,binds)
   const result = await simpleExecute(query, binds);
   return result.rows;
 };

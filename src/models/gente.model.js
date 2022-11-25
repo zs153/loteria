@@ -9,7 +9,7 @@ FROM gentes
 export const find = async (context) => {
   let query = baseQuery;
   let binds = {}
-console.log(query, context)
+
   if (context.nifgen.lengtn === 9) {
     binds.nifgen = context.nifgen;
     query += `WHERE nifgen = :nifgen`;

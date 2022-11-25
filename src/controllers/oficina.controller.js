@@ -53,10 +53,8 @@ export const oficina = async (req, res) => {
   }
 }
 export const oficinas = async (req, res) => {
-  const context = req.body.oficina
-
   try {
-    const result = await DAL.findAll(context)
+    const result = await DAL.find({})
 
     if (result !== null) {
       res.status(200).json(result)

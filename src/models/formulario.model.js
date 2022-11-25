@@ -56,7 +56,7 @@ const deleteSql = `BEGIN FORMULARIOS_PKG.DELETEDOCUMENTO(
   :tipmov 
 ); END;
 `
-const asignarSql = `BEGIN FRAUDE_PKG.ASIGNARDOCUMENTO(
+const asignarSql = `BEGIN FORMULARIOS_PKG.ASIGNARDOCUMENTO(
   :iddocu,
   :liqdoc,
   :stadoc,
@@ -64,7 +64,7 @@ const asignarSql = `BEGIN FRAUDE_PKG.ASIGNARDOCUMENTO(
   :tipmov 
 ); END;
 `
-const unasignarSql = `BEGIN FRAUDE_PKG.UNASIGNARDOCUMENTO(
+const unasignarSql = `BEGIN FORMULARIOS_PKG.UNASIGNARDOCUMENTO(
   :iddocu,
   :liqdoc,
   :stadoc,
@@ -72,7 +72,7 @@ const unasignarSql = `BEGIN FRAUDE_PKG.UNASIGNARDOCUMENTO(
   :tipmov 
 ); END;
 `
-const resolverSql = `BEGIN FRAUDE_PKG.RESOLVERDOCUMENTO(
+const resolverSql = `BEGIN FORMULARIOS_PKG.RESOLVERDOCUMENTO(
   :iddocu,
   :liqdoc,
   :stadoc,
@@ -113,7 +113,7 @@ export const find = async (context) => {
       `
     }
   }
-console.log(query,binds)
+
   const result = await simpleExecute(query, binds)
   return result.rows
 }
