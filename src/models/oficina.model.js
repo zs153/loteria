@@ -34,11 +34,11 @@ export const find = async (context) => {
   let query = baseQuery
   let binds = {}
 
-  if (context.idofic) {
-    binds.idofic = context.idofic
+  if (context.IDOFIC) {
+    binds.idofic = context.IDOFIC
     query += `WHERE idofic = :idofic`
   }
-
+  
   const result = await simpleExecute(query, binds)
   return result.rows
 }

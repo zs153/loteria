@@ -53,8 +53,10 @@ export const tipo = async (req, res) => {
   }
 };
 export const tipos = async (req, res) => {
+  const bind = req.body
+
   try {
-    const result = await DAL.find();
+    const result = await DAL.find(bind);
 
     if (result !== null) {
       res.status(200).json(result);

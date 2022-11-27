@@ -4,8 +4,7 @@ import { simpleExecute } from '../services/database.js'
 const baseQuery = `SELECT 
     oo.desofi,
     tt.destip,
-    dd.*,
-    TO_CHAR(dd.fecdoc, 'DD/MM/YYYY') "STRFEC"
+    dd.*
 FROM documentos dd
 INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc
 INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc
@@ -32,20 +31,16 @@ const insertSql = `BEGIN FORMULARIOS_PKG.INSERTFORMULARIO(
 `
 const updateSql = `BEGIN FORMULARIOS_PKG.UPDATEFORMULARIO(
   :iddocu,
-  :fecdoc,
+  TO_DATE(:fecdoc,'YYYY-MM-DD'),
   :nifcon,
   :nomcon,
   :emacon,
   :telcon,
   :movcon,
-  :refdoc,
   :tipdoc,
   :ejedoc,
   :ofidoc,
   :obsdoc,
-  :fundoc,
-  :liqdoc,
-  :stadoc,
   :usumov,
   :tipmov
 ); END;
@@ -56,7 +51,7 @@ const deleteSql = `BEGIN FORMULARIOS_PKG.DELETEFORMULARIO(
   :tipmov 
 ); END;
 `
-const asignarSql = `BEGIN FORMULARIOS_PKG.ASIGNARFORMULARIO(
+const asignarSql = `BEGIN FORMULARIOS_PKG.CAMBIOESTADOFORMULARIO(
   :iddocu,
   :liqdoc,
   :stadoc,
@@ -64,7 +59,7 @@ const asignarSql = `BEGIN FORMULARIOS_PKG.ASIGNARFORMULARIO(
   :tipmov 
 ); END;
 `
-const unasignarSql = `BEGIN FORMULARIOS_PKG.UNASIGNARFORMULARIO(
+const unasignarSql = `BEGIN FORMULARIOS_PKG.CAMBIOESTADOFORMULARIO(
   :iddocu,
   :liqdoc,
   :stadoc,
@@ -72,7 +67,7 @@ const unasignarSql = `BEGIN FORMULARIOS_PKG.UNASIGNARFORMULARIO(
   :tipmov 
 ); END;
 `
-const resolverSql = `BEGIN FORMULARIOS_PKG.RESOLVERFORMULARIO(
+const resolverSql = `BEGIN FORMULARIOS_PKG.CAMBIOESTADOFORMULARIO(
   :iddocu,
   :liqdoc,
   :stadoc,
@@ -91,17 +86,16 @@ export const find = async (context) => {
   } else if (context.REFDOC) {
     binds.refdoc = context.REFDOC
     query += `WHERE refdoc = :refdoc`
-  } else if (context.liqdoc) {
+  } else if (context.LIQDOC) {
     binds.liqdoc = context.LIQDOC
-    if (context.STADOC === 1) {
+    if (context.TIPVIS === 1) {
       query += `WHERE dd.liqdoc = :liqdoc
           AND BITAND(dd.stadoc,1) > 0
         UNION
         SELECT
           oo.desofi,
           tt.destip,
-          dd.*,
-          TO_CHAR(dd.fecdoc, 'DD/MM/YYYY') "STRFEC"
+          dd.*
         FROM documentos dd
         INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc
         INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc

@@ -1,7 +1,7 @@
 import express from 'express'
 import {
-  documento,
-  documentos,
+  formulario,
+  formularios,
   crear,
   borrar,
   modificar,
@@ -13,8 +13,8 @@ import {
 const apiFormularioRouter = express.Router()
 
 // formularios
-apiFormularioRouter.post("/formulario", documento);
-apiFormularioRouter.post("/formularios", documentos);
+apiFormularioRouter.post("/formulario", formulario);
+apiFormularioRouter.post("/formularios", formularios);
 apiFormularioRouter.post("/formularios/insert", crear);
 apiFormularioRouter.post("/formularios/update", modificar);
 apiFormularioRouter.post("/formularios/delete", borrar);

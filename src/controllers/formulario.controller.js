@@ -1,67 +1,63 @@
 import * as DAL from '../models/formulario.model'
 
 const insertFromRec = (req) => {
-  const documento = {
-    fecdoc: req.body.documento.FECDOC,
-    nifcon: req.body.documento.NIFCON,
-    nomcon: req.body.documento.NOMCON,
-    emacon: req.body.documento.EMACON,
-    telcon: req.body.documento.TELCON,
-    movcon: req.body.documento.MOVCON,
-    refdoc: req.body.documento.REFDOC,
-    tipdoc: req.body.documento.TIPDOC,
-    ejedoc: req.body.documento.EJEDOC,
-    ofidoc: req.body.documento.OFIDOC,
-    obsdoc: req.body.documento.OBSDOC,
-    fundoc: req.body.documento.FUNDOC,
-    liqdoc: req.body.documento.LIQDOC,
-    stadoc: req.body.documento.STADOC,
+  const formulario = {
+    fecdoc: req.body.formulario.FECDOC,
+    nifcon: req.body.formulario.NIFCON,
+    nomcon: req.body.formulario.NOMCON,
+    emacon: req.body.formulario.EMACON,
+    telcon: req.body.formulario.TELCON,
+    movcon: req.body.formulario.MOVCON,
+    refdoc: req.body.formulario.REFDOC,
+    tipdoc: req.body.formulario.TIPDOC,
+    ejedoc: req.body.formulario.EJEDOC,
+    ofidoc: req.body.formulario.OFIDOC,
+    obsdoc: req.body.formulario.OBSDOC,
+    fundoc: req.body.formulario.FUNDOC,
+    liqdoc: req.body.formulario.LIQDOC,
+    stadoc: req.body.formulario.STADOC,
   }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(documento, movimiento)
+  return Object.assign(formulario, movimiento)
 }
 const updateFromRec = (req) => {
-  const documento = {
-    iddocu: req.body.documento.IDDOCU,
-    fecdoc: req.body.documento.FECDOC,
-    nifcon: req.body.documento.NIFDOC,
-    nomcon: req.body.documento.NOMCON,
-    emacon: req.body.documento.EMACON,
-    telcon: req.body.documento.TELCON,
-    movcon: req.body.documento.MOVCON,
-    refdoc: req.body.documento.REFDOC,
-    tipdoc: req.body.documento.TIPDOC,
-    ejedoc: req.body.documento.EJEDOC,
-    ofidoc: req.body.documento.OFIDOC,
-    obsdoc: req.body.documento.OBSDOC,
-    fundoc: req.body.documento.FUNDOC,
-    liqdoc: req.body.documento.LIQDOC,
-    stadoc: req.body.documento.STADOC,
+  const formulario = {
+    iddocu: req.body.formulario.IDDOCU,
+    fecdoc: req.body.formulario.FECDOC,
+    nifcon: req.body.formulario.NIFCON,
+    nomcon: req.body.formulario.NOMCON,
+    emacon: req.body.formulario.EMACON,
+    telcon: req.body.formulario.TELCON,
+    movcon: req.body.formulario.MOVCON,
+    tipdoc: req.body.formulario.TIPDOC,
+    ejedoc: req.body.formulario.EJEDOC,
+    ofidoc: req.body.formulario.OFIDOC,
+    obsdoc: req.body.formulario.OBSDOC,
   }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(documento, movimiento)
+  return Object.assign(formulario, movimiento)
 }
 const deleteFromRec = (req) => {
-  const documento = {
-    iddocu: req.body.documento.IDDOCU,
+  const formulario = {
+    iddocu: req.body.formulario.IDDOCU,
   }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(documento, movimiento)
+  return Object.assign(formulario, movimiento)
 }
 const asignarFromRec = (req) => {
-  const documento = {
+  const formulario = {
     iddocu: req.body.formulario.IDDOCU,
     liqdoc: req.body.formulario.LIQDOC,
     stadoc: req.body.formulario.STADOC,
@@ -71,37 +67,37 @@ const asignarFromRec = (req) => {
     tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(documento, movimiento)
+  return Object.assign(formulario, movimiento)
 }
 const unasignarFromRec = (req) => {
-  const documento = {
-    IDDOCU: req.body.documento.IDDOCU,
-    LIQDOC: req.body.documento.LIQDOC,
-    STADOC: req.body.documento.STADOC,
+  const formulario = {
+    IDDOCU: req.body.formulario.IDDOCU,
+    LIQDOC: req.body.formulario.LIQDOC,
+    STADOC: req.body.formulario.STADOC,
   }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(documento, movimiento)
+  return Object.assign(formulario, movimiento)
 }
 const resolverFromRec = (req) => {
-  const documento = {
-    IDDOCU: req.body.documento.IDDOCU,
-    LIQDOC: req.body.documento.LIQDOC,
-    STADOC: req.body.documento.STADOC,
+  const formulario = {
+    IDDOCU: req.body.formulario.IDDOCU,
+    LIQDOC: req.body.formulario.LIQDOC,
+    STADOC: req.body.formulario.STADOC,
   }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(documento, movimiento)
+  return Object.assign(formulario, movimiento)
 }
 
-export const documento = async (req, res) => {
-  const context = req.body.documento
+export const formulario = async (req, res) => {
+  const context = req.body.formulario
 
   try {
     const result = await DAL.find(context)
@@ -115,8 +111,8 @@ export const documento = async (req, res) => {
     res.status(500).end()
   }
 }
-export const documentos = async (req, res) => {
-  const context = req.body.documento
+export const formularios = async (req, res) => {
+  const context = req.body.formulario
 
   try {
     const result = await DAL.find(context)
@@ -185,7 +181,7 @@ export const asignar = async (req, res) => {
 }
 export const unasignar = async (req, res) => {
   try {
-    const result = await DAL.unasing(unasignFromRec(req))
+    const result = await DAL.unasign(unasignarFromRec(req))
 
     if (result !== null) {
       res.status(200).json(result)
