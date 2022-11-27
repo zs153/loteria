@@ -6,8 +6,10 @@ import path from "path";
 import mainRouter from "./routes/main.router";
 import adminRouter from "./routes/admin.router";
 import loginRouter from "./routes/login.router";
-import usuarioRouter from "./routes/usuario.router"
+import usuarioRouter from "./routes/usuario.router";
 import formularioRouter from "./routes/formulario.router";
+import oficinaRouter from "./routes/oficina.router";
+import tipoRouter from "./routes/tipo.router";
 
 const app = express();
 
@@ -26,6 +28,8 @@ app.use("/", mainRouter)
 app.use("/admin", adminRouter)
 app.use("/admin", usuarioRouter)
 app.use("/admin", formularioRouter)
+app.use("/admin", oficinaRouter)
+app.use("/admin", tipoRouter)
 app.use("/log", loginRouter)
 
 export default app;

@@ -5,9 +5,12 @@ export const mainPage = async (req, res) => {
   const user = req.user;
 
   try {
-    const result = await axios.get("http://localhost:8000/api/oficinas");
+    const result = await axios.post("http://localhost:8000/api/oficinas", {});
+    const datos = {
+      oficinas: result.data,
+    }
 
-    res.render("admin/oficinas", { user, oficinas: result.data.dat });
+    res.render("admin/oficinas", { user, datos });
   } catch (error) {
     const msg = "No se ha podido acceder a los datos de la aplicación.";
 
@@ -19,9 +22,9 @@ export const mainPage = async (req, res) => {
 export const addPage = async (req, res) => {
   const user = req.user;
   const oficina = {
-    idofic: 0,
-    desofi: "",
-    codofi: "",
+    IDOFIC: 0,
+    DESOFI: "",
+    CODOFI: "",
   };
 
   try {
@@ -40,20 +43,16 @@ export const addPage = async (req, res) => {
 };
 export const editPage = async (req, res) => {
   const user = req.user;
-
+  const oficina = {
+    IDOFIC: req.params.id
+  }
   try {
     const result = await axios.post("http://localhost:8000/api/oficina", {
-      idofic: req.params.id,
+      oficina,
     });
 
-    const oficina = {
-      idofic: result.data.idofic,
-      desofi: result.data.desofi,
-      codofi: result.data.codofi,
-    };
-
     const datos = {
-      oficina,
+      oficina: result.data,
     };
 
     res.render("admin/oficinas/edit", { user, datos });
@@ -68,12 +67,12 @@ export const editPage = async (req, res) => {
 export const insertOficina = async (req, res) => {
   const user = req.user;
   const oficina = {
-    desofi: req.body.desofi,
-    codofi: req.body.codofi,
+    DESOFI: req.body.desofi.toUpperCase(),
+    CODOFI: req.body.codofi,
   };
   const movimiento = {
-    usuarioMov: user.id,
-    tipoMov: tiposMovimiento.crearOficina,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.crearOficina,
   };
 
   try {
@@ -98,13 +97,13 @@ export const insertOficina = async (req, res) => {
 export const updateOficina = async (req, res) => {
   const user = req.user;
   const oficina = {
-    idofic: req.body.idofic,
-    desofi: req.body.desofi,
-    codofi: req.body.codofi,
+    IDOFIC: req.body.idofic,
+    DESOFI: req.body.desofi,
+    CODOFI: req.body.codofi,
   };
   const movimiento = {
-    usuarioMov: user.id,
-    tipoMov: tiposMovimiento.modificarOficina,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.modificarOficina,
   };
 
   try {
@@ -130,11 +129,11 @@ export const updateOficina = async (req, res) => {
 export const deleteOficina = async (req, res) => {
   const user = req.user;
   const oficina = {
-    idofic: req.body.idofic,
+    IDOFIC: req.body.idofic,
   };
   const movimiento = {
-    usuarioMov: user.id,
-    tipoMov: tiposMovimiento.borrarOficina,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.modificarOficina,
   };
 
   try {

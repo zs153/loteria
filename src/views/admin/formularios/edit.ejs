@@ -32,7 +32,7 @@
                 <% }) %>
                 <% } %>
                 <form id="form" action="/admin/formularios/update" method="POST" onsubmit="return validate();">
-                  <input type="hidden" name="iddocu" id="iddocu" value="<%- datos.formulario.iddocu %>">
+                  <input type="hidden" name="iddocu" id="iddocu" value="<%- datos.formulario.IDDOCU %>">
                   <div class="card-header">
                     <h3 class="card-title">Editar formulario</h3>
                   </div>
@@ -70,7 +70,12 @@
                       <div class="col-9">
                         <div class="mb-1">
                           <div class="form-label">Tipo</div>
-                          <select class="form-select" id="cbotip" name="tipfra" value="<%- datos.formulario.TIPFRA %>">
+                          <select class="form-select" id="cbotip" name="tipdoc" value="<%- datos.formulario.TIPDOC %>">
+                            <% datos.tipos.map(element=> { %>
+                            <option value="<%- element.IDTIPO %>" <%- element.IDTIPO === datos.formulario.TIPDOC ? " selected" :"" %>>
+                              <%- element.DESTIP %>
+                            </option>
+                            <% }) %>
                           </select>
                         </div>
                       </div>
@@ -78,8 +83,7 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">Ejercicio</label>
-                            <input type="number" name="ejefra" id="ejefra" class="form-control"
-                              value="<%- datos.formulario.EJEFRA %>" />
+                            <input type="number" name="ejedoc" id="ejedoc" class="form-control" value="<%- datos.formulario.EJEDOC %>" />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -87,8 +91,7 @@
                       <div class="col-1">
                         <div class="mb-1">
                           <label class="form-label">Adm</label>
-                          <input type="text" name="funfra" id="funfra" class="form-control"
-                            value="<%- datos.formulario.FUNFRA %>" readonly />
+                          <input type="text" name="fundoc" id="fundoc" class="form-control" value="<%- datos.formulario.FUNDOC %>" readonly />
                         </div>
                       </div>
                     </div>
@@ -97,9 +100,8 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">Fecha</label>
-                            <input type="date" name="fecfra" id="fecfra" class="form-control"
-                              value="<%- datos.formulario.STRFEC %>"
-                              <%- datos.formulario.FUNFRA === 'SYSTEM' ? 'readonly' : '' %> />
+                            <input type="date" name="fecdoc" id="fecdoc" class="form-control" value="<%- datos.formulario.ISOFEC %>"
+                              <%- datos.formulario.FUNDOC === 'SYSTEM' ? 'readonly' : '' %> />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -107,23 +109,26 @@
                       <div class="col-5">
                         <div class="mb-1">
                           <div class="form-label">Oficina</div>
-                          <select class="form-select" id="cboofi" name="ofifra" value="<%- datos.formulario.OFIFRA %>">
-                          </select>
+                            <select class="form-select" id="cboofi" name="ofidoc" value="<%- datos.formulario.OFIDOC %>">
+                              <% datos.oficinas.map(element=> { %>
+                              <option value="<%- element.IDOFIC %>" <%- element.IDOFIC === datos.formulario.OFIDOC ? " selected" :"" %>>
+                                <%- element.DESOFI %>
+                              </option>
+                              <% }) %>
+                            </select>
                         </div>
                       </div>
                       <div class="col-2">
                         <div class="mb-3">
                           <label class="form-label">Teléfono</label>
-                          <input type="text" name="telcon" id="telcon" class="form-control"
-                            value="<%- datos.formulario.TELCON %>" />
+                          <input type="text" name="telcon" id="telcon" class="form-control" value="<%- datos.formulario.TELCON %>" />
                         </div>
                       </div>
                       <div class="col-2">
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label">Movil</label>
-                            <input type="text" name="movcon" id="movcon" class="form-control"
-                              value="<%- datos.formulario.MOVCON %>" />
+                            <input type="text" name="movcon" id="movcon" class="form-control" value="<%- datos.formulario.MOVCON %>" />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -134,8 +139,8 @@
                         <small></small>
                         <div class="mb-1">
                           <label class="form-label">Observaciones</label>
-                          <textarea type="text" name="obsfra" id="obsfra" class="form-control" rows="3"
-                            style="resize: vertical"><%- datos.formulario.OBSFRA %></textarea>
+                          <textarea type="text" name="obsdoc" id="obsdoc" class="form-control" rows="3"
+                            style="resize: vertical"><%- datos.formulario.OBSDOC %></textarea>
                         </div>
                       </div>
                     </div>
@@ -162,38 +167,19 @@
   </div>
 
   <script src="/js/ayuda.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const messages = document.getElementById('messages')
-    const socket = io()
-
-    socket.on('receive-message', msg => {
-      const li = document.createElement('li')
-      li.textContent = msg
-      messages.appendChild(li)
-
-      const toggleBadge = document.querySelector('#toggleBadge');
-      const numeroMensajes = messages.getElementsByTagName("li").length
-      if (numeroMensajes === 1) {
-        toggleBadge.classList.toggle('d-none')
-      }
-    })
-  </script>
   <script>
       const nifcon = document.getElementById('nifcon')
       const nomcon = document.getElementById('nomcon')
-      const ejefor = document.getElementById('ejedoc')
-      const fecfor = document.getElementById('fecdoc')
-      const obsfor = document.getElementById('obsdoc')
-      const tipfor = document.getElementById('cbotip')
+      const ejedoc = document.getElementById('ejedoc')
+      const fecdoc = document.getElementById('fecdoc')
+      const tipdoc = document.getElementById('cbotip')
 
       const validate = () => {
         const nifconValue = nifcon.value.trim().toUpperCase().slice(0, 9)
         const nomconValue = nomcon.value.trim()
-        const ejeforValue = ejefor.value.trim()
-        const fecforValue = fecfor.value.trim()
-        const obsdocValue = obsfor.value.trim()
-        const tipforValue = tipfor.value
+        const ejedocValue = ejedoc.value.trim()
+        const fecdocValue = fecdoc.value.trim()
+        const tipdocValue = tipdoc.value
 
         if (nifconValue === '') {
           setError(nifcon, 'NIF/NIE requerido')
@@ -251,7 +237,7 @@
         } else {
           setSuccess(nomcon)
         }
-        if (tipfraValue === '0') {
+        if (tipdocValue === '0') {
           setError(cbotip, 'Seleccione un tipo')
           setTimeout(function () {
             setSuccess(cbotip)
@@ -260,33 +246,33 @@
         } else {
           setSuccess(cbotip)
         }
-        if (ejefraValue === '') {
-          setError(ejefra, 'Ejercicio requerido')
+        if (ejedocValue === '') {
+          setError(ejedoc, 'Ejercicio requerido')
           setTimeout(function () {
-            setSuccess(ejefra)
+            setSuccess(ejedoc)
           }, 3000)
           return false
         } else {
           const pattern = /^([0-9]{4})$/
-          const isValid = pattern.test(ejefraValue)
+          const isValid = pattern.test(ejedocValue)
 
           if (isValid === false) {
-            setError(ejefra, 'Introduzca ejercicio válido')
+            setError(ejedoc, 'Introduzca ejercicio válido')
             setTimeout(function () {
-              setSuccess(ejefra)
+              setSuccess(ejedoc)
             }, 3000)
             return false
           }
-          setSuccess(ejefra)
+          setSuccess(ejedoc)
         }
-        if (isNaN(Date.parse(fecfraValue))) {
-          setError(fecfra, 'Fecha requerida')
+        if (isNaN(Date.parse(fecdocValue))) {
+          setError(fecdoc, 'Fecha requerida')
           setTimeout(function () {
-            setSuccess(fecfra)
+            setSuccess(fecdoc)
           }, 3000)
           return false
         } else {
-          setSuccess(fecfra)
+          setSuccess(fecdoc)
         }
 
         return true

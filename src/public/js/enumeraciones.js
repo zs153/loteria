@@ -66,7 +66,6 @@ export const estadosDocumento = {
   pendiente: 0,
   asignado: 1,
   resuelto: 2,
-  remitido: 3,
 };
 export const estadosCita = {
   disponible: 0,

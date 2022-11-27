@@ -1,5 +1,4 @@
 import axios from "axios";
-import jwt from "jsonwebtoken";
 import {
   estadosDocumento,
   estadosSms,
@@ -9,18 +8,18 @@ import {
 
 export const mainPage = async (req, res) => {
   const user = req.user;
-  const documento = {
-    LIQDOC: user.userID,
-    STADOC: estadosDocumento.pendiente + estadosDocumento.asignado,
-  };
   const verTodo = false
+  const formulario = {
+    LIQDOC: user.userID,
+    TIPVIS: estadosDocumento.pendiente + estadosDocumento.asignado,
+  };
 
   try {
     const result = await axios.post("http://localhost:8000/api/formularios", {
-      documento,
+      formulario,
     })
     const datos = {
-      documentos: JSON.stringify(result.data),
+      formularios: JSON.stringify(result.data),
       estadosDocumento,
       tiposRol,
       verTodo,
@@ -38,8 +37,8 @@ export const mainPage = async (req, res) => {
 export const addPage = async (req, res) => {
   const user = req.user;
   const fecha = new Date();
-  const documento = {
-    STRFEC: fecha.toISOString().slice(0, 10),
+  const formulario = {
+    ISOFEC: fecha.toISOString().slice(0, 10),
     EJEFRA: fecha.getFullYear() - 1,
     OFIDOC: user.oficina,
     FUNDOC: user.userID,
@@ -50,7 +49,7 @@ export const addPage = async (req, res) => {
     const tipos = await axios.post("http://localhost:8000/api/tipos")
     const oficinas = await axios.post("http://localhost:8000/api/oficinas")
     const datos = {
-      documento,
+      formulario,
       tipos: tipos.data,
       oficinas: oficinas.data,
     }
@@ -66,16 +65,23 @@ export const addPage = async (req, res) => {
 }
 export const editPage = async (req, res) => {
   const user = req.user;
-  const formulario = {
-    IDDOCU: req.params.iddocu,
+  let formulario = {
+    IDDOCU: req.params.id,
   };
-  console.log(formulario)
+
   try {
+    const tipos = await axios.post("http://localhost:8000/api/tipos", {})
+    const oficinas = await axios.post("http://localhost:8000/api/oficinas", {})
     const result = await axios.post("http://localhost:8000/api/formulario", {
       formulario,
     });
+
+    formulario = result.data
+    formulario.ISOFEC = formulario.FECDOC.slice(0, 10)
     const datos = {
-      formulario: result.data,
+      formulario,
+      tipos: tipos.data,
+      oficinas: oficinas.data,
       tiposRol,
     };
 
@@ -93,25 +99,25 @@ export const editPage = async (req, res) => {
 export const ejercicioPage = async (req, res) => {
   const user = req.user;
   const fecha = new Date();
-  let documento = {
-    IDDOCU: req.params.iddocu,
+  let formulario = {
+    IDDOCU: req.params.id,
   };
 
   try {
     // formulario
     const result = await axios.post("http://localhost:8000/api/formulario", {
-      documento,
+      formulario,
     })
 
-    documento = result.data
-    documento.FECHA = fecha.toISOString().substring(0, 10)
-    documento.EJEDOC = fecha.getFullYear()
-    documento.FUNDOC = user.userID
-    documento.LIQDOC = user.userID
-    documento.STADOC = estadosDocumento.asignado
+    formulario = result.data
+    formulario.FECISO = fecha.toISOString().substring(0, 10)
+    formulario.EJEDOC = fecha.getFullYear()
+    formulario.FUNDOC = user.userID
+    formulario.LIQDOC = user.userID
+    formulario.STADOC = estadosDocumento.asignado
 
     const datos = {
-      documento,
+      formulario,
     };
 
     res.render("admin/formularios/ejercicio", { user, datos });
@@ -127,7 +133,7 @@ export const ejercicioPage = async (req, res) => {
 export const relacionPage = async (req, res) => {
   const user = req.user;
   const fecha = new Date();
-  let documento = {
+  let formulario = {
     IDDOCU: req.params.iddocu,
   };
 
@@ -137,20 +143,20 @@ export const relacionPage = async (req, res) => {
       documento,
     });
 
-    documento = result.data
-    documento.NIFCON = ''
-    documento.NOMCON = ''
-    documento.EMACON = ''
-    documento.TELCON = ''
-    documento.MOVCON = ''
-    documento.OBSDOC = ''
-    documento.EJEDOC = fecha.getFullYear()
-    documento.FUNDOC = user.userID
-    documento.LIQDOC = user.userID
-    documento.STADOC = estadosDocumento.asignado
+    formulario = result.data
+    formulario.NIFCON = ''
+    formulario.NOMCON = ''
+    formulario.EMACON = ''
+    formulario.TELCON = ''
+    formulario.MOVCON = ''
+    formulario.OBSDOC = ''
+    formulario.EJEDOC = fecha.getFullYear()
+    formulario.FUNDOC = user.userID
+    formulario.LIQDOC = user.userID
+    formulario.STADOC = estadosDocumento.asignado
 
     const datos = {
-      documento,
+      formulario,
     };
 
     res.render("admin/formularios/relacion", { user, datos });
@@ -168,7 +174,7 @@ export const relacionPage = async (req, res) => {
 export const insert = async (req, res) => {
   const user = req.user;
   const referencia = "Z" + randomString(10, "1234567890YMGS");
-  const documento = {
+  const formulario = {
     FECDOC: req.body.fecdoc,
     NIFCON: req.body.nifcon.toUpperCase(),
     NOMCON: req.body.nomcon.toUpperCase(),
@@ -190,13 +196,10 @@ export const insert = async (req, res) => {
   };
 
   try {
-    const result = await axios.post(
-      "http://localhost:8000/api/formularios/insert",
-      {
-        documento,
-        movimiento,
-      }
-    );
+    await axios.post("http://localhost:8000/api/formularios/insert", {
+      formulario,
+      movimiento,
+    });
 
     res.redirect("/admin/formularios");
   } catch (error) {
@@ -213,8 +216,8 @@ export const insert = async (req, res) => {
 }
 export const update = async (req, res) => {
   const user = req.user;
-  const documento = {
-    IDDOCU: req.body.idfrau,
+  const formulario = {
+    IDDOCU: req.body.iddocu,
     FECDOC: req.body.fecdoc,
     NIFCON: req.body.nifcon.toUpperCase(),
     NOMCON: req.body.nomcon.toUpperCase(),
@@ -232,13 +235,10 @@ export const update = async (req, res) => {
   };
 
   try {
-    const result = await axios.post(
-      "http://localhost:8000/api/formularios/update",
-      {
-        documento,
-        movimiento,
-      }
-    );
+    await axios.post("http://localhost:8000/api/formularios/update", {
+      formulario,
+      movimiento,
+    });
 
     res.redirect("/admin/formularios");
   } catch (error) {
@@ -255,7 +255,7 @@ export const update = async (req, res) => {
 }
 export const remove = async (req, res) => {
   const user = req.user;
-  const documento = {
+  const formulario = {
     IDDOCU: req.body.iddocu,
   };
   const movimiento = {
@@ -264,13 +264,10 @@ export const remove = async (req, res) => {
   };
 
   try {
-    const result = await axios.post(
-      "http://localhost:8000/api/formularios/delete",
-      {
-        documento,
-        movimiento,
-      }
-    );
+    await axios.post("http://localhost:8000/api/formularios/delete", {
+      formulario,
+      movimiento,
+    });
 
     res.redirect("/admin/formularios");
   } catch (error) {
@@ -283,16 +280,16 @@ export const remove = async (req, res) => {
 }
 export const asignar = async (req, res) => {
   const user = req.user;
-  let documento = {
+  let formulario = {
     IDDOCU: req.body.iddocu,
   };
 
   try {
     const result = await axios.post("http://localhost:8000/api/formulario", {
-      documento,
+      formulario,
     });
 
-    documento = {
+    formulario = {
       IDDOCU: result.data.IDDOCU,
       LIQDOC: user.userID,
       STADOC: estadosDocumento.asignado,
@@ -303,13 +300,10 @@ export const asignar = async (req, res) => {
     };
 
     if (result.data.STADOC === estadosDocumento.pendiente) {
-      const result = await axios.post(
-        "http://localhost:8000/api/formularios/cambio",
-        {
-          documento,
-          movimiento,
-        }
-      );
+      await axios.post("http://localhost:8000/api/formularios/cambio", {
+        formulario,
+        movimiento,
+      });
 
       res.redirect("/admin/formularios");
     }
@@ -323,29 +317,30 @@ export const asignar = async (req, res) => {
 }
 export const resolver = async (req, res) => {
   const user = req.user;
-  let documento = {
+  let formulario = {
     IDDOCU: req.body.iddocu,
-    LIQDOC: user.userID,
-    STADOC: estadosDocumento.resuelto,
-  };
-  const movimiento = {
-    USUMOV: user.id,
-    TIPMOV: tiposMovimiento.resolverFormulario,
   };
 
   try {
     const result = await axios.post("http://localhost:8000/api/formulario", {
-      documento,
+      formulario,
     });
 
     if (result.data.STADOC === estadosDocumento.asignado) {
-      const result = await axios.post(
-        "http://localhost:8000/api/formularios/resolver",
-        {
-          documento,
-          movimiento,
-        }
-      );
+      formulario = {
+        IDDOCU: result.data.IDDOCU,
+        LIQDOC: user.userID,
+        STADOC: estadosDocumento.resuelto,
+      };
+      const movimiento = {
+        USUMOV: user.id,
+        TIPMOV: tiposMovimiento.resolverFormulario,
+      };
+
+      await axios.post("http://localhost:8000/api/formularios/resolver", {
+        formulario,
+        movimiento,
+      });
     }
 
     res.redirect("/admin/formularios");
@@ -359,25 +354,29 @@ export const resolver = async (req, res) => {
 }
 export const unasignar = async (req, res) => {
   const user = req.user;
-  const documento = {
+  let formulario = {
     IDDOCU: req.body.iddocu,
-    LIQDOC: "PEND",
-    STADOC: estadosDocumento.pendiente,
-  };
-  const movimiento = {
-    USUMOV: user.id,
-    TIPMOV: tiposMovimiento.desasignarFormulario,
   };
 
   try {
-    const resul = await axios.post("http://localhost:8000/api/formulario", {
+    const result = await axios.post("http://localhost:8000/api/formulario", {
       documento,
     });
 
     if (
-      resul.data.STADOC === estadosDocumento.asignado ||
-      resul.data.STADOC === estadosDocumento.resuelto
+      result.data.STADOC === estadosDocumento.asignado ||
+      result.data.STADOC === estadosDocumento.resuelto
     ) {
+      formulario = {
+        IDDOCU: result.data.IDDOCU,
+        LIQDOC: "PEND",
+        STADOC: estadosDocumento.pendiente,
+      };
+      const movimiento = {
+        USUMOV: user.id,
+        TIPMOV: tiposMovimiento.desasignarFormulario,
+      };
+
       await axios.post("http://localhost:8000/api/formularios/unasignar", {
         documento,
         movimiento,
@@ -395,22 +394,22 @@ export const unasignar = async (req, res) => {
 }
 export const verTodo = async (req, res) => {
   const user = req.user;
-  const documento = {
-    LIQDOC: user.userID,
-    STADOC: estadosDocumento.resuelto,
-  };
   const verTodo = true;
+  const formulario = {
+    LIQDOC: user.userID,
+    TIPVIS: estadosDocumento.resuelto,
+  };
 
   if (user.rol === tiposRol.admin) {
-    delete documento.LIQDOC
+    delete formulario.LIQDOC
   }
 
   try {
     const result = await axios.post("http://localhost:8000/api/formularios", {
-      documento,
+      formulario,
     });
     const datos = {
-      documento: JSON.stringify(result.data),
+      formularios: JSON.stringify(result.data),
       estadosDocumento,
       tiposRol,
       verTodo,
@@ -427,7 +426,7 @@ export const verTodo = async (req, res) => {
 }
 export const sms = async (req, res) => {
   const user = req.user;
-  const documento = {
+  const formulario = {
     IDDOCU: req.body.iddocu,
   };
   const sms = {
@@ -442,7 +441,7 @@ export const sms = async (req, res) => {
 
   try {
     await axios.post("http://localhost:8000/api/sms/insert", {
-      documento,
+      formulario,
       sms,
       movimiento,
     });
@@ -461,7 +460,7 @@ export const sms = async (req, res) => {
 export const ejercicio = async (req, res) => {
   const user = req.user;
   const fecha = new Date()
-  const documento = {
+  const formulario = {
     FECDOC: fecha.toISOString().slice(0, 10),
     NIFCON: req.body.nifcon,
     NOMCON: req.body.nomcon,
@@ -484,7 +483,7 @@ export const ejercicio = async (req, res) => {
 
   try {
     await axios.post("http://localhost:8000/api/formularios/insert", {
-      documento,
+      formulario,
       movimiento,
     });
 
@@ -500,7 +499,7 @@ export const ejercicio = async (req, res) => {
 export const relacion = async (req, res) => {
   const user = req.user;
   const fecha = new Date()
-  const documento = {
+  const formulario = {
     FECDOC: fecha.toISOString().slice(0, 10),
     NIFCON: req.body.nifcon,
     NOMCON: req.body.nomcon,
@@ -523,7 +522,7 @@ export const relacion = async (req, res) => {
 
   try {
     await axios.post("http://localhost:8000/api/formularios/insert", {
-      documento,
+      formulario,
       movimiento,
     });
 

@@ -1,17 +1,16 @@
 import axios from "axios";
-import {
-  origenTipo,
-  arrOrigenTipo,
-  tiposMovimiento,
-} from "../public/js/enumeraciones";
+import {tiposMovimiento} from "../public/js/enumeraciones";
 
 export const mainPage = async (req, res) => {
   const user = req.user;
 
   try {
-    const result = await axios.get("http://localhost:8000/api/tipos");
+    const result = await axios.post("http://localhost:8000/api/tipos", {});
+    const datos = {
+      tipos: result.data
+    }
 
-    res.render("admin/tipos", { user, tipos: result.data.dat, arrOrigenTipo });
+    res.render("admin/tipos", { user, datos });
   } catch (error) {
     const msg = "No se ha podido acceder a los datos de la aplicación.";
 
@@ -23,16 +22,14 @@ export const mainPage = async (req, res) => {
 export const addPage = async (req, res) => {
   const user = req.user;
   const tipo = {
-    idtipo: 0,
-    destip: "",
-    ayutip: "",
-    orgtip: origenTipo.formulario,
+    IDTIPO: 0,
+    DESTIP: "",
+    AYUTIP: "",
   };
 
   try {
     const datos = {
       tipo,
-      arrOrigenTipo,
     };
 
     res.render("admin/tipos/add", { user, datos });
@@ -46,21 +43,17 @@ export const addPage = async (req, res) => {
 };
 export const editPage = async (req, res) => {
   const user = req.user;
+  const tipo = {
+    IDTIPO: req.params.id,
+  }
 
   try {
     const result = await axios.post("http://localhost:8000/api/tipo", {
-      id: req.params.id,
+      tipo,
     });
 
-    const tipo = {
-      idtipo: result.data.idtipo,
-      destip: result.data.destip,
-      ayutip: result.data.ayutip,
-      orgtip: result.data.orgtip,
-    };
     const datos = {
-      tipo,
-      arrOrigenTipo,
+      tipo: result.data,
     };
 
     res.render("admin/tipos/edit", { user, datos });
@@ -75,13 +68,12 @@ export const editPage = async (req, res) => {
 export const insertTipo = async (req, res) => {
   const user = req.user;
   const tipo = {
-    destip: req.body.destip,
-    ayutip: req.body.ayutip,
-    orgtip: req.body.orgtip,
+    DESTIP: req.body.destip.toUpperCase(),
+    AYUTIP: req.body.ayutip,
   };
   const movimiento = {
-    usuarioMov: user.id,
-    tipoMov: tiposMovimiento.crearTipo,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.crearOficina,
   };
 
   try {
@@ -106,14 +98,13 @@ export const insertTipo = async (req, res) => {
 export const updateTipo = async (req, res) => {
   const user = req.user;
   const tipo = {
-    idtipo: req.body.idtipo,
-    destip: req.body.destip,
-    ayutip: req.body.ayutip,
-    orgtip: req.body.orgtip,
+    IDTIPO: req.body.idtipo,
+    DESTIP: req.body.destip,
+    AYUTIP: req.body.ayutip,
   };
   const movimiento = {
-    usuarioMov: user.id,
-    tipoMov: tiposMovimiento.modificarTipo,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.modificarOficina,
   };
 
   try {
@@ -139,11 +130,11 @@ export const updateTipo = async (req, res) => {
 export const deleteTipo = async (req, res) => {
   const user = req.user;
   const tipo = {
-    idtipo: req.body.idtipo,
+    IDTIPO: req.body.idtipo,
   };
   const movimiento = {
-    usuarioMov: user.id,
-    tipoMov: tiposMovimiento.borrarTipo,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.modificarOficina,
   };
 
   try {
