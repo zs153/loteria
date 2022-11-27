@@ -1,6 +1,7 @@
 import axios from 'axios'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import { secret } from '../config/settings'
 import {
   arrTiposRol,
   arrTiposPerfil,
@@ -8,7 +9,7 @@ import {
   estadosUsuario,
   tiposMovimiento,
   tiposRol,
-  tiposPerfil,  
+  tiposPerfil,
 } from '../public/js/enumeraciones'
 
 export const mainPage = async (req, res) => {
@@ -115,7 +116,7 @@ export const perfilPage = async (req, res) => {
       usuario,
       tiposRol,
     }
-    
+
     res.render('admin/usuarios/perfil', { user, datos })
   } catch (error) {
     const msg = 'No se ha podido acceder a los datos de la aplicación.'
@@ -289,7 +290,7 @@ export const updatePerfil = async (req, res) => {
         rol: user.rol,
         oficina: usuario.OFIUSU,
       },
-      `${process.env.ACCESS_TOKEN_SECRET}`,
+      `${secret}`,
       { expiresIn: '8h' }
     )
     const options = {

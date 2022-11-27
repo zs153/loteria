@@ -1,6 +1,7 @@
 import Usuario from "../models/usuario.model";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { secret } from '../config/settings'
 
 export const login = async (req, res) => {
   const { userid, password } = req.body;
@@ -27,7 +28,7 @@ export const login = async (req, res) => {
               rol: usuario.rol,
               oficina: usuario.oficina,
             },
-            `${process.env.ACCESS_TOKEN_SECRET}`,
+            `${secret}`,
             { expiresIn: "8h" }
           );
 

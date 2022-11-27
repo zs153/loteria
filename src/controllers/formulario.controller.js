@@ -18,13 +18,13 @@ export const mainPage = async (req, res) => {
   try {
     const result = await axios.post("http://localhost:8000/api/formularios", {
       documento,
-    });
+    })
     const datos = {
       documentos: JSON.stringify(result.data),
       estadosDocumento,
       tiposRol,
       verTodo,
-    };
+    }
 
     res.render("admin/formularios", { user, datos });
   } catch (error) {
@@ -66,16 +66,16 @@ export const addPage = async (req, res) => {
 }
 export const editPage = async (req, res) => {
   const user = req.user;
-  const documento = {
+  const formulario = {
     IDDOCU: req.params.iddocu,
   };
-
+  console.log(formulario)
   try {
     const result = await axios.post("http://localhost:8000/api/formulario", {
-      documento,
+      formulario,
     });
     const datos = {
-      documento: result.data,
+      formulario: result.data,
       tiposRol,
     };
 

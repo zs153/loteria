@@ -1,6 +1,7 @@
 import axios from "axios";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { secret } from '../config/settings'
 import {
   estadosUsuario,
   tiposPerfil,
@@ -43,7 +44,7 @@ export const verifyLogin = async (req, res) => {
             rol: result.data.ROLUSU,
             oficina: result.data.OFIUSU,
           },
-          `${process.env.ACCESS_TOKEN_SECRET}`,
+          `${secret}`,
           { expiresIn: "8h" }
         );
         const options = {
