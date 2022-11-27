@@ -10,8 +10,8 @@ FROM documentos dd
 INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc
 INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc
 `
-const insertSql = `BEGIN FORMULARIOS_PKG.INSERTDOCUMENTO(
-  :fecdoc,
+const insertSql = `BEGIN FORMULARIOS_PKG.INSERTFORMULARIO(
+  to_date(:fecdoc,'YYYY-MM-DD'),
   :nifcon,
   :nomcon,
   :emacon,
@@ -30,7 +30,7 @@ const insertSql = `BEGIN FORMULARIOS_PKG.INSERTDOCUMENTO(
   :iddocu
 ); END;
 `
-const updateSql = `BEGIN FORMULARIOS_PKG.UPDATEDOCUMENTO(
+const updateSql = `BEGIN FORMULARIOS_PKG.UPDATEFORMULARIO(
   :iddocu,
   :fecdoc,
   :nifcon,
@@ -50,21 +50,13 @@ const updateSql = `BEGIN FORMULARIOS_PKG.UPDATEDOCUMENTO(
   :tipmov
 ); END;
 `
-const deleteSql = `BEGIN FORMULARIOS_PKG.DELETEDOCUMENTO(
+const deleteSql = `BEGIN FORMULARIOS_PKG.DELETEFORMULARIO(
   :iddocu,
   :usumov,
   :tipmov 
 ); END;
 `
-const asignarSql = `BEGIN FORMULARIOS_PKG.ASIGNARDOCUMENTO(
-  :iddocu,
-  :liqdoc,
-  :stadoc,
-  :usumov,
-  :tipmov 
-); END;
-`
-const unasignarSql = `BEGIN FORMULARIOS_PKG.UNASIGNARDOCUMENTO(
+const asignarSql = `BEGIN FORMULARIOS_PKG.ASIGNARFORMULARIO(
   :iddocu,
   :liqdoc,
   :stadoc,
@@ -72,7 +64,15 @@ const unasignarSql = `BEGIN FORMULARIOS_PKG.UNASIGNARDOCUMENTO(
   :tipmov 
 ); END;
 `
-const resolverSql = `BEGIN FORMULARIOS_PKG.RESOLVERDOCUMENTO(
+const unasignarSql = `BEGIN FORMULARIOS_PKG.UNASIGNARFORMULARIO(
+  :iddocu,
+  :liqdoc,
+  :stadoc,
+  :usumov,
+  :tipmov 
+); END;
+`
+const resolverSql = `BEGIN FORMULARIOS_PKG.RESOLVERFORMULARIO(
   :iddocu,
   :liqdoc,
   :stadoc,
@@ -86,7 +86,7 @@ export const find = async (context) => {
   let binds = {}
 
   if (context.IDDOCU) {
-    binds.iddocu = context.iddocu
+    binds.iddocu = context.IDDOCU
     query += `WHERE iddocu = :iddocu`
   } else if (context.REFDOC) {
     binds.refdoc = context.REFDOC

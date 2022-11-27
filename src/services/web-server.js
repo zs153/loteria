@@ -3,7 +3,7 @@ import logger from 'morgan'
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-import { port } from '../config/settings'
+import { puerto } from '../config/settings'
 import apiOficinaRouter from '../routes/oficina.router'
 import apiUsuarioRouter from '../routes/usuario.router'
 import apiFormularioRouter from '../routes/formulario.router'
@@ -33,9 +33,9 @@ function initialize() {
 
     // server
     httpServer
-      .listen(port)
+      .listen(puerto)
       .on('listening', () => {
-        console.log(`Web server listening on conexion: port:${port} `)
+        console.log(`Server listening on port: ${puerto} `)
 
         resolve()
       })

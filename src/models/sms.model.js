@@ -1,6 +1,6 @@
 import oracledb from "oracledb";
 import Movimiento from "./movimiento.model";
-import { connectionString } from "../settings";
+import { connectionString } from "../config/settings";
 
 class SMS {
   constructor(id, texto, movil, estado) {

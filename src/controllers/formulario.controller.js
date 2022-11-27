@@ -3,7 +3,7 @@ import * as DAL from '../models/formulario.model'
 const insertFromRec = (req) => {
   const documento = {
     fecdoc: req.body.documento.FECDOC,
-    nifcon: req.body.documento.NIFDOC,
+    nifcon: req.body.documento.NIFCON,
     nomcon: req.body.documento.NOMCON,
     emacon: req.body.documento.EMACON,
     telcon: req.body.documento.TELCON,
@@ -16,7 +16,7 @@ const insertFromRec = (req) => {
     fundoc: req.body.documento.FUNDOC,
     liqdoc: req.body.documento.LIQDOC,
     stadoc: req.body.documento.STADOC,
-    }
+  }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
