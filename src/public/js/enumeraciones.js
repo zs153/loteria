@@ -27,6 +27,8 @@ export const tiposMovimiento = {
   borrarFraude: 25,
   nuevoEjercicioFormularios: 26,
   nuevoRelacionadoFormularios: 27,
+  modificarRelacionadoFormularios: 28,
+  borrarRelacionadoFormularios: 29,
   crearHito: 30,
   modificarHito: 31,
   borrarHito: 32,

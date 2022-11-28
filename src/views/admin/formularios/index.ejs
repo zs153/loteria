@@ -724,18 +724,18 @@
                   </li>
                   <li class="nav-item">
                     <a href="/admin/formularios/ejercicio/${element.IDDOCU}" class="nav-link">
-                      <i class="bi bi-calendar dropdown-item-icon"></i>Nuevo ejercicio
+                      <i class="bi bi-calendar dropdown-item-icon"></i>Ejercicio
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="/admin/formularios/relacionado/${element.IDDOCU}" class="nav-link">
-                      <i class="bi bi-people dropdown-item-icon"></i>Nuevo relacionado
+                    <a href="/admin/formularios/referencias/${element.IDDOCU}" class="nav-link">
+                      <i class="bi bi-people dropdown-item-icon"></i>Referencias
                     </a>
                   </li>
                   <li class="nav-item list-divider"></li>
                   <li class="nav-item ">
-                    <a href="#" class="nav-link" onclick="{document.getElementById('movilsms').value ='${element.MOVCON}', document.getElementById('nomsms').value ='${element.NOMCON}', document.getElementById('idsmss').value ='${element.IDDOCU}', setTimeout(focoSMS,500)}" data-bs-toggle="modal" data-bs-target="#modal-sms">
-                      <i class="bi bi-chat dropdown-item-icon"></i>Enviar SMS
+                    <a href="/admin/formularios/smss/${element.IDDOCU}" class="nav-link">                    
+                      <i class="bi bi-chat dropdown-item-icon"></i>Gestión sms
                     </a>
                   </li>
                 </ul>

@@ -95,6 +95,179 @@ export const editPage = async (req, res) => {
   }
 }
 
+// pages referencias
+export const referenciasPage = async (req, res) => {
+  const user = req.user;
+  const formulario = {
+    IDDOCU: req.params.iddoc,
+  };
+
+  try {
+    const result = await axios.post("http://localhost:8000/api/formularios/referencias", {
+      formulario,
+    })
+
+    const datos = {
+      formulario,
+      referencias: JSON.stringify(result.data),
+    }
+
+    res.render("admin/formularios/referencias", { user, datos });
+  } catch (error) {
+    const msg = "No se ha podido acceder a los datos de la aplicación.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+export const referenciasAddPage = async (req, res) => {
+  const user = req.user;
+  let formulario = {
+    IDDOCU: req.params.iddoc,
+  };
+
+  try {
+    const tipos = await axios.post("http://localhost:8000/api/tipos", {})
+    const result = await axios.post("http://localhost:8000/api/formulario", {
+      formulario,
+    });
+    const referencia = {
+      NIFREF: '',
+      DESREF: result.data.REFDOC,
+      TIPREF: result.data.TIPDOC,
+    }
+    const datos = {
+      formulario,
+      referencia,
+      tipos: tipos.data,
+    };
+
+    res.render("admin/formularios/referencias/add", { user, datos });
+  } catch (error) {
+    const msg =
+      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+export const referenciasEditPage = async (req, res) => {
+  const user = req.user;
+  const formulario = {
+    IDDOCU: req.params.iddoc
+  }
+  let referencia = {
+    IDREFE: req.params.idref,
+  };
+
+  try {
+    const tipos = await axios.post("http://localhost:8000/api/tipos", {})
+    const result = await axios.post("http://localhost:8000/api/formularios/referencia", {
+      referencia,
+    });
+    const datos = {
+      formulario,
+      referencia: result.data,
+      tipos: tipos.data,
+    };
+
+    res.render("admin/formularios/referencias/edit", { user, datos });
+  } catch (error) {
+    const msg =
+      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+
+// pages smss
+export const smssPage = async (req, res) => {
+  const user = req.user;
+  const formulario = {
+    IDDOCU: req.params.iddoc,
+  };
+
+  try {
+    const result = await axios.post("http://localhost:8000/api/formularios/smss", {
+      formulario,
+    })
+    const datos = {
+      formulario,
+      smss: JSON.stringify(result.data),
+    }
+
+    res.render("admin/formularios/smss", { user, datos });
+  } catch (error) {
+    const msg = "No se ha podido acceder a los datos de la aplicación.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+export const smssAddPage = async (req, res) => {
+  const user = req.user;
+  let formulario = {
+    IDDOCU: req.params.iddoc,
+  };
+
+  try {
+    const result = await axios.post("http://localhost:8000/api/formulario", {
+      formulario,
+    });
+    const sms = {
+      TEXSMS: '',
+      MOVSMS: result.data.MOVCON,
+      STASMS: estadosSms.pendiente,
+    }
+    const datos = {
+      formulario,
+      sms,
+    };
+
+    res.render("admin/formularios/smss/add", { user, datos });
+  } catch (error) {
+    const msg =
+      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+export const smssEditPage = async (req, res) => {
+  const user = req.user;
+  const formulario = {
+    IDDOCU: req.params.iddoc
+  }
+  let sms = {
+    IDSMSS: req.params.idsms,
+  };
+
+  try {
+    const result = await axios.post("http://localhost:8000/api/formularios/sms", {
+      sms,
+    });
+    const datos = {
+      formulario,
+      sms: result.data,
+    };
+
+    res.render("admin/formularios/smss/edit", { user, datos });
+  } catch (error) {
+    const msg =
+      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+
 // otros
 export const ejercicioPage = async (req, res) => {
   const user = req.user;
@@ -122,45 +295,6 @@ export const ejercicioPage = async (req, res) => {
     };
 
     res.render("admin/formularios/ejercicio", { user, datos });
-  } catch (error) {
-    const msg =
-      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
-  }
-}
-export const relacionPage = async (req, res) => {
-  const user = req.user;
-  const fecha = new Date();
-  let formulario = {
-    IDDOCU: req.params.iddocu,
-  };
-
-  try {
-    // formulario
-    const result = await axios.post("http://localhost:8000/api/formulario", {
-      documento,
-    });
-
-    formulario = result.data
-    formulario.NIFCON = ''
-    formulario.NOMCON = ''
-    formulario.EMACON = ''
-    formulario.TELCON = ''
-    formulario.MOVCON = ''
-    formulario.OBSDOC = ''
-    formulario.EJEDOC = fecha.getFullYear()
-    formulario.FUNDOC = user.userID
-    formulario.LIQDOC = user.userID
-    formulario.STADOC = estadosDocumento.asignado
-
-    const datos = {
-      formulario,
-    };
-
-    res.render("admin/formularios/relacion", { user, datos });
   } catch (error) {
     const msg =
       "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
@@ -419,7 +553,98 @@ export const verTodo = async (req, res) => {
     });
   }
 }
-export const sms = async (req, res) => {
+
+// referencias
+export const insertReferencia = async (req, res) => {
+  const user = req.user;
+  const fecha = new Date()
+  const formulario = {
+    IDDOCU: req.body.iddocu
+  }
+  const referencia = {
+    FECREF: fecha.toISOString().slice(0, 10),
+    NIFREF: req.body.nifref.toUpperCase(),
+    DESREF: req.body.desref,
+    TIPREF: req.body.tipref,
+  };
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.nuevoRelacionadoFormularios,
+  };
+
+  try {
+    await axios.post("http://localhost:8000/api/formularios/referencias/insert", {
+      formulario,
+      referencia,
+      movimiento,
+    });
+
+    res.redirect("/admin/formularios");
+  } catch (error) {
+    const msg = "No se ha podido insertar el relacionado.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+export const updateReferencia = async (req, res) => {
+  const user = req.user;
+  const fecha = new Date()
+  const referencia = {
+    IDREFE: req.body.idrefe,
+    FECREF: fecha.toISOString().slice(0, 10),
+    NIFREF: req.body.nifref.toUpperCase(),
+    TIPREF: req.body.tipref,
+  };
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.modificarRelacionadoFormularios,
+  };
+
+  try {
+    await axios.post("http://localhost:8000/api/formularios/referencias/update", {
+      referencia,
+      movimiento,
+    });
+
+    res.redirect("/admin/formularios");
+  } catch (error) {
+    const msg = "No se ha podido actualizar el relacionado.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+export const removeReferencia = async (req, res) => {
+  const user = req.user;
+  const referencia = {
+    IDREFE: req.body.idrefe,
+  };
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.borrarRelacionadoFormularios,
+  };
+
+  try {
+    await axios.post("http://localhost:8000/api/formularios/referencias/delete", {
+      referencia,
+      movimiento,
+    });
+
+    res.redirect("/admin/formularios");
+  } catch (error) {
+    const msg = "No se ha podido borrar el relacionado.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+
+// sms
+export const insertSms = async (req, res) => {
   const user = req.user;
   const formulario = {
     IDDOCU: req.body.iddocu,
@@ -435,13 +660,71 @@ export const sms = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8000/api/sms/insert", {
+    await axios.post("http://localhost:8000/api/formularios/smss/insert", {
       formulario,
       sms,
       movimiento,
     });
 
-    res.redirect("/admin/formularios");
+    res.redirect(`/admin/formularios/smss/${formulario.IDDOCU}`);
+  } catch (error) {
+    const msg = "No se ha podido enviar el sms.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+export const updateSms = async (req, res) => {
+  const user = req.user;
+  const formulario = {
+    IDDOCU: req.body.iddocu,
+  }
+  const sms = {
+    IDSMSS: req.body.idsmss,
+    TEXSMS: req.body.texsms,
+    MOVSMS: req.body.movsms,
+  };
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.modificarSms,
+  };
+
+  try {
+    await axios.post("http://localhost:8000/api/formularios/smss/update", {
+      sms,
+      movimiento,
+    });
+
+    res.redirect(`/admin/formularios/smss/${formulario.IDDOCU}`);
+  } catch (error) {
+    const msg = "No se ha podido enviar el sms.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+export const removeSms = async (req, res) => {
+  const user = req.user;
+  const formulario = {
+    IDDOCU: req.body.iddocu,
+  }
+  const sms = {
+    IDSMSS: req.body.idsmss,
+  };
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.borrarSms,
+  };
+
+  try {
+    await axios.post("http://localhost:8000/api/formularios/smss/delete", {
+      sms,
+      movimiento,
+    });
+
+    res.redirect(`/admin/formularios/smss/${formulario.IDDOCU}`);
   } catch (error) {
     const msg = "No se ha podido enviar el sms.";
 
@@ -492,45 +775,6 @@ export const ejercicio = async (req, res) => {
     });
   }
 }
-export const relacion = async (req, res) => {
-  const user = req.user;
-  const fecha = new Date()
-  const formulario = {
-    FECDOC: fecha.toISOString().slice(0, 10),
-    NIFCON: req.body.nifcon,
-    NOMCON: req.body.nomcon,
-    EMACON: req.body.emacon,
-    TELCON: req.body.telcon,
-    MOVCON: req.body.movcon,
-    REFDOC: req.body.refdoc,
-    TIPDOC: req.body.tipdoc,
-    EJEDOC: req.body.ejedoc,
-    OFIDOC: user.oficina,
-    OBSDOC: req.body.obsdoc,
-    FUNDOC: user.userID,
-    LIQDOC: user.userID,
-    STADOC: estadosDocumento.asignado,
-  };
-  const movimiento = {
-    USUMOV: user.id,
-    TIPMOV: tiposMovimiento.nuevoRelacionadoFormularios,
-  };
-
-  try {
-    await axios.post("http://localhost:8000/api/formularios/insert", {
-      formulario,
-      movimiento,
-    });
-
-    res.redirect("/admin/formularios");
-  } catch (error) {
-    const msg = "No se ha podido insertar el relacionado.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
-  }
-}
 
 // helpers
 function randomString(long, chars) {
@@ -542,3 +786,4 @@ function randomString(long, chars) {
 
   return result;
 }
+// <a href="#" class="nav-link" onclick="{document.getElementById('movilsms').value ='${element.MOVCON}', document.getElementById('nomsms').value ='${element.NOMCON}', document.getElementById('idsmss').value ='${element.IDDOCU}', setTimeout(focoSMS,500)}" data-bs-toggle="modal" data-bs-target="#modal-sms">
