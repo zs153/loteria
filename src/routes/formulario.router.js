@@ -4,12 +4,13 @@ import {
   mainPage,
   addPage,
   editPage,
+  ejercicioPage,
   verTodo,
   insert,
   update,
   remove,
   asignar,
-  unasignar,
+  desasignar,
   resolver,
   ejercicio,
   relacion,
@@ -22,6 +23,7 @@ const formularioRouter = express.Router()
 formularioRouter.get('/formularios', authRoutes, mainPage)
 formularioRouter.get('/formularios/add', authRoutes, addPage)
 formularioRouter.get('/formularios/edit/:id', authRoutes, editPage)
+formularioRouter.get('/formularios/ejercicio/:id', authRoutes, ejercicioPage)
 
 // procedures get
 formularioRouter.get("/formularios/vertodo", authRoutes, verTodo);
@@ -33,7 +35,7 @@ formularioRouter.post("/formularios/delete", authRoutes, remove);
 formularioRouter.post("/formularios/ejercicio", authRoutes, ejercicio);
 formularioRouter.post("/formularios/relacionado", authRoutes, relacion);
 formularioRouter.post("/formularios/asignar", authRoutes, asignar);
-formularioRouter.post("/formularios/desasignar", authRoutes, unasignar);
+formularioRouter.post("/formularios/desasignar", authRoutes, desasignar);
 formularioRouter.post("/formularios/resolver", authRoutes, resolver);
 formularioRouter.post("/formularios/sms", authRoutes, sms);
 

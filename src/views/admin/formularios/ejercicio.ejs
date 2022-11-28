@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Nuevo ejercicio</title>
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="/css/bootstrap-icons.css">
+  <!-- custom -->
+  <link rel="stylesheet" href="/css/estilos.min.css">
+  <link rel="stylesheet" href="/css/navbar.css">
+</head>
+
+<body class="antialiased">
+  <div class="wrapper">
+    <%- include('../../partials/header') %>
+    <%- include('../../partials/navbar', {opcion: 'formularioS'}) %>
+    <div class="page-wrapper">
+      <div class="page-body">
+        <div class="container-xl">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <% if(typeof alerts !='undefined' ) { %>
+                <% alerts.map(function (alert) { %>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  <%- alert.msg %>
+                </div>
+                <% }) %>
+                <% } %>
+                <form id="form" action="/admin/formularios/ejercicio" method="POST" onsubmit="return validate();">
+                  <input type="hidden" name="iddocu" id="iddocu" value="<%- datos.formulario.IDDOCU %>">
+                  <div class="card-header">
+                    <h3 class="card-title">Nuevo ejercicio</h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-2">
+                        <div class="mb-1">
+                          <div class="input-control">
+                            <label class="form-label required">NIF/NIE</label>
+                            <input type="text" name="nifcon" id="nifcon" class="form-control"
+                              style="text-transform: uppercase;" value="<%- datos.formulario.NIFCON %>" readonly />
+                            <div class="invalid-feedback"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="mb-1">
+                          <div class="input-control">
+                            <label class="form-label required">Nombre</label>
+                            <input type="text" name="nomcon" id="nomcon" class="form-control"
+                              style="text-transform: uppercase;" value="<%- datos.formulario.NOMCON %>" readonly />
+                            <div class="invalid-feedback"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="mb-1">
+                          <label class="form-label">Correo electrónico</label>
+                          <input type="text" name="emacon" id="emacon" class="form-control"
+                            value="<%- datos.formulario.EMACON %>" readonly />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="mb-1">
+                          <div class="form-label">Tipo</div>
+                          <select class="form-select" id="cbotip" name="tipdoc" value="<%- datos.formulario.TIPDOC %>" autofocus>
+                            <option value="0">SELECCIONE UN TIPO</option>
+                            <% datos.tipos.map(element=> { %>
+                              <option value="<%- element.IDTIPO %>" <%- element.IDTIPO === datos.formulario.TIPDOC ? " selected" :"" %>>
+                                <%- element.DESTIP %>
+                              </option>
+                            <% }) %>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-2">
+                        <div class="mb-1">
+                          <div class="input-control">
+                            <label class="form-label required">Ejercicio</label>
+                            <input type="number" name="ejedoc" id="ejedoc" class="form-control" value="<%- datos.formulario.EJEDOC %>" />
+                            <div class="invalid-feedback"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-2">
+                        <div class="mb-1">
+                          <label class="form-label">Teléfono</label>
+                          <input type="text" name="telcon" id="telcon" class="form-control"
+                            value="<%- datos.formulario.TELCON %>" readonly />
+                        </div>
+                      </div>
+                      <div class="col-2">
+                        <div class="mb-1">
+                          <label class="form-label">Movil</label>
+                          <input type="text" name="movcon" id="movcon" class="form-control"
+                            value="<%- datos.formulario.MOVCON %>" readonly />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="mb-1">
+                          <label class="form-label">Observaciones</label>
+                          <textarea type="text" name="obsdoc" id="obsdoc" class="form-control" rows="3"
+                            style="resize: vertical"><%- datos.formulario.OBSDOC %></textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer text-end">
+                    <div class="d-flex">
+                      <a href="/admin/formularios" class="btn btn-link">Cancelar</a>
+                      <button type="submit" class="btn btn-primary ms-auto" id="btnInsert">Crear ejercicio</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include('../../partials/footer') %>
+  </div>
+  <script src="/js/ayuda.min.js"></script>
+
+  <script>
+    const ejedoc = document.getElementById('ejedoc')
+
+    const validate = () => {
+      const ejedocValue = ejedoc.value.trim()
+
+      if (ejedocValue === '') {
+        setError(ejedoc, 'Ejercicio requerido')
+        setTimeout(function () {
+          setSuccess(ejedoc)
+        }, 3000)
+        return false
+      } else {
+        const pattern = /^([0-9]{4})$/
+        const isValid = pattern.test(ejedocValue)
+
+        if (isValid === false) {
+          setTimeout(function () {
+            setSuccess(ejedoc)
+          }, 3000)
+          setError(ejedoc, 'Introduzca ejercicio válido')
+          return false
+        }
+        setSuccess(ejedoc)
+      }
+
+      return true
+    }
+
+    const setSuccess = (element) => {
+      const inputControl = element.parentElement;
+      const errorDisplay = inputControl.querySelector('.invalid-feedback');
+
+      errorDisplay.innerText = '';
+      inputControl.classList.add('is-valid');
+      element.classList.remove('is-invalid');
+    }
+    const setError = (element, message) => {
+      const inputControl = element.parentElement;
+      const errorDisplay = inputControl.querySelector('.invalid-feedback');
+
+      errorDisplay.innerText = message;
+      element.classList.add('is-invalid');
+      inputControl.classList.remove('is-valid');
+    }
+  </script>
+</body>
+
+</html>

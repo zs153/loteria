@@ -104,7 +104,7 @@ export const ejercicioPage = async (req, res) => {
   };
 
   try {
-    // formulario
+    const tipos = await axios.post("http://localhost:8000/api/tipos", {})
     const result = await axios.post("http://localhost:8000/api/formulario", {
       formulario,
     })
@@ -118,6 +118,7 @@ export const ejercicioPage = async (req, res) => {
 
     const datos = {
       formulario,
+      tipos: tipos.data,
     };
 
     res.render("admin/formularios/ejercicio", { user, datos });
@@ -352,7 +353,7 @@ export const resolver = async (req, res) => {
     });
   }
 }
-export const unasignar = async (req, res) => {
+export const desasignar = async (req, res) => {
   const user = req.user;
   let formulario = {
     IDDOCU: req.body.iddocu,
@@ -360,13 +361,11 @@ export const unasignar = async (req, res) => {
 
   try {
     const result = await axios.post("http://localhost:8000/api/formulario", {
-      documento,
+      formulario,
     });
 
-    if (
-      result.data.STADOC === estadosDocumento.asignado ||
-      result.data.STADOC === estadosDocumento.resuelto
-    ) {
+    if (result.data.STADOC === estadosDocumento.asignado ||
+      result.data.STADOC === estadosDocumento.resuelto) {
       formulario = {
         IDDOCU: result.data.IDDOCU,
         LIQDOC: "PEND",
@@ -377,8 +376,8 @@ export const unasignar = async (req, res) => {
         TIPMOV: tiposMovimiento.desasignarFormulario,
       };
 
-      await axios.post("http://localhost:8000/api/formularios/unasignar", {
-        documento,
+      await axios.post("http://localhost:8000/api/formularios/unasign", {
+        formulario,
         movimiento,
       });
     }
@@ -399,10 +398,6 @@ export const verTodo = async (req, res) => {
     LIQDOC: user.userID,
     TIPVIS: estadosDocumento.resuelto,
   };
-
-  if (user.rol === tiposRol.admin) {
-    delete formulario.LIQDOC
-  }
 
   try {
     const result = await axios.post("http://localhost:8000/api/formularios", {
@@ -459,6 +454,7 @@ export const sms = async (req, res) => {
 // procs otros
 export const ejercicio = async (req, res) => {
   const user = req.user;
+  const referencia = "R" + randomString(10, "1234567890YMGS");
   const fecha = new Date()
   const formulario = {
     FECDOC: fecha.toISOString().slice(0, 10),
@@ -467,7 +463,7 @@ export const ejercicio = async (req, res) => {
     EMACON: req.body.emacon,
     TELCON: req.body.telcon,
     MOVCON: req.body.movcon,
-    REFDOC: req.body.refdoc,
+    REFDOC: referencia,
     TIPDOC: req.body.tipdoc,
     EJEDOC: req.body.ejedoc,
     OFIDOC: user.oficina,
