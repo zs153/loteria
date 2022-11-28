@@ -95,7 +95,90 @@ const resolverFromRec = (req) => {
 
   return Object.assign(formulario, movimiento)
 }
+const insertReferenciaFromRec = (req) => {
+  const formulario = {
+    iddocu: req.body.formulario.IDDOCU,
+  }
+  const referencia = {
+    fecref: req.body.referencia.FECREF,
+    nifref: req.body.referencia.NIFREF,
+    desref: req.body.referencia.DESREF,
+    tipref: req.body.referencia.TIPREF,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
 
+  return Object.assign(formulario, referencia, movimiento)
+}
+const updateReferenciaFromRec = (req) => {
+  const referencia = {
+    idrefe: req.body.referencia.IDREFE,
+    fecref: req.body.referencia.FECREF,
+    nifref: req.body.referencia.NIFREF,
+    tipref: req.body.referencia.TIPREF,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(referencia, movimiento)
+}
+const deleteReferenciaFromRec = (req) => {
+  const referencia = {
+    idrefe: req.body.referencia.IDREFE,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(referencia, movimiento)
+}
+const insertSmsFromRec = (req) => {
+  const formulario = {
+    iddocu: req.body.formulario.IDDOCU,
+  }
+  const sms = {
+    texsms: req.body.sms.TEXSMS,
+    movsms: req.body.sms.MOVSMS,
+    stasms: req.body.sms.STASMS,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(formulario, sms, movimiento)
+}
+const updateSmsFromRec = (req) => {
+  const sms = {
+    idsmss: req.body.sms.IDSMSS,
+    texsms: req.body.sms.TEXSMS,
+    movsms: req.body.sms.MOVSMS,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(sms, movimiento)
+}
+const deleteSmsFromRec = (req) => {
+  const sms = {
+    idsmss: req.body.sms.IDSMSS,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(sms, movimiento)
+}
+
+// formulario
 export const formulario = async (req, res) => {
   const context = req.body.formulario
 
@@ -195,6 +278,149 @@ export const desasignar = async (req, res) => {
 export const resolver = async (req, res) => {
   try {
     const result = await DAL.resolver(resolverFromRec(req))
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
+
+// referencia
+export const referencia = async (req, res) => {
+  const context = req.body.referencia
+
+  try {
+    const result = await DAL.findReferencia(context)
+
+    if (result.length === 1) {
+      return res.status(200).json(result[0])
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
+export const referencias = async (req, res) => {
+  const context = req.body.formulario
+
+  try {
+    const result = await DAL.findReferencia(context)
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
+export const crearReferencia = async (req, res) => {
+  try {
+    const result = await DAL.insertReferencia(insertReferenciaFromRec(req))
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
+export const modificarReferencia = async (req, res) => {
+  try {
+    const result = await DAL.updateReferencia(updateReferenciaFromRec(req))
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
+export const borrarReferencia = async (req, res) => {
+  try {
+    const result = await DAL.removeReferencia(deleteReferenciaFromRec(req))
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
+
+// referencia
+export const sms = async (req, res) => {
+  const context = req.body.sms
+
+  try {
+    const result = await DAL.findSms(context)
+
+    if (result.length === 1) {
+      return res.status(200).json(result[0])
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
+export const smss = async (req, res) => {
+  const context = req.body.formulario
+
+  try {
+    const result = await DAL.findSms(context)
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
+export const crearSms = async (req, res) => {
+  console.log(insertSmsFromRec(req))
+  try {
+    const result = await DAL.insertSms(insertSmsFromRec(req))
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
+export const modificarSms = async (req, res) => {
+  try {
+    const result = await DAL.updateSms(updateSmsFromRec(req))
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
+export const borrarSms = async (req, res) => {
+  try {
+    const result = await DAL.removeSms(deleteSmsFromRec(req))
 
     if (result !== null) {
       res.status(200).json(result)

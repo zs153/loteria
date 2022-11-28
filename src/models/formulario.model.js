@@ -4,7 +4,8 @@ import { simpleExecute } from '../services/database.js'
 const baseQuery = `SELECT 
     oo.desofi,
     tt.destip,
-    dd.*
+    dd.*,
+    TO_CHAR(dd.fecdoc, 'DD/MM/YYYY') STRFEC
 FROM documentos dd
 INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc
 INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc
@@ -75,7 +76,70 @@ const resolverSql = `BEGIN FORMULARIOS_PKG.CAMBIOESTADOFORMULARIO(
   :tipmov 
 ); END;
 `
+const baseReferenciasQuery = `SELECT 
+  rr.*,
+  tt.destip,
+  TO_CHAR(rr.fecref, 'DD/MM/YYYY') AS STRFEC
+FROM referencias rr
+INNER JOIN tipos tt ON tt.idtipo = rr.tipref
+`
+const insertReferenciaSql = `BEGIN FORMULARIOS_PKG.INSERTREFERENCIA(
+  :iddocu,
+  to_date(:fecref,'YYYY-MM-DD'),
+  :nifref,
+  :desref,
+  :tipref,
+  :usumov,
+  :tipmov,
+  :idrefe
+); END;
+`
+const updateReferenciaSql = `BEGIN FORMULARIOS_PKG.UPDATEREFERENCIA(
+  :idrefe,
+  TO_DATE(:fecref,'YYYY-MM-DD'),
+  :nifref,
+  :tipref,
+  :usumov,
+  :tipmov
+); END;
+`
+const deleteReferenciaSql = `BEGIN FORMULARIOS_PKG.DELETEREFERENCIA(
+  :idrefe,
+  :usumov,
+  :tipmov 
+); END;
+`
+const baseSmssQuery = `SELECT 
+  ss.*,
+  TO_CHAR(ss.fecsms, 'DD/MM/YYYY') AS STRFEC
+FROM smss ss
+`
+const insertSmsSql = `BEGIN FORMULARIOS_PKG.INSERTSMS(
+  :iddocu,
+  :texsms,
+  :movsms,
+  :stasms,
+  :usumov,
+  :tipmov,
+  :idsmss
+); END;
+`
+const updateSmsSql = `BEGIN FORMULARIOS_PKG.UPDATESMS(
+  :idsmss,
+  :texsms,
+  :movsms,
+  :usumov,
+  :tipmov
+); END;
+`
+const deleteSmsSql = `BEGIN FORMULARIOS_PKG.DELETESMS(
+  :idsmss,
+  :usumov,
+  :tipmov 
+); END;
+`
 
+// formulario
 export const find = async (context) => {
   let query = baseQuery
   let binds = {}
@@ -96,7 +160,8 @@ export const find = async (context) => {
         SELECT
           oo.desofi,
           tt.destip,
-          dd.*
+          dd.*,
+          TO_CHAR(dd.fecdoc, 'DD/MM/YYYY') STRFEC
         FROM documentos dd
         INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc
         INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc
@@ -186,6 +251,126 @@ export const resolver = async (bind) => {
 
   try {
     await simpleExecute(resolverSql, bind)
+
+    result = bind
+  } catch (error) {
+    result = null
+  }
+
+  return result
+}
+
+// referencia
+export const findReferencia = async (context) => {
+  let query = baseReferenciasQuery
+  let binds = {}
+
+  if (context.IDREFE) {
+    binds.idrefe = context.IDREFE
+    query += `WHERE rr.idrefe = :idrefe`
+  } else if (context.IDDOCU) {
+    binds.iddocu = context.IDDOCU
+    query += `INNER JOIN referenciasdocumento rd ON rd.idrefe = rr.idrefe    
+      WHERE rd.iddocu = :iddocu`
+  }
+
+  const result = await simpleExecute(query, binds)
+  return result.rows
+}
+export const insertReferencia = async (bind) => {
+  bind.idrefe = {
+    dir: oracledb.BIND_OUT,
+    type: oracledb.NUMBER,
+  }
+
+  try {
+    const result = await simpleExecute(insertReferenciaSql, bind)
+
+    bind.idrefe = await result.outBinds.idrefe
+  } catch (error) {
+    bind = null
+  }
+
+  return bind
+}
+export const updateReferencia = async (bind) => {
+  let result
+
+  try {
+    await simpleExecute(updateReferenciaSql, bind)
+
+    result = bind
+  } catch (error) {
+    result = null
+  }
+
+  return result
+}
+export const removeReferencia = async (bind) => {
+  let result
+
+  try {
+    await simpleExecute(deleteReferenciaSql, bind)
+
+    result = bind
+  } catch (error) {
+    result = null
+  }
+
+  return result
+}
+
+// sms
+export const findSms = async (context) => {
+  let query = baseSmssQuery
+  let binds = {}
+
+  if (context.IDSMSS) {
+    binds.idsmss = context.IDSMSS
+    query += `WHERE ss.idsmss = :idsmss`
+  } else if (context.IDDOCU) {
+    binds.iddocu = context.IDDOCU
+    query += `INNER JOIN smssdocumento sd ON sd.idsmss = ss.idsmss
+      WHERE sd.iddocu = :iddocu`
+  }
+
+  const result = await simpleExecute(query, binds)
+  return result.rows
+}
+export const insertSms = async (bind) => {
+  bind.idsmss = {
+    dir: oracledb.BIND_OUT,
+    type: oracledb.NUMBER,
+  }
+  console.log(insertSmsSql, bind)
+  try {
+    const result = await simpleExecute(insertSmsSql, bind)
+
+    bind.idsmss = await result.outBinds.idsmss
+  } catch (error) {
+    bind = null
+  }
+
+  return bind
+}
+export const updateSms = async (bind) => {
+  let result
+
+  try {
+    await simpleExecute(updateSmsSql, bind)
+
+    result = bind
+  } catch (error) {
+    result = null
+  }
+
+  return result
+}
+export const removeSms = async (bind) => {
+  let result
+
+  try {
+    await simpleExecute(deleteSmsSql, bind)
 
     result = bind
   } catch (error) {
