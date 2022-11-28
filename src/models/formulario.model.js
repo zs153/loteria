@@ -59,7 +59,7 @@ const asignarSql = `BEGIN FORMULARIOS_PKG.CAMBIOESTADOFORMULARIO(
   :tipmov 
 ); END;
 `
-const unasignarSql = `BEGIN FORMULARIOS_PKG.CAMBIOESTADOFORMULARIO(
+const desasignarSql = `BEGIN FORMULARIOS_PKG.CAMBIOESTADOFORMULARIO(
   :iddocu,
   :liqdoc,
   :stadoc,
@@ -89,6 +89,7 @@ export const find = async (context) => {
   } else if (context.LIQDOC) {
     binds.liqdoc = context.LIQDOC
     if (context.TIPVIS === 1) {
+      // mostrar asignados al liquidador y todos los pendientes
       query += `WHERE dd.liqdoc = :liqdoc
           AND BITAND(dd.stadoc,1) > 0
         UNION
@@ -102,8 +103,9 @@ export const find = async (context) => {
         WHERE dd.stadoc = 0
       `
     } else {
+      // mostrar los resueltos por el liquidador
       query += `WHERE dd.liqdoc = :liqdoc 
-        AND BITAND(dd.stadoc,2) > 0)
+        AND BITAND(dd.stadoc,2) > 0
       `
     }
   }
@@ -166,11 +168,11 @@ export const asignar = async (bind) => {
 
   return result
 }
-export const unasingar = async (bind) => {
+export const desasingar = async (bind) => {
   let result
 
   try {
-    await simpleExecute(unasignarSql, bind)
+    await simpleExecute(desasignarSql, bind)
 
     result = bind
   } catch (error) {

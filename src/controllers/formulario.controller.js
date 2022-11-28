@@ -69,11 +69,11 @@ const asignarFromRec = (req) => {
 
   return Object.assign(formulario, movimiento)
 }
-const unasignarFromRec = (req) => {
+const desasignarFromRec = (req) => {
   const formulario = {
-    IDDOCU: req.body.formulario.IDDOCU,
-    LIQDOC: req.body.formulario.LIQDOC,
-    STADOC: req.body.formulario.STADOC,
+    iddocu: req.body.formulario.IDDOCU,
+    liqdoc: req.body.formulario.LIQDOC,
+    stadoc: req.body.formulario.STADOC,
   }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
@@ -84,9 +84,9 @@ const unasignarFromRec = (req) => {
 }
 const resolverFromRec = (req) => {
   const formulario = {
-    IDDOCU: req.body.formulario.IDDOCU,
-    LIQDOC: req.body.formulario.LIQDOC,
-    STADOC: req.body.formulario.STADOC,
+    iddocu: req.body.formulario.IDDOCU,
+    liqdoc: req.body.formulario.LIQDOC,
+    stadoc: req.body.formulario.STADOC,
   }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
@@ -179,9 +179,9 @@ export const asignar = async (req, res) => {
     res.status(500).end()
   }
 }
-export const unasignar = async (req, res) => {
+export const desasignar = async (req, res) => {
   try {
-    const result = await DAL.unasign(unasignarFromRec(req))
+    const result = await DAL.desasingar(desasignarFromRec(req))
 
     if (result !== null) {
       res.status(200).json(result)
@@ -194,7 +194,7 @@ export const unasignar = async (req, res) => {
 }
 export const resolver = async (req, res) => {
   try {
-    const result = await DAL.cerrar(resolverFromRec(req))
+    const result = await DAL.resolver(resolverFromRec(req))
 
     if (result !== null) {
       res.status(200).json(result)
