@@ -96,7 +96,6 @@ const insertReferenciaSql = `BEGIN FORMULARIOS_PKG.INSERTREFERENCIA(
 `
 const updateReferenciaSql = `BEGIN FORMULARIOS_PKG.UPDATEREFERENCIA(
   :idrefe,
-  TO_DATE(:fecref,'YYYY-MM-DD'),
   :nifref,
   :tipref,
   :usumov,

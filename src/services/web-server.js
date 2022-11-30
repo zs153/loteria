@@ -9,6 +9,7 @@ import apiUsuarioRouter from '../routes/usuario.router'
 import apiFormularioRouter from '../routes/formulario.router'
 import apiTipoRouter from '../routes/tipo.router'
 import apiGenteRouter from '../routes/gente.router'
+import apiCargaRouter from '../routes/carga.router'
 
 let httpServer
 
@@ -30,6 +31,7 @@ function initialize() {
     app.use('/api', apiFormularioRouter)
     app.use('/api', apiTipoRouter)
     app.use('/api', apiGenteRouter)
+    app.use('/api', apiCargaRouter)
 
     // server
     httpServer

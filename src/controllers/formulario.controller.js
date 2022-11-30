@@ -115,7 +115,6 @@ const insertReferenciaFromRec = (req) => {
 const updateReferenciaFromRec = (req) => {
   const referencia = {
     idrefe: req.body.referencia.IDREFE,
-    fecref: req.body.referencia.FECREF,
     nifref: req.body.referencia.NIFREF,
     tipref: req.body.referencia.TIPREF,
   }
