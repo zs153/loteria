@@ -31,7 +31,16 @@
     }
 
     .pagination {
-      float: right;
+      float: left;
+    }
+
+    .subtitulo {
+      margin: 0;
+      align-items: center;
+      justify-content: center;
+      color: #656d77;
+      pointer-events: none;
+      font-size: 0.8em;
     }
   </style>
 </head>
@@ -47,7 +56,18 @@
                 <div class="col-12">
                   <div class="card">
                     <div class="card-header">
-                      <h3 class="card-title">Gestión Sms</h3>
+                      <div>
+                        <h3 class="card-title">Gestión sms</h3>
+                        <p class="subtitulo">
+                          <span class="text-muted">
+                            <%- datos.formularioData.NIFCON %>
+                            <%- datos.formularioData.NOMCON %>
+                          </span>
+                          <span class="ms-2">
+                            Ejercicio: <%- datos.formularioData.EJEDOC %>
+                          </span>
+                        </p>
+                      </div>
                       <div class="col-auto ms-auto">
                         <div class="d-flex">
                           <div class="input-icon me-3">
@@ -83,6 +103,9 @@
                         </tbody>
                       </table>
                       <div id="pagination-wrapper" class="pagination py-1"></div>
+                      <div class="ms-auto d-flex py-1">
+                        <a href="/admin/formularios" class="btn btn-link ms-auto">Volver</a>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -277,11 +300,19 @@
         const row = document.createElement('tr')
         let cell = document.createElement('td')
         cell.classList.add("w-5")
-        cell.innerHTML = `<div class="align-items-center py-1">
-            <span class="avatar avatar-rounded bg-green-lt">
-              <h6>${element.IDSMSS}</h6>
+        if (element.STASMS === <%- datos.estadosSms.pendiente %>) {
+          cell.innerHTML = `<div class="align-items-center py-1">
+            <span class="avatar avatar-rounded bg-red-lt">
+              <h6>PEND</h6>
             </span>
           </div>`
+        } else {
+          cell.innerHTML = `<div class="align-items-center py-1">
+            <span class="avatar avatar-rounded bg-green-lt">
+              <h6>ENVI</h6>
+            </span>
+          </div>`
+        }
 
         row.appendChild(cell)
 

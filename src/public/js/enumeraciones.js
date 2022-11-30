@@ -40,6 +40,9 @@ export const tiposMovimiento = {
   crearCita: 38,
   modificarCita: 39,
   borrarCita: 40,
+  crearCarga: 41,
+  modificarCarga: 42,
+  borrarCarga: 43,
   cambioPassword: 60,
   olvidoPassword: 61,
   restablecerPassword: 62,
@@ -68,6 +71,10 @@ export const estadosDocumento = {
   pendiente: 0,
   asignado: 1,
   resuelto: 2,
+};
+export const estadosCarga = {
+  pendiente: 0,
+  procesado: 1,
 };
 export const estadosCita = {
   disponible: 0,

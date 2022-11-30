@@ -24,7 +24,7 @@ export const mainPage = async (req, res) => {
       tiposRol,
       verTodo,
     }
-
+console.log(datos)
     res.render("admin/formularios", { user, datos });
   } catch (error) {
     const msg = "No se ha podido acceder a los datos de la aplicación.";
@@ -103,15 +103,24 @@ export const referenciasPage = async (req, res) => {
   };
 
   try {
+    const ret = await axios.post("http://localhost:8000/api/formulario", {
+      formulario,
+    })
     const result = await axios.post("http://localhost:8000/api/formularios/referencias", {
       formulario,
     })
 
+    const formularioData = {
+      NIFCON: ret.data.NIFCON,
+      NOMCON: ret.data.NOMCON,
+      EJEDOC: ret.data.EJEDOC,
+    }
     const datos = {
       formulario,
+      formularioData,
       referencias: JSON.stringify(result.data),
     }
-
+    
     res.render("admin/formularios/referencias", { user, datos });
   } catch (error) {
     const msg = "No se ha podido acceder a los datos de la aplicación.";
@@ -192,12 +201,23 @@ export const smssPage = async (req, res) => {
   };
 
   try {
+    const ret = await axios.post("http://localhost:8000/api/formulario", {
+      formulario,
+    })
     const result = await axios.post("http://localhost:8000/api/formularios/smss", {
       formulario,
     })
+
+    const formularioData = {
+      NIFCON: ret.data.NIFCON,
+      NOMCON: ret.data.NOMCON,
+      EJEDOC: ret.data.EJEDOC,
+    }
     const datos = {
       formulario,
+      formularioData,
       smss: JSON.stringify(result.data),
+      estadosSms,
     }
 
     res.render("admin/formularios/smss", { user, datos });
@@ -579,7 +599,7 @@ export const insertReferencia = async (req, res) => {
       movimiento,
     });
 
-    res.redirect("/admin/formularios");
+    res.redirect(`/admin/formularios/referencias/${formulario.IDDOCU}`);
   } catch (error) {
     const msg = "No se ha podido insertar el relacionado.";
 
@@ -591,9 +611,11 @@ export const insertReferencia = async (req, res) => {
 export const updateReferencia = async (req, res) => {
   const user = req.user;
   const fecha = new Date()
+  const formulario = {
+    IDDOCU: req.body.iddocu,
+  };
   const referencia = {
     IDREFE: req.body.idrefe,
-    FECREF: fecha.toISOString().slice(0, 10),
     NIFREF: req.body.nifref.toUpperCase(),
     TIPREF: req.body.tipref,
   };
@@ -608,7 +630,7 @@ export const updateReferencia = async (req, res) => {
       movimiento,
     });
 
-    res.redirect("/admin/formularios");
+    res.redirect(`/admin/formularios/referencias/${formulario.IDDOCU}`);
   } catch (error) {
     const msg = "No se ha podido actualizar el relacionado.";
 
@@ -619,6 +641,9 @@ export const updateReferencia = async (req, res) => {
 }
 export const removeReferencia = async (req, res) => {
   const user = req.user;
+  const formulario = {
+    IDDOCU: req.body.iddocu,
+  };
   const referencia = {
     IDREFE: req.body.idrefe,
   };
@@ -632,8 +657,8 @@ export const removeReferencia = async (req, res) => {
       referencia,
       movimiento,
     });
-
-    res.redirect("/admin/formularios");
+console.log(formulario)
+    res.redirect(`/admin/formularios/referencias/${formulario.IDDOCU}`);
   } catch (error) {
     const msg = "No se ha podido borrar el relacionado.";
 

@@ -31,7 +31,16 @@
     }
 
     .pagination {
-      float: right;
+      float: left;
+    }
+
+    .subtitulo {
+      margin: 0;
+      align-items: center;
+      justify-content: center;
+      color: #656d77;
+      pointer-events: none;
+      font-size: 0.8em;
     }
   </style>
 </head>
@@ -43,11 +52,22 @@
         <div class="page-wrapper">
           <div class="page-body">
             <div class="container-xl">
-              <div class="row row-deck row-cards">
+              <div class="row">
                 <div class="col-12">
                   <div class="card">
                     <div class="card-header">
-                      <h3 class="card-title">Referencias</h3>
+                      <div>
+                        <h3 class="card-title">Referencias</h3>
+                        <p class="subtitulo">
+                          <span class="text-muted">
+                            <%- datos.formularioData.NIFCON %> 
+                            <%- datos.formularioData.NOMCON %>
+                          </span>
+                          <span class="ms-2">
+                            Ejercicio: <%- datos.formularioData.EJEDOC %>
+                          </span>
+                        </p>
+                      </div>
                       <div class="col-auto ms-auto">
                         <div class="d-flex">
                           <div class="input-icon me-3">
@@ -83,6 +103,9 @@
                         </tbody>
                       </table>
                       <div id="pagination-wrapper" class="pagination py-1"></div>
+                      <div class="ms-auto d-flex py-1">
+                        <a href="/admin/formularios" class="btn btn-link ms-auto">Volver</a>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -119,6 +142,7 @@
               <div class="col">
                 <form action="/admin/formularios/referencias/delete" method="POST">
                   <input type="hidden" id="idrefe" name="idrefe" value="">
+                  <input type="hidden" id="iddocu" name="iddocu" value="<%- datos.formulario.IDDOCU %>">
                   <button type="submit" class="btn btn-danger w-100">Borrar referencia</button>
                 </form>
               </div>
