@@ -2,11 +2,14 @@ import oracledb from 'oracledb'
 import { simpleExecute } from '../services/database.js'
 
 const estadisticaSituacionSql = `SELECT 
-  stadoc, count(*) numcta
+  refdoc,
+  SUM(CASE WHEN stadoc = 0 THEN 1 ELSE 0 END) "PEN",
+  SUM(CASE WHEN stadoc = 1 THEN 1 ELSE 0 END) "ASI",
+  SUM(CASE WHEN stadoc = 2 THEN 1 ELSE 0 END) "RES",
+  COUNT(*) "TOT"
 FROM documentos
 WHERE refdoc = :refdoc
-  AND fecdoc BETWEEN TO_DATE(:desfec, 'YYYY-MM-DD') AND TO_DATE(:hasfec, 'YYYY-MM-DD') +24/24
-GROUP BY ROLLUP(stadoc)
+GROUP BY refdoc
 `
 const estadisticaOficinaSql = `SELECT 
   oo.desofi,
@@ -32,37 +35,26 @@ const estadisticaOficinaSql = `SELECT
 INNER JOIN oficinas oo ON oo.idofic = p1.ofi
 GROUP BY ROLLUP(oo.desofi)
 `
-const estadisticaActuacionSql = `SELECT TO_CHAR(fec, 'yyyy-mm-dd') "FEC",
-  SUM(CASE WHEN sta = 2 THEN 1 ELSE 0 END) "LIQ",
-  SUM(CASE WHEN sta = 4 THEN 1 ELSE 0 END) "SAN",
-  SUM(CASE WHEN sit > 0 THEN 1 ELSE 0 END) "COR"
-  FROM
-  (
-  WITH vDates AS (
+const estadisticaActuacionSql = `WITH 
+  vDates AS (
     SELECT TO_DATE(:desfec,'YYYY-MM-DD') + ROWNUM - 1 AS fecha
     FROM dual
     CONNECT BY rownum <= TO_DATE(:hasfec,'YYYY-MM-DD') - TO_DATE(:desfec,'YYYY-MM-DD') + 1
   )
-  SELECT v.fecha as fec, -1 as sta, -1 as sit
+  SELECT TO_CHAR(v.fecha, 'YYYY-MM-DD') as fec, 0 "ASI", 0 "RES"
   FROM vDates v
   UNION ALL
-  SELECT TRUNC(fc.feccie) as fec, hh.stahit as sta, 0 AS sit    
-      FROM fcierres fc
-      INNER JOIN fraudes ff ON ff.idfrau = fc.idfrau
-      INNER JOIN hitosfraude hf ON hf.idfrau = ff.idfrau
-      INNER JOIN hitos hh ON hh.idhito = hf.idhito
-      WHERE ff.tipfra = :tipfra
-        AND fc.feccie BETWEEN TO_DATE(:desfec, 'YYYY-MM-DD') AND TO_DATE(:hasfec, 'YYYY-MM-DD') +24/24
-      UNION ALL
-      SELECT TRUNC(fc.feccie) as fec, 0 as sta, sitcie as sit
-      FROM fcierres fc
-      INNER JOIN fraudes ff ON ff.idfrau = fc.idfrau
-      WHERE ff.tipfra = :tipfra
-        AND ff.reffra = :reffra
-        AND fc.feccie BETWEEN TO_DATE(:desfec, 'YYYY-MM-DD') AND TO_DATE(:hasfec, 'YYYY-MM-DD') +24/24
-  ) p1
-GROUP BY fec
-ORDER BY fec
+  SELECT 
+      TO_CHAR(mm.fecmov, 'YYYY-MM-DD') as fec, 
+      SUM(CASE WHEN mm.tipmov = 15 THEN 1 ELSE 0 END) "ASI",
+      SUM(CASE WHEN mm.tipmov = 16 THEN 1 ELSE 0 END) "RES"
+  FROM movimientosdocumento md
+  INNER JOIN documentos dd ON dd.iddocu = md.iddocu
+  INNER JOIN movimientos mm ON mm.idmovi = md.idmovi
+  WHERE dd.refdoc = :refdoc AND 
+      (mm.tipmov = :tipoAsign OR mm.tipmov = :tipoResol) AND
+      mm.fecmov BETWEEN TO_DATE(:desfec, 'YYYY-MM-DD') AND TO_DATE(:hasfec, 'YYYY-MM-DD') +24/24
+  GROUP BY TO_CHAR(mm.fecmov, 'YYYY-MM-DD')
 `
 
 export const statSituacion = async (bind) => {
@@ -90,7 +82,6 @@ export const statOficinas = async (bind) => {
 export const statActuacion = async (bind) => {
   let result
 
-  delete bind.fecfra
   try {
     result = await simpleExecute(estadisticaActuacionSql, bind)
   } catch (error) {

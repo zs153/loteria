@@ -1,20 +1,37 @@
 import * as DAL from '../models/estadistica.model'
 
-const estadisticaFromRec = (req) => {
+const situacionFromRec = (req) => {
+  const formulario = {
+    refdoc: req.body.formulario.REFDOC,
+  }
+
+  return Object.assign(formulario)
+}
+const oficinasFromRec = (req) => {
+  const carga = {
+    refcar: req.body.carga.REFCAR,
+  }
+
+  return carga
+}
+const actuacionFromRec = (req) => {
   const periodo = {
     desfec: req.body.periodo.DESDE,
     hasfec: req.body.periodo.HASTA,
   }
   const formulario = {
-    refdoc: req.body.fraude.REFDOC,
+    refdoc: req.body.formulario.REFDOC,
   }
-
-  return Object.assign(periodo, formulario)
+  const tipos = {
+    tipoAsign: req.body.tiposMovimiento.asignarFormulario,
+    tipoResol: req.body.tiposMovimiento.resolverFormulario,
+  }
+  return Object.assign(periodo, formulario, tipos)
 }
 
 export const estadisticasSituacion = async (req, res) => {
   try {
-    const result = await DAL.statSituacion(estadisticaFromRec(req))
+    const result = await DAL.statSituacion(situacionFromRec(req))
 
     if (result !== null) {
       res.status(200).json(result)
@@ -27,7 +44,7 @@ export const estadisticasSituacion = async (req, res) => {
 }
 export const estadisticasOficinas = async (req, res) => {
   try {
-    const result = await DAL.statOficinas(cargaFromRec(req))
+    const result = await DAL.statOficinas(oficinasFromRec(req))
 
     if (result !== null) {
       res.status(200).json(result)
@@ -40,7 +57,7 @@ export const estadisticasOficinas = async (req, res) => {
 }
 export const estadisticasActuacion = async (req, res) => {
   try {
-    const result = await DAL.statActuacion(estadisticaFromRec(req))
+    const result = await DAL.statActuacion(actuacionFromRec(req))
 
     if (result !== null) {
       res.status(200).json(result)

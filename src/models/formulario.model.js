@@ -155,7 +155,7 @@ export const find = async (context) => {
       // mostrar asignados al liquidador y todos los pendientes
       query += `WHERE dd.liqdoc = :liqdoc
           AND BITAND(dd.stadoc,1) > 0
-        UNION
+        UNION ALL
         SELECT
           oo.desofi,
           tt.destip,
