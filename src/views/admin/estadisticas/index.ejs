@@ -25,7 +25,7 @@
                 <div class="col-12">
                   <div class="card">
                     <form action="/admin/estadisticas" method="POST" onsubmit="return validate();">
-                      <input type="hidden" id="refcar" name="refcar">
+                      <input type="hidden" id="refdoc" name="refdoc">
                       <div class="modal-body">
                         <div class="card-body">
 
@@ -57,7 +57,7 @@
                                 <div class="form-label">Carga</div>
                                 <select class="form-select" id="cbocar" name="refcar" value="">
                                   <% datos.cargas.map(element=> { %>
-                                    <option value="<%- element.IDCARG %>" >
+                                    <option value="<%- element.REFCAR %>" >
                                       <%- element.DESCAR %>
                                     </option>
                                     <% }) %>
@@ -83,14 +83,12 @@
   <script src="/js/ayuda.min.js"></script>
   <script>
     const cboC = document.getElementById('cbocar');
-    const cboT = document.getElementById('cbotip');
+
+    document.getElementById('refdoc').value = cboC.value
 
     cboC.addEventListener('change', (e) => {
-      document.getElementById('refcar').value = e.target.options[e.target.selectedIndex].getAttribute('data-foo')
+      document.getElementById('refdoc').value = e.target.options[e.target.selectedIndex].value
     })
-    cboT.addEventListener('change', (e) => {
-      document.getElementById('destip').value = e.target.options[e.target.selectedIndex].text
-    })    
   </script>
   <script>
     const desde = document.getElementById('desde')

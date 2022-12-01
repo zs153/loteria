@@ -27,7 +27,8 @@
     }
 
     .h1 {
-      font-size: 1.5rem;
+      font-size: 3.5rem;
+      color:rgb(87, 87, 87)
     }
 
     .progress-container {
@@ -62,47 +63,20 @@
       z-index: 2;
     }
 
+    .subpercent {
+      display: block;
+      z-index: 4;
+    }
+
     .percent:after {
       content: '%';
-      margin-left: 0.1em;
+      margin-left: 0;
       font-size: .8em;
     }
 
-    .err {
-      width: 10%;
-      height: 100%;
-      float: left;
-    }
-
-    .efe {
-      width: 10%;
-      height: 100%;
-      float: left;
-    }
-
-    .tri {
-      width: 10%;
-      height: 100%;
-      float: left;
-    }
-
-    .pre {
-      width: 10%;
-      height: 100%;
-      float: left;
-    }
-
-    .otr {
-      width: 10%;
-      height: 100%;
-      float: left;
-    }
-
-    .legend {
-      display: inline-block;
-      width: 0.75rem;
-      height: 0.75rem;
-      border-radius: 4px;
+    .subpercent:after {
+      margin-left: 0;
+      font-size: .8em;
     }
 
     .progress-separated {
@@ -143,15 +117,14 @@
 
 <body class="antialiased">
   <div class="wrapper">
-    <%- include('../../../partials/header') %>
-      <%- include('../../../partials/navbar', {opcion: 'ADMINISTRACION' }) %>
+    <%- include('../../partials/header') %>
+      <%- include('../../partials/navbar', {opcion: 'ADMINISTRACION' }) %>
         <div class="page-wrapper">
           <div class="page-body">
             <div class="container-xl">
               <div class="d-flex">
-                <span>Carga: <%- datos.fraude.reffra %></span>
-                <span class="ms-3">Tipo: <%- datos.tipo.destip %></span>
-                <span class="ms-3">Periodo: <%- datos.periodo.desde %> al <%- datos.periodo.hasta %></span>
+                <span>Carga: <%- datos.carga.REFCAR %></span>
+                <span class="ms-3">Periodo: <%- datos.strPeriodo.desde %> al <%- datos.strPeriodo.hasta %></span>
                 <a href="#" class="ms-auto" data-bs-toggle="modal" data-bs-target="#modal-config">
                   <i class="bi bi-gear" style="font-size: 0.9rem; color: #626976;"></i>
                 </a>
@@ -161,48 +134,11 @@
                   <div class="card">
                     <div class="card-body">
                       <div class="d-flex align-items-center">
-                        <div class="subheader">Correctas</div>
+                        <div class="subheader">Pendientes</div>
                       </div>
-                      <div class="h1 mb-3">
-                        <%- datos.situacion.CORREC %>
-                      </div>
-                      <div class="d-flex">
-                        <div class="subheader">Causas</div>
-                        <div class="ms-auto">
-                          <div class="col-auto">
-                            <span class="legend bg-azure"></span>
-                            <div class="tooltip">CE
-                              <span class="tooltiptext">Datos cruce erroneos</span>
-                            </div>
-                            <span class="legend bg-purple"></span>
-                            <div class="tooltip">SE
-                              <span class="tooltiptext">Sin efecto económico</span>
-                            </div>
-                            <span class="legend bg-pink"></span>
-                            <div class="tooltip">TC
-                              <span class="tooltiptext">Tributación correcta</span>
-                            </div>
-                            <span class="legend bg-orange"></span>
-                            <div class="tooltip">PR
-                              <span class="tooltiptext">Prescrito</span>
-                            </div>
-                            <span class="legend bg-teal"></span>
-                            <div class="tooltip">OT
-                              <span class="tooltiptext">Otros casos</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="progress-container">
-                        <div class="err bg-azure progress-separated">
-                        </div>
-                        <div class="efe bg-purple progress-separated">
-                        </div>
-                        <div class="tri bg-pink progress-separated">
-                        </div>
-                        <div class="pre bg-orange progress-separated">
-                        </div>
-                        <div class="otr bg-teal">
+                      <div class="d-flex align-items-center">
+                        <div class="h1 ms-auto">
+                          <%- Intl.NumberFormat('de-DE').format(datos.situacion.PEN) %>
                         </div>
                       </div>
                     </div>
@@ -212,22 +148,12 @@
                   <div class="card">
                     <div class="card-body">
                       <div class="d-flex align-items-center">
-                        <div class="subheader">Liquidaciones</div>
-                        <div class="subheader ms-auto">Importe</div>
+                        <div class="subheader">Adjudicadas</div>
                       </div>
                       <div class="d-flex align-items-center">
-                        <div class="h1 mb-3">
-                          <%- Intl.NumberFormat('de-DE').format(datos.hitos.LIQUID) %>
-                        </div>
                         <div class="h1 ms-auto">
-                          <%- Intl.NumberFormat('de-DE').format(datos.hitos.IMPLIQ) %>
+                            <%- Intl.NumberFormat('de-DE').format(datos.situacion.ASI) %>
                         </div>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <div class="subheader">Propuestas</div>
-                      </div>
-                      <div class="h2">
-                        <%- Intl.NumberFormat('de-DE').format(datos.hitos.PROLIQ) %>
                       </div>
                     </div>
                   </div>
@@ -236,31 +162,11 @@
                   <div class="card">
                     <div class="card-body">
                       <div class="d-flex align-items-center">
-                        <div class="subheader">Sanciones</div>
-                        <div class="subheader ms-auto">Importe</div>
+                        <div class="subheader">Resueltas</div>
                       </div>
                       <div class="d-flex align-items-center">
-                        <div class="h1 mb-3">
-                          <%- Intl.NumberFormat('de-DE').format(datos.hitos.SANCIO) %>
-                        </div>
                         <div class="h1 ms-auto">
-                          <%- Intl.NumberFormat('de-DE').format(datos.hitos.IMPSAN) %>
-                        </div>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <div class="subheader">
-                          Propuestas
-                          <span class="text-red">(anuladas)</span>
-                        </div>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <div class="h2">
-                          <%- datos.hitos.PROSAN %>
-                            <span class="text-red">(<%- Intl.NumberFormat('de-DE').format(datos.hitos.ANUSAN) %>)</span>
-                        </div>
-                        <div class="ms-auto">
-                          <%- Intl.NumberFormat('de-DE').format(datos.hitos.IMPPSA) %>
-                            <span class="text-red">(<%- Intl.NumberFormat('de-DE').format(datos.hitos.IMPANU) %>)</span>
+                            <%- Intl.NumberFormat('de-DE').format(datos.situacion.RES) %>
                         </div>
                       </div>
                     </div>
@@ -269,7 +175,7 @@
                 <div class="col-lg-6 mt-1">
                   <div class="card">
                     <div class="card-header">
-                      <h3 class="card-title">Acumulados</h3>
+                      <h3 class="card-title">Actividad</h3>
                     </div>
                     <div class="card-body">
                       <div id="chart-actuac"></div>
@@ -284,7 +190,7 @@
                           <h3 class="card-title">Oficinas</h3>
                         </div>
                         <div class="card-body">
-                          <table class="table table-vcenter table-striped sortable" id="tblFraudes">
+                          <table class="table table-vcenter table-striped sortable" id="tblOficinas">
                             <thead>
                               <tr class="header">
                                 <th>Oficina</th>
@@ -302,11 +208,11 @@
                                       <div class="flex-fill">
                                         <% if (element.DESOFI===null) { %>
                                           <div class="font-weight-medium">TOTAL</div>
-                                          <% } else { %>
-                                            <div class="font-weight-medium">
-                                              <%- element.DESOFI %>
-                                            </div>
-                                            <% } %>
+                                        <% } else { %>
+                                          <div class="font-weight-medium">
+                                            <%- element.DESOFI %>
+                                          </div>
+                                        <% } %>
                                       </div>
                                     </div>
                                   </td>
@@ -347,7 +253,7 @@
                                     </div>
                                   </td>
                                 </tr>
-                                <% }) %>
+                              <% }) %>
                             </tbody>
                           </table>
                         </div>
@@ -356,21 +262,21 @@
                     <div class="col-12 mt-1">
                       <div class="card" style="display: -webkit-box;">
                         <div class="col-4 mx-auto w-auto">
-                          <div id="chart-correc" class="chart" data-percent="<%- datos.ratios.correctas %>">
+                          <div id="chart-pendientes" class="chart" data-percent="<%- datos.ratios.pendientes %>">
                             <span class="percent"></span>
-                            <span>Correcto</span>
+                            <span class="subpercent">Pendiente</span>
                           </div>
                         </div>
                         <div class="col-4 mx-auto w-auto">
-                          <div id="chart-liquid" class="chart" data-percent="<%- datos.ratios.liquidacion %>">
+                          <div id="chart-asignadas" class="chart" data-percent="<%- datos.ratios.asignadas %>">
                             <span class="percent"></span>
-                            <span>Liquida</span>
+                            <span class="subpercent">Adjudicado</span>
                           </div>
                         </div>
                         <div class="col-4 mx-auto w-auto">
-                          <div id="chart-sancio" class="chart" data-percent="<%- datos.ratios.sancion %>">
+                          <div id="chart-resueltas" class="chart" data-percent="<%- datos.ratios.resueltas %>">
                             <span class="percent"></span>
-                            <span>Sanción</span>
+                            <span class="subpercent">Resuelto</span>
                           </div>
                         </div>
                       </div>
@@ -381,57 +287,47 @@
             </div>
           </div>
         </div>
-        <%- include('../../../partials/footer') %>
+        <%- include('../../partials/footer') %>
   </div>
 
   <div class="modal modal-blur fade" id="modal-config" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title mt-0">Estadística de fraudes</h5>
+          <h5 class="modal-title mt-0">Estadística de formularios</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form action="/admin/estadisticas/fraudes" method="POST" onsubmit="return validate();">
-          <input type="hidden" id="destip" name="destip">
-          <input type="hidden" id="refcar" name="refcar">
+        <form action="/admin/estadisticas" method="POST" onsubmit="return validate();">
+          <input type="hidden" id="refdoc" name="refdoc">
           <div class="modal-body">
             <div class="card-body">
               <div class="row">
                 <div class="col-12">
                   <div class="mb-1">
-                    <div class="form-label">Tipo</div>
-                    <select class="form-select form-control" id="cbotip" name="tipfra" value="">
+                    <div class="form-label">Carga</div>
+                    <select class="form-select form-control" id="cbocar" name="refcar" value="">
                     </select>
                   </div>
                 </div>
               </div>
               <div class="row">
-                <div class="col-4">
+                <div class="col-6">
                   <div class="mb-1">
                     <div class="input-control">
                       <label class="form-label required">Desde</label>
                       <input type="date" name="desde" id="desde" class="form-control"
-                        value="<%- datos.periodo.desde %>" />
+                        value="<%- datos.periodo.DESDE %>" />
                       <div class="invalid-feedback"></div>
                     </div>
                   </div>
                 </div>
-                <div class="col-4">
+                <div class="col-6">
                   <div class="mb-1">
                     <div class="input-control">
                       <label class="form-label required">Hasta</label>
                       <input type="date" name="hasta" id="hasta" class="form-control"
-                        value="<%- datos.periodo.hasta %>" />
+                        value="<%- datos.periodo.HASTA %>" />
                       <div class="invalid-feedback"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-4">
-                  <div class="mb-1">
-                    <div class="input-control">
-                      <label class="form-label">Carga</label>
-                      <select class="form-select form-control" id="cbocar" name="idcarg" value="">
-                      </select>
                     </div>
                   </div>
                 </div>
@@ -450,36 +346,26 @@
   <script src="/js/ayuda.min.js"></script>
   <script>
     const cboC = document.getElementById('cbocar');
-    const cboT = document.getElementById('cbotip');
 
     cboC.addEventListener('change', (e) => {
-      document.getElementById('refcar').value = e.target.options[e.target.selectedIndex].getAttribute('data-foo')
+      document.getElementById('refdoc').value = e.target.options[e.target.selectedIndex].value
     })
-    cboT.addEventListener('change', (e) => {
-      document.getElementById('destip').value = e.target.options[e.target.selectedIndex].text
-    })    
   </script>
   <script>
     const changeProgress = (element, texto, valor, progress) => {
       element.style.width = `${progress}%`;
       element.innerHTML = `<div class="tooltip" style="display: block;">${valor}
-            <span class="tooltiptext">
-              <p>${texto}</p>
-              <p>Total: ${valor}</p>
-              <p>Porcentaje: ${progress}%</p>
-            </span>
-          </div>`
+        <span class="tooltiptext">
+          <p>${texto}</p>
+          <p>Total: ${valor}</p>
+          <p>Porcentaje: ${progress}%</p>
+        </span>
+      </div>`
     };
-
-    changeProgress(document.querySelector(".err"), 'Datos cruce erroneos', <% - datos.situacion.ACUERR %>, Math.round(<% - datos.situacion.ACUERR / datos.situacion.CORREC * 100 %> * 100) / 100)
-    changeProgress(document.querySelector(".efe"), 'Sin efectos económicos', <% - datos.situacion.ACUEFE %>, Math.round(<% - datos.situacion.ACUEFE / datos.situacion.CORREC * 100 %> * 100) / 100)
-    changeProgress(document.querySelector(".tri"), 'Tributación correcta', <% - datos.situacion.ACUTRI %>, Math.round(<% - datos.situacion.ACUTRI / datos.situacion.CORREC * 100 %> * 100) / 100)
-    changeProgress(document.querySelector(".pre"), 'Prescrito', <% - datos.situacion.ACUPRE %>, Math.round(<% - datos.situacion.ACUPRE / datos.situacion.CORREC * 100 %> * 100) / 100)
-    changeProgress(document.querySelector(".otr"), 'Otros casos', <% - datos.situacion.ACUOTR %>, Math.round(<% - datos.situacion.ACUOTR / datos.situacion.CORREC * 100 %> * 100) / 100)
   </script>
   <script>
     const options = {
-      colors: ['#4263eb', '#74b816', '#f76707'],
+      colors: ['#f76707', '#74b816'],
       chart: {
         locales: [{
           "name": "es",
@@ -548,17 +434,13 @@
       },
       series: [
         {
-          name: 'Correcto',
-          data: <% - datos.serieC %>
-          },
+          name: 'Adjudicado',
+          data: <%- datos.serieA %>
+        },
         {
-          name: 'Liquidaciones',
-          data: <% - datos.serieL %>
-          },
-        {
-          name: 'Sanciones',
-          data: <% - datos.serieS %>
-          }
+          name: 'Resuelto',
+          data: <%- datos.serieR %>
+        }
       ],
       xaxis: {
         type: 'datetime',
@@ -569,11 +451,11 @@
     chart.render();   
   </script>
   <script>
-    const element = document.querySelector('#chart-correc');
-    const element1 = document.querySelector('#chart-liquid');
-    const element2 = document.querySelector('#chart-sancio');
+    const element = document.querySelector('#chart-pendientes');
+    const element1 = document.querySelector('#chart-asignadas');
+    const element2 = document.querySelector('#chart-resueltas');
 
-    const chartCorrecto = new EasyPieChart(element, {
+    const chartPendientes = new EasyPieChart(element, {
       easing: 'easeOutElastic',
       delay: 3000,
       barColor: '#4263eb',
@@ -586,10 +468,10 @@
         this.el.children[0].innerHTML = Math.round(percent * 100) / 100;
       }
     });
-    const chartLiquid = new EasyPieChart(element1, {
+    const chartAdjudicadas = new EasyPieChart(element1, {
       easing: 'easeOutElastic',
       delay: 3000,
-      barColor: '#74b816',
+      barColor: '#f76707',
       trackColor: '#f2f3f4',
       scaleColor: false,
       lineWidth: 3,
@@ -599,10 +481,10 @@
         this.el.children[0].innerHTML = Math.round(percent * 100) / 100;
       }
     });
-    const chartSancion = new EasyPieChart(element2, {
+    const chartResueltas = new EasyPieChart(element2, {
       easing: 'easeOutElastic',
       delay: 3000,
-      barColor: '#f76707',
+      barColor: '#74b816',
       trackColor: '#f2f3f4',
       scaleColor: false,
       lineWidth: 3,
@@ -616,12 +498,10 @@
   <script>
     const desde = document.getElementById('desde')
     const hasta = document.getElementById('hasta')
-    const fecha = document.getElementById('fecfra')
 
     const validate = () => {
       const desdeValue = desde.value
       const hastaValue = hasta.value
-      const fechaValue = fecha.value
 
       if (isNaN(Date.parse(desdeValue))) {
         setError(desde, 'Fecha requerida')
@@ -640,15 +520,6 @@
         return false
       } else {
         setSuccess(hasta)
-      }
-      if (isNaN(Date.parse(fechaValue))) {
-        setError(fecha, 'Fecha requerida')
-        setTimeout(function () {
-          setSuccess(fecha)
-        }, 3000)
-        return false
-      } else {
-        setSuccess(fecha)
       }
 
       return true
@@ -682,44 +553,19 @@
 
           cargas.map((itm) => {
             const option = document.createElement('option')
-            option.value = itm.IDCARG
+            option.value = itm.REFCAR
             option.text = itm.DESCAR
-            option.setAttribute('data-foo', itm.REFCAR)
 
             cbo.appendChild(option)
           })
 
-          document.getElementById('refcar').value = cbo.options[cbo.selectedIndex].getAttribute('data-foo')
+          document.getElementById('refdoc').value = cbo.options[cbo.selectedIndex].value
         }
       };
-      xhr.open('POST', 'http://localhost:8100/api/cargas', true);
+      xhr.open('POST', 'http://localhost:8000/api/cargas', true);
       xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
       xhr.send()
     }
-    const Tipos = () => {
-      const xhr = new XMLHttpRequest();
-
-      xhr.onload = function () {
-        if (xhr.status === 200) {
-          const tipos = JSON.parse(xhr.response)
-          const cbo = document.getElementById('cbotip')
-
-          tipos.map((itm) => {
-            const option = document.createElement('option')
-            option.value = itm.IDTIPO
-            option.text = itm.DESTIP
-
-            cbo.appendChild(option)
-          })
-
-          document.getElementById('destip').value = cbo.options[cbo.selectedIndex].text
-        }
-      };
-      xhr.open('POST', 'http://localhost:8100/api/tipos/fraudes', true);
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-      xhr.send()
-    }
-    Tipos();
     Cargas();
   </script>
 </body>
