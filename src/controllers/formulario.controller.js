@@ -24,7 +24,7 @@ export const mainPage = async (req, res) => {
       tiposRol,
       verTodo,
     }
-console.log(datos)
+
     res.render("admin/formularios", { user, datos });
   } catch (error) {
     const msg = "No se ha podido acceder a los datos de la aplicación.";
@@ -120,7 +120,7 @@ export const referenciasPage = async (req, res) => {
       formularioData,
       referencias: JSON.stringify(result.data),
     }
-    
+
     res.render("admin/formularios/referencias", { user, datos });
   } catch (error) {
     const msg = "No se ha podido acceder a los datos de la aplicación.";
@@ -475,6 +475,12 @@ export const resolver = async (req, res) => {
   let formulario = {
     IDDOCU: req.body.iddocu,
   };
+  const sms = {
+    MOVSMS: req.body.movsms,
+    TEXSMS: req.body.texsms,
+    STASMS: estadosSms.pendiente,
+    CHKENV: req.body.chkenv ? true : false
+  }
 
   try {
     const result = await axios.post("http://localhost:8000/api/formulario", {
@@ -494,6 +500,7 @@ export const resolver = async (req, res) => {
 
       await axios.post("http://localhost:8000/api/formularios/resolver", {
         formulario,
+        sms,
         movimiento,
       });
     }
@@ -657,7 +664,7 @@ export const removeReferencia = async (req, res) => {
       referencia,
       movimiento,
     });
-console.log(formulario)
+    console.log(formulario)
     res.redirect(`/admin/formularios/referencias/${formulario.IDDOCU}`);
   } catch (error) {
     const msg = "No se ha podido borrar el relacionado.";
@@ -811,4 +818,3 @@ function randomString(long, chars) {
 
   return result;
 }
-// <a href="#" class="nav-link" onclick="{document.getElementById('movilsms').value ='${element.MOVCON}', document.getElementById('nomsms').value ='${element.NOMCON}', document.getElementById('idsmss').value ='${element.IDDOCU}', setTimeout(focoSMS,500)}" data-bs-toggle="modal" data-bs-target="#modal-sms">

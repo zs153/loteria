@@ -190,6 +190,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           <div class="modal-status bg-success"></div>
           <form action="/admin/formularios/resolver" method="POST">
+            <input type="hidden" id="resdoc" name="iddocu" value="">
             <div class="modal-body text-center py-4">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-green icon-lg" width="24" height="24"
                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
@@ -236,7 +237,6 @@
                     <a href="/admin/formularios" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
                   </div>
                   <div class="col">
-                    <input type="hidden" id="resdoc" name="iddocu" value="">
                     <button type="submit" class="btn btn-success w-100">Resolver formulario</button>
                   </div>
                 </div>
@@ -692,8 +692,8 @@
                   </li>
                   <li class="nav-item list-divider"></li>
                   <li class="nav-item ">
-                    <a href="#" class="nav-link" onclick="{document.getElementById('movilsms').value ='${element.MOVCON}', document.getElementById('nomsms').value ='${element.NOMCON}', document.getElementById('idsmss').value ='${element.IDDOCU}', setTimeout(focoSMS,500)}" data-bs-toggle="modal" data-bs-target="#modal-sms">
-                      <i class="bi bi-chat dropdown-item-icon"></i>Enviar SMS
+                    <a href="/admin/formularios/smss/${element.IDDOCU}" class="nav-link">                    
+                      <i class="bi bi-chat dropdown-item-icon"></i>Gestión sms
                     </a>
                   </li>
                 </ul>
