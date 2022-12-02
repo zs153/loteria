@@ -50,23 +50,23 @@ const validateSms = () => {
       setSuccess(movsms)
     }, 3000)
     return false
-    if (nomsmsValue === '') {
-      setError(nomsms, 'Nombre requerido')
-      setTimeout(function () {
-        setSuccess(nomsms)
-      }, 3000)
-      return false
-    }
-    if (modsmsValue === '') {
-      setError(modsms, 'Texto requerido')
-      setTimeout(function () {
-        setSuccess(modsms)
-      }, 3000)
-      return false
-    }
-
-    return true
   }
+  if (nomsmsValue === '') {
+    setError(nomsms, 'Nombre requerido')
+    setTimeout(function () {
+      setSuccess(nomsms)
+    }, 3000)
+    return false
+  }
+  if (modsmsValue === '') {
+    setError(modsms, 'Texto requerido')
+    setTimeout(function () {
+      setSuccess(modsms)
+    }, 3000)
+    return false
+  }
+
+  return true
 }
 const setError = (element, message) => {
   const inputControl = element.parentElement;
