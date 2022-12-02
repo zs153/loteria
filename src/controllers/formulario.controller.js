@@ -88,12 +88,17 @@ const resolverFromRec = (req) => {
     liqdoc: req.body.formulario.LIQDOC,
     stadoc: req.body.formulario.STADOC,
   }
+  const sms = {
+    movsms: req.body.sms.MOVSMS,
+    texsms: req.body.sms.TEXSMS,
+    stasms: req.body.sms.STASMS,
+  }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(formulario, movimiento)
+  return Object.assign(formulario, req.body.sms.CHKENV ? sms : '', movimiento)
 }
 const insertReferenciaFromRec = (req) => {
   const formulario = {
@@ -208,7 +213,6 @@ export const formularios = async (req, res) => {
     res.status(500).end()
   }
 }
-
 export const crear = async (req, res) => {
   try {
     const result = await DAL.insert(insertFromRec(req))

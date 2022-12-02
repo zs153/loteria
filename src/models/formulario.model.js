@@ -1,4 +1,5 @@
 import oracledb from 'oracledb'
+import { sms } from '../controllers/formulario.controller.js'
 import { simpleExecute } from '../services/database.js'
 
 const baseQuery = `SELECT 
@@ -52,7 +53,7 @@ const deleteSql = `BEGIN FORMULARIOS_PKG.DELETEFORMULARIO(
   :tipmov 
 ); END;
 `
-const asignarSql = `BEGIN FORMULARIOS_PKG.CAMBIOESTADOFORMULARIO(
+const cambioEstadoSql = `BEGIN FORMULARIOS_PKG.CAMBIOESTADOFORMULARIO(
   :iddocu,
   :liqdoc,
   :stadoc,
@@ -60,18 +61,13 @@ const asignarSql = `BEGIN FORMULARIOS_PKG.CAMBIOESTADOFORMULARIO(
   :tipmov 
 ); END;
 `
-const desasignarSql = `BEGIN FORMULARIOS_PKG.CAMBIOESTADOFORMULARIO(
+const resolverConSmsSql = `BEGIN FORMULARIOS_PKG.RESOLVERCONSMSFORMULARIO(
   :iddocu,
   :liqdoc,
   :stadoc,
-  :usumov,
-  :tipmov 
-); END;
-`
-const resolverSql = `BEGIN FORMULARIOS_PKG.CAMBIOESTADOFORMULARIO(
-  :iddocu,
-  :liqdoc,
-  :stadoc,
+  :movsms,
+  :texsms,
+  :stasms,
   :usumov,
   :tipmov 
 ); END;
@@ -223,7 +219,7 @@ export const asignar = async (bind) => {
   let result
 
   try {
-    await simpleExecute(asignarSql, bind)
+    await simpleExecute(cambioEstadoSql, bind)
 
     result = bind
   } catch (error) {
@@ -236,7 +232,7 @@ export const desasingar = async (bind) => {
   let result
 
   try {
-    await simpleExecute(desasignarSql, bind)
+    await simpleExecute(cambioEstadoSql, bind)
 
     result = bind
   } catch (error) {
@@ -246,10 +242,15 @@ export const desasingar = async (bind) => {
   return result
 }
 export const resolver = async (bind) => {
+  let query = cambioEstadoSql
   let result
 
+  if (bind.movsms) {
+    query = resolverConSmsSql
+  }
+
   try {
-    await simpleExecute(resolverSql, bind)
+    await simpleExecute(query, bind)
 
     result = bind
   } catch (error) {
