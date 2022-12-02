@@ -24,47 +24,40 @@
               <div class="row row-deck row-cards">
                 <div class="col-12">
                   <div class="card mt-3">
-                    <% if(typeof alerts !='undefined' ) { %>
-                      <% alerts.map(function (alert){ %>
-                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                          <%- alert.msg %>
+                    <form action="/admin/oficinas/update" method="POST" onsubmit="return validate();">
+                      <input type="hidden" id="idofic" name="idofic" value="<%- datos.oficina.IDOFIC %>">
+                      <div class="card-header">
+                        <h3 class="card-title">Oficina</h3>
+                      </div>
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-8">
+                            <div class="mb-1">
+                              <div class="input-control">
+                                <label class="form-label required">Descripción</label>
+                                <input type="text" name="desofi" id="desofi" class="form-control" style="text-transform: uppercase;" value="<%- datos.oficina.DESOFI %>" />
+                                <div class="invalid-feedback"></div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-4">
+                            <div class="mb-1">
+                              <div class="input-control">
+                                <label class="form-label required">Código</label>
+                                <input type="text" name="codofi" id="codofi" class="form-control" value="<%- datos.oficina.CODOFI %>" />
+                                <div class="invalid-feedback"></div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                        <% }) %>
-                          <% } %>
-                            <form action="/admin/oficinas/update" method="POST" onsubmit="return validate();">
-                              <input type="hidden" id="idofic" name="idofic" value="<%- datos.oficina.IDOFIC %>">
-                              <div class="card-header">
-                                <h3 class="card-title">Oficina</h3>
-                              </div>
-                              <div class="card-body">
-                                <div class="row">
-                                  <div class="col-8">
-                                    <div class="mb-1">
-                                      <div class="input-control">
-                                        <label class="form-label required">Descripción</label>
-                                        <input type="text" name="desofi" id="desofi" class="form-control" style="text-transform: uppercase;" value="<%- datos.oficina.DESOFI %>" />
-                                        <div class="invalid-feedback"></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="col-4">
-                                    <div class="mb-1">
-                                      <div class="input-control">
-                                        <label class="form-label required">Código</label>
-                                        <input type="text" name="codofi" id="codofi" class="form-control" value="<%- datos.oficina.CODOFI %>" />
-                                        <div class="invalid-feedback"></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="card-footer text-end">
-                                <div class="d-flex">
-                                  <a href="/admin/oficinas" class="btn btn-link">Cancelar</a>
-                                  <button type="submit" class="btn btn-primary ms-auto" id="btnInsert">Modificar oficina</button>
-                                </div>
-                              </div>
-                            </form>
+                      </div>
+                      <div class="card-footer text-end">
+                        <div class="d-flex">
+                          <a href="/admin/oficinas" class="btn btn-link">Cancelar</a>
+                          <button type="submit" class="btn btn-primary ms-auto" id="btnInsert">Modificar oficina</button>
+                        </div>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>

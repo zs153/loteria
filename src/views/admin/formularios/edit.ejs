@@ -24,13 +24,6 @@
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <% if(typeof alerts !='undefined' ) { %>
-                <% alerts.map(function (alert) { %>
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                  <%- alert.msg %>
-                </div>
-                <% }) %>
-                <% } %>
                 <form id="form" action="/admin/formularios/update" method="POST" onsubmit="return validate();">
                   <input type="hidden" name="iddocu" id="iddocu" value="<%- datos.formulario.IDDOCU %>">
                   <div class="card-header">
@@ -152,7 +145,7 @@
                   </div>
                   <div class="card-footer text-end">
                     <div class="d-flex">
-                      <a href="/admin/formularios" class="btn btn-link">Cancelar</a>
+                      <input type="submit" class="btn btn-link" action="action" onclick="window.history.go(-1); return false;" value="Cancelar" />
                       <button type="submit" class="btn btn-primary ms-auto" id="btnUpdate">Actualizar formulario</button>
                     </div>
                   </div>

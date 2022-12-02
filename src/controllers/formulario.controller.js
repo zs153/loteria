@@ -8,7 +8,6 @@ import {
 
 export const mainPage = async (req, res) => {
   const user = req.user;
-  const verTodo = false
   const formulario = {
     LIQDOC: user.userID,
     TIPVIS: estadosDocumento.pendiente + estadosDocumento.asignado,
@@ -22,7 +21,7 @@ export const mainPage = async (req, res) => {
       formularios: JSON.stringify(result.data),
       estadosDocumento,
       tiposRol,
-      verTodo,
+      verTodo: false,
     }
 
     res.render("admin/formularios", { user, datos });
@@ -554,7 +553,6 @@ export const desasignar = async (req, res) => {
 }
 export const verTodo = async (req, res) => {
   const user = req.user;
-  const verTodo = true;
   const formulario = {
     LIQDOC: user.userID,
     TIPVIS: estadosDocumento.resuelto,
@@ -568,7 +566,7 @@ export const verTodo = async (req, res) => {
       formularios: JSON.stringify(result.data),
       estadosDocumento,
       tiposRol,
-      verTodo,
+      verTodo: true,
     };
 
     res.render("admin/formularios", { user, datos });

@@ -31,7 +31,7 @@
     }
 
     .pagination {
-      float: left;
+      float: right;
     }
 
     .subtitulo {
@@ -104,7 +104,7 @@
                       </table>
                       <div id="pagination-wrapper" class="pagination py-1"></div>
                       <div class="ms-auto d-flex py-1">
-                        <a href="/admin/formularios" class="btn btn-link ms-auto">Volver</a>
+                        <input type="submit" class="btn btn-link" action="action" onclick="window.history.go(-1); return false;" value="Cancelar" />
                       </div>
                     </div>
                   </div>
