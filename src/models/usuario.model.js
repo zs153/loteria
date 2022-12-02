@@ -115,13 +115,6 @@ export const find = async (context) => {
     binds.emausu = context.EMAUSU;
     query += "WHERE emausu = :emausu";
   }
-  
-  const result = await simpleExecute(query, binds);
-  return result.rows;
-};
-export const findAll = async () => {
-  let query = largeQuery;
-  let binds = {}
 
   const result = await simpleExecute(query, binds);
   return result.rows;

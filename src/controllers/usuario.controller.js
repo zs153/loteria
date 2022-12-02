@@ -130,10 +130,8 @@ export const usuario = async (req, res) => {
   }
 }
 export const usuarios = async (req, res) => {
-  const context = req.body.usuario
-
   try {
-    const rows = await DAL.findAll(context)
+    const rows = await DAL.find({})
 
     res.status(200).json(rows)
   } catch (err) {
