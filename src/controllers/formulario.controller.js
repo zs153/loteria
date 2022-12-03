@@ -19,8 +19,7 @@ export const mainPage = async (req, res) => {
     })
     const datos = {
       formularios: JSON.stringify(result.data),
-      estadosDocumento,
-      tiposRol,
+      estadosDocumento: JSON.stringify(estadosDocumento),
       verTodo: false,
     }
 
@@ -564,8 +563,7 @@ export const verTodo = async (req, res) => {
     });
     const datos = {
       formularios: JSON.stringify(result.data),
-      estadosDocumento,
-      tiposRol,
+      estadosDocumento: JSON.stringify(estadosDocumento),
       verTodo: true,
     };
 

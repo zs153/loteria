@@ -1,10 +1,20 @@
+// inicializa sort
+document.querySelectorAll(".sortable th").forEach(headerCell => {
+  headerCell.addEventListener("click", () => {
+    const tableElement = headerCell.parentElement.parentElement.parentElement;
+    const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
+    const currentIsAscending = headerCell.classList.contains("th-sort-asc");
+
+    sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
+  });
+});
+// campos validate
+const modsms = document.getElementById('modsms')
+const movsms = document.getElementById('movilsms')
+const nomsms = document.getElementById('nomsms')
+
 const focoRes = () => {
   const ele = document.getElementById('texsms')
-
-  ele.focus()
-}
-const focoSMS = () => {
-  const ele = document.getElementById('modsms')
 
   ele.focus()
 }
@@ -96,14 +106,13 @@ const sortTableByColumn = (table, column, asc = true) => {
   table.querySelector(`th:nth-child(${column + 1})`).classList.toggle("th-sort-asc", asc);
   table.querySelector(`th:nth-child(${column + 1})`).classList.toggle("th-sort-desc", !asc);
 }
-const arrayFilter = () => {
-  const filtro = elemBuscar.value.toUpperCase()
+const arrayFilter = (value) => {
+  const filtro = value.toUpperCase()
   const trimmedData = orgList.filter(itm => Object.keys(itm).some(k => JSON.stringify(itm[k]).includes(filtro)))
-
   state.querySet = trimmedData
   state.page = 1
 
-  buildTable()
+  buildTable(state, estadosDocumento)
 }
 const pagination = (querySet, page, rows) => {
   const trimStart = (page - 1) * rows
@@ -147,7 +156,223 @@ const pageButtons = (pages) => {
     elem[i].addEventListener('click', (e) => {
       state.page = Number(e.target.value)
 
-      buildTable()
+      buildTable(state, estadosDocumento)
     })
   }
+}
+const buildTable = (state, estadosDocumento) => {
+  const table = document.getElementById('table-body')
+  const data = pagination(state.querySet, state.page, state.rows)
+  const myList = data.querySet
+  table.innerHTML = ''
+
+  myList.map(element => {
+    // col1
+    const row = document.createElement('tr')
+    let cell = document.createElement('td')
+    cell.classList.add("w-4")
+    if (element.STADOC === estadosDocumento.pendiente) {
+      cell.innerHTML = `<div class="align-items-center py-1">
+            <span class="avatar avatar-rounded bg-red-lt">
+              <h6>${element.LIQDOC}</h6>
+            </span>
+          </div>`
+    } else if (element.STADOC === estadosDocumento.asignado) {
+      if (element.NUMHIT === 0 && element.NUMEVE === 0) {
+        cell.innerHTML = `<div class="align-items-center py-1">
+              <span class="avatar avatar-rounded bg-blue-lt">
+                <h6>${element.LIQDOC}</h6>
+              </span>
+            </div>`
+      } else {
+        cell.innerHTML = `<ul class="dots-menu">
+            <li class="nav-item drop-left p-0">
+              <div class="align-items-center py-1">
+                <span class="avatar avatar-rounded bg-yellow-lt">
+                  <h6>${element.LIQDOC}</h6>
+                </span>
+              </div>
+            </li>
+          </ul>`
+      }
+    } else if (element.STADOC === estadosDocumento.resuelto) {
+      cell.innerHTML = `<div class="align-items-center py-1">
+            <span class="avatar avatar-rounded bg-green-lt">
+              <h6>${element.LIQDOC}</h6>
+            </span>
+          </div>`
+    }
+    row.appendChild(cell)
+
+    // col2
+    cell = document.createElement('td')
+    cell.classList.add("w-8")
+    cell.innerHTML = `<div class="d-flex py-1 align-items-center">
+          <div class="flex-fill">
+            <div class="font-weight-medium">${element.DESOFI}</div>
+          </div>
+        </div>`
+    row.appendChild(cell)
+
+    // col3
+    cell = document.createElement('td')
+    cell.classList.add("w-6")
+    cell.innerHTML = `<div class="d-flex py-1 align-items-center">
+          <div class="flex-fill">
+            <div class="font-weight-medium">${element.STRFEC}</div>
+          </div>
+        </div>`
+    row.appendChild(cell)
+
+    // col4
+    cell = document.createElement('td')
+    cell.classList.add("w-5")
+    cell.innerHTML = `<div class="d-flex py-1 align-items-center">
+          <div class="flex-fill">
+            <div class="font-weight-medium">${element.EJEDOC}</div>
+          </div>
+        </div>`
+    row.appendChild(cell)
+
+    // col5
+    cell = document.createElement('td')
+    cell.classList.add("w-8")
+    cell.innerHTML = `<div class="d-flex py-1 align-items-center">
+          <div class="flex-fill">
+            <div class="font-weight-medium">${element.NIFCON}</div>
+          </div>
+        </div>`
+    row.appendChild(cell)
+
+    // col6
+    cell = document.createElement('td')
+    cell.innerHTML = `<div class="d-flex py-1 align-items-center">
+          <div class="flex-fill">
+            <div class="font-weight-medium">${element.NOMCON}</div>
+          </div>
+        </div>`
+    row.appendChild(cell)
+
+    // col7
+    cell = document.createElement('td')
+    cell.innerHTML = `<div class="d-flex py-1 align-items-center">
+          <div class="flex-fill">
+            <div class="font-weight-medium">${element.DESTIP.length > 30 ? element.DESTIP.slice(0, 30) + '...' : element.DESTIP}</div>
+          </div>
+        </div>`
+    row.appendChild(cell)
+
+    // col8
+    cell = document.createElement('td')
+    if (element.OBSDOC !== null) {
+      cell.innerHTML = `<div class="d-flex py-1 align-items-center">
+            <div class="flex-fill">
+              <div class="font-weight-medium">${element.OBSDOC.length > 30 ? element.OBSDOC.slice(0, 30) + '...' : element.OBSDOC}</div>
+            </div>
+          </div>`
+    }
+    row.appendChild(cell)
+
+    // col9
+    cell = document.createElement('td')
+    cell.classList.add("w-5")
+    if (element.STADOC === estadosDocumento.pendiente) {
+      cell.innerHTML = `<ul class="dots-menu">
+            <li class="nav-item drop-right">
+              <a href="#" class="nav-link">
+                <i class="bi bi-three-dots-vertical"></i>
+              </a>
+              <ul>
+                <li class="nav-item">
+                  <a href="/admin/formularios/edit/${element.IDDOCU}" class="nav-link">
+                    <i class="bi bi-pencil dropdown-item-icon"></i>Editar formulario
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link" onclick="{document.getElementById('asign').value ='${element.IDDOCU}', document.getElementById('texasi').innerHTML ='<p>${element.REFDOC}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-asignar">
+                    <i class="bi bi-heart dropdown-item-icon"></i>Asignar formulario
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link" onclick="{document.getElementById('iddocu').value ='${element.IDDOCU}', document.getElementById('delfor').innerHTML ='<p>${element.REFDOC}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-borrar">
+                    <i class="bi bi-trash dropdown-item-icon"></i>Borrar formulario
+                  </a>
+                </li>
+              </ul>
+            </li>                              
+          </ul>`
+    } else if (element.STADOC === estadosDocumento.resuelto) {
+      cell.innerHTML = `<ul class="dots-menu">
+            <li class="nav-item drop-right">
+              <a href="#" class="nav-link">
+                <i class="bi bi-three-dots-vertical"></i>
+              </a>
+              <ul>
+                <li class="nav-item ">
+                  <a href="/admin/formularios/edit/${element.IDDOCU}" class="nav-link">
+                    <i class="bi bi-pencil dropdown-item-icon"></i>Editar
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link" onclick="{document.getElementById('desasig').value ='${element.IDDOCU}', document.getElementById('texdes').innerHTML ='<p>${element.REFDOC}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-desasignar">
+                    <i class="bi bi-reply dropdown-item-icon"></i>Desasignar
+                  </a>
+                </li>
+                <li class="nav-item list-divider"></li>
+                <li class="nav-item ">
+                  <a href="/admin/formularios/smss/${element.IDDOCU}" class="nav-link">                    
+                    <i class="bi bi-chat dropdown-item-icon"></i>Gestión sms
+                  </a>
+                </li>
+              </ul>
+            </li>                              
+          </ul>`
+    } else {
+      cell.innerHTML = `<ul class="dots-menu">
+            <li class="nav-item drop-right">
+              <a href="#" class="nav-link">
+                <i class="bi bi-three-dots-vertical"></i>
+              </a>
+              <ul>
+                <li class="nav-item">
+                  <a href="/admin/formularios/edit/${element.IDDOCU}" class="nav-link">
+                    <i class="bi bi-pencil dropdown-item-icon"></i>Editar
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link" onclick="{document.getElementById('resdoc').value ='${element.IDDOCU}', document.getElementById('texres').innerHTML ='<p>${element.REFDOC}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>', document.getElementById('resol').value = '${element.MOVCON}'}" data-bs-toggle="modal" data-bs-target="#modal-resolver">
+                    <i class="bi bi-check2 dropdown-item-icon"></i>Resolver
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link" onclick="{document.getElementById('desasig').value ='${element.IDDOCU}', document.getElementById('texdes').innerHTML ='<p>${element.REFDOC}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-desasignar">
+                    <i class="bi bi-x-square dropdown-item-icon"></i>Desasignar
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/admin/formularios/ejercicio/${element.IDDOCU}" class="nav-link">
+                    <i class="bi bi-calendar dropdown-item-icon"></i>Ejercicio
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/admin/formularios/referencias/${element.IDDOCU}" class="nav-link">
+                    <i class="bi bi-people dropdown-item-icon"></i>Referencias
+                  </a>
+                </li>
+                <li class="nav-item list-divider"></li>
+                <li class="nav-item ">
+                  <a href="/admin/formularios/smss/${element.IDDOCU}" class="nav-link">                    
+                    <i class="bi bi-chat dropdown-item-icon"></i>Gestión sms
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>`
+    }
+    row.appendChild(cell)
+
+    table.appendChild(row)
+  })
+
+  pageButtons(data.pages)
 }
