@@ -8,16 +8,8 @@ document.querySelectorAll(".sortable th").forEach(headerCell => {
     sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
   });
 });
-// campos validate
-const modsms = document.getElementById('modsms')
-const movsms = document.getElementById('movilsms')
-const nomsms = document.getElementById('nomsms')
 
-const focoRes = () => {
-  const ele = document.getElementById('texsms')
-
-  ele.focus()
-}
+// funcs
 const getCookie = (key) => {
   let value = ''
   document.cookie.split(';').forEach((e) => {
@@ -48,43 +40,6 @@ const checkItem = (ver) => {
     localStorage.setItem('vertodo', 'n')
     window.location.href = 'http://localhost:4000/admin/formularios'
   }
-}
-const validateSms = () => {
-  const modsmsValue = modsms.value.trim()
-  const movsmsValue = movsms.value.trim()
-  const nomsmsValue = nomsms.value.trim()
-
-  if (movsmsValue === '') {
-    setError(movsms, 'Movil requerido')
-    setTimeout(function () {
-      setSuccess(movsms)
-    }, 3000)
-    return false
-  }
-  if (nomsmsValue === '') {
-    setError(nomsms, 'Nombre requerido')
-    setTimeout(function () {
-      setSuccess(nomsms)
-    }, 3000)
-    return false
-  }
-  if (modsmsValue === '') {
-    setError(modsms, 'Texto requerido')
-    setTimeout(function () {
-      setSuccess(modsms)
-    }, 3000)
-    return false
-  }
-
-  return true
-}
-const setError = (element, message) => {
-  const inputControl = element.parentElement;
-  const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-  errorDisplay.innerText = message;
-  element.classList.add('is-invalid');
-  inputControl.classList.remove('is-valid');
 }
 const sortTableByColumn = (table, column, asc = true) => {
   const dirModifier = asc ? 1 : -1;
@@ -278,96 +233,96 @@ const buildTable = (state, estadosDocumento) => {
     cell.classList.add("w-5")
     if (element.STADOC === estadosDocumento.pendiente) {
       cell.innerHTML = `<ul class="dots-menu">
-            <li class="nav-item drop-right">
-              <a href="#" class="nav-link">
-                <i class="bi bi-three-dots-vertical"></i>
+        <li class="nav-item drop-right">
+          <a href="#" class="nav-link">
+            <i class="bi bi-three-dots-vertical"></i>
+          </a>
+          <ul>
+            <li class="nav-item">
+              <a href="/admin/formularios/edit/${element.IDDOCU}" class="nav-link">
+                <i class="bi bi-pencil dropdown-item-icon"></i>Editar formulario
               </a>
-              <ul>
-                <li class="nav-item">
-                  <a href="/admin/formularios/edit/${element.IDDOCU}" class="nav-link">
-                    <i class="bi bi-pencil dropdown-item-icon"></i>Editar formulario
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link" onclick="{document.getElementById('asign').value ='${element.IDDOCU}', document.getElementById('texasi').innerHTML ='<p>${element.REFDOC}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-asignar">
-                    <i class="bi bi-heart dropdown-item-icon"></i>Asignar formulario
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link" onclick="{document.getElementById('iddocu').value ='${element.IDDOCU}', document.getElementById('delfor').innerHTML ='<p>${element.REFDOC}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-borrar">
-                    <i class="bi bi-trash dropdown-item-icon"></i>Borrar formulario
-                  </a>
-                </li>
-              </ul>
-            </li>                              
-          </ul>`
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" onclick="{document.getElementById('idasig').value ='${element.IDDOCU}', document.getElementById('msgasi').innerHTML ='<p>${element.REFDOC}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-asignar">
+                <i class="bi bi-heart dropdown-item-icon"></i>Asignar formulario
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" onclick="{document.getElementById('idborr').value ='${element.IDDOCU}', document.getElementById('msgbor').innerHTML ='<p>${element.REFDOC}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-borrar">
+                <i class="bi bi-trash dropdown-item-icon"></i>Borrar formulario
+              </a>
+            </li>
+          </ul>
+        </li>                              
+      </ul>`
     } else if (element.STADOC === estadosDocumento.resuelto) {
       cell.innerHTML = `<ul class="dots-menu">
-            <li class="nav-item drop-right">
-              <a href="#" class="nav-link">
-                <i class="bi bi-three-dots-vertical"></i>
+        <li class="nav-item drop-right">
+          <a href="#" class="nav-link">
+            <i class="bi bi-three-dots-vertical"></i>
+          </a>
+          <ul>
+            <li class="nav-item ">
+              <a href="/admin/formularios/edit/${element.IDDOCU}" class="nav-link">
+                <i class="bi bi-pencil dropdown-item-icon"></i>Editar
               </a>
-              <ul>
-                <li class="nav-item ">
-                  <a href="/admin/formularios/edit/${element.IDDOCU}" class="nav-link">
-                    <i class="bi bi-pencil dropdown-item-icon"></i>Editar
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link" onclick="{document.getElementById('desasig').value ='${element.IDDOCU}', document.getElementById('texdes').innerHTML ='<p>${element.REFDOC}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-desasignar">
-                    <i class="bi bi-reply dropdown-item-icon"></i>Desasignar
-                  </a>
-                </li>
-                <li class="nav-item list-divider"></li>
-                <li class="nav-item ">
-                  <a href="/admin/formularios/smss/${element.IDDOCU}" class="nav-link">                    
-                    <i class="bi bi-chat dropdown-item-icon"></i>Gestión sms
-                  </a>
-                </li>
-              </ul>
-            </li>                              
-          </ul>`
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" onclick="{document.getElementById('iddesa').value ='${element.IDDOCU}', document.getElementById('msgdes').innerHTML ='<p>${element.REFDOC}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-desasignar">
+                <i class="bi bi-reply dropdown-item-icon"></i>Desasignar
+              </a>
+            </li>
+            <li class="nav-item list-divider"></li>
+            <li class="nav-item ">
+              <a href="/admin/formularios/smss/${element.IDDOCU}" class="nav-link">                    
+                <i class="bi bi-chat dropdown-item-icon"></i>Gestión sms
+              </a>
+            </li>
+          </ul>
+        </li>                              
+      </ul>`
     } else {
       cell.innerHTML = `<ul class="dots-menu">
-            <li class="nav-item drop-right">
-              <a href="#" class="nav-link">
-                <i class="bi bi-three-dots-vertical"></i>
+        <li class="nav-item drop-right">
+          <a href="#" class="nav-link">
+            <i class="bi bi-three-dots-vertical"></i>
+          </a>
+          <ul>
+            <li class="nav-item">
+              <a href="/admin/formularios/edit/${element.IDDOCU}" class="nav-link">
+                <i class="bi bi-pencil dropdown-item-icon"></i>Editar
               </a>
-              <ul>
-                <li class="nav-item">
-                  <a href="/admin/formularios/edit/${element.IDDOCU}" class="nav-link">
-                    <i class="bi bi-pencil dropdown-item-icon"></i>Editar
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link" onclick="{document.getElementById('resdoc').value ='${element.IDDOCU}', document.getElementById('texres').innerHTML ='<p>${element.REFDOC}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>', document.getElementById('resol').value = '${element.MOVCON}'}" data-bs-toggle="modal" data-bs-target="#modal-resolver">
-                    <i class="bi bi-check2 dropdown-item-icon"></i>Resolver
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link" onclick="{document.getElementById('desasig').value ='${element.IDDOCU}', document.getElementById('texdes').innerHTML ='<p>${element.REFDOC}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-desasignar">
-                    <i class="bi bi-x-square dropdown-item-icon"></i>Desasignar
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="/admin/formularios/ejercicio/${element.IDDOCU}" class="nav-link">
-                    <i class="bi bi-calendar dropdown-item-icon"></i>Ejercicio
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="/admin/formularios/referencias/${element.IDDOCU}" class="nav-link">
-                    <i class="bi bi-people dropdown-item-icon"></i>Referencias
-                  </a>
-                </li>
-                <li class="nav-item list-divider"></li>
-                <li class="nav-item ">
-                  <a href="/admin/formularios/smss/${element.IDDOCU}" class="nav-link">                    
-                    <i class="bi bi-chat dropdown-item-icon"></i>Gestión sms
-                  </a>
-                </li>
-              </ul>
             </li>
-          </ul>`
+            <li class="nav-item">
+              <a href="#" class="nav-link" onclick="{document.getElementById('idreso').value ='${element.IDDOCU}', document.getElementById('msgres').innerHTML ='<p>${element.REFDOC}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>', document.getElementById('movres').value = '${element.MOVCON}'}" data-bs-toggle="modal" data-bs-target="#modal-resolver">
+                <i class="bi bi-check2 dropdown-item-icon"></i>Resolver
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" onclick="{document.getElementById('iddesa').value ='${element.IDDOCU}', document.getElementById('msgdes').innerHTML ='<p>${element.REFDOC}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-desasignar">
+                <i class="bi bi-x-square dropdown-item-icon"></i>Desasignar
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/admin/formularios/ejercicio/${element.IDDOCU}" class="nav-link">
+                <i class="bi bi-calendar dropdown-item-icon"></i>Ejercicio
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/admin/formularios/referencias/${element.IDDOCU}" class="nav-link">
+                <i class="bi bi-people dropdown-item-icon"></i>Referencias
+              </a>
+            </li>
+            <li class="nav-item list-divider"></li>
+            <li class="nav-item ">
+              <a href="/admin/formularios/smss/${element.IDDOCU}" class="nav-link">                    
+                <i class="bi bi-chat dropdown-item-icon"></i>Gestión sms
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>`
     }
     row.appendChild(cell)
 

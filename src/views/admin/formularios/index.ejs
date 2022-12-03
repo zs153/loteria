@@ -70,7 +70,7 @@
                         <input type="text" class="form-control d-inline-block me-3" id="buscarFormBox"
                           onkeyup="arrayFilter(this.value);" placeholder="Buscar..." aria-label="Buscar en formularios">
                       </div>
-                      <a href="#" class="btn btn-warning" onclick="checkItem(localStorage.getItem('vertodo'));">
+                      <a href="#" class="btn btn-success" onclick="checkItem(localStorage.getItem('vertodo'));">
                         <% if (datos.verTodo) { %>
                           <i class='bi bi-eye-slash dropdown-item-icon'></i>Pendientes
                         <% } else { %>
@@ -134,18 +134,18 @@
               <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
             </svg>
             <h3>¿Desea borrar este documento?</h3>
-            <div id="delfor"></div>
+            <div id="msgbor"></div>
             <div class="text-muted">Lo que vas a hacer no puede ser recuperado.</div>
           </div>
           <div class="modal-footer">
             <div class="w-100">
               <div class="row">
                 <div class="col">
-                  <a href="/admin/formularios" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
+                  <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
                 </div>
                 <div class="col">
                   <form action="/admin/formularios/delete" method="POST">
-                    <input type="hidden" id="iddocu" name="iddocu" value="">
+                    <input type="hidden" id="idborr" name="iddocu" value="">
                     <button type="submit" class="btn btn-danger w-100" id="btnUpdate">Borrar formulario</button>
                   </form>
                 </div>
@@ -169,17 +169,17 @@
               <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
             </svg>
             <h3>Asignar formulario</h3>
-            <div id="texasi"></div>
+            <div id="msgasi"></div>
           </div>
           <div class="modal-footer">
             <div class="w-100">
               <div class="row">
                 <div class="col">
-                  <a href="/admin/formularios" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
+                  <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
                 </div>
                 <div class="col">
                   <form action="/admin/formularios/asignar" method="POST">
-                    <input type="hidden" id="asign" name="iddocu" value="">
+                    <input type="hidden" id="idasig" name="iddocu" value="">
                     <button type="submit" class="btn btn-primary w-100">Asignar formulario</button>
                   </form>
                 </div>
@@ -195,7 +195,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           <div class="modal-status bg-success"></div>
           <form action="/admin/formularios/resolver" method="POST">
-            <input type="hidden" id="resdoc" name="iddocu" value="">
+            <input type="hidden" id="idreso" name="iddocu" value="">
             <div class="modal-body text-center py-4">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-green icon-lg" width="24" height="24"
                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
@@ -205,7 +205,7 @@
                 <path d="M9 12l2 2l4 -4"></path>
               </svg>
               <h3>Resolver formulario</h3>
-              <div id="texres"></div>
+              <div id="msgres"></div>
               <div class="card-header">
                 SMS
               </div>
@@ -214,13 +214,13 @@
                   <div class="col-4">
                     <div class="mb-1">
                       <label class="form-label text-start">Móvil</label>
-                      <input type="text" name="movsms" id="resol" class="form-control" readonly />
+                      <input type="text" name="movsms" id="movres" class="form-control" readonly />
                     </div>
                   </div>
                   <div class="col-8">
                     <div class="mb-1">
                       <label class="form-label text-start">Texto sms</label>
-                      <textarea name="texsms" id="texsms" class="form-control" value="" maxlength="140" rows="3"
+                      <textarea name="texsms" id="texres" class="form-control" value="" maxlength="140" rows="3"
                         style="resize: vertical"></textarea>
                     </div>
                   </div>
@@ -239,7 +239,7 @@
               <div class="w-100">
                 <div class="row">
                   <div class="col">
-                    <a href="/admin/formularios" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
+                    <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
                   </div>
                   <div class="col">
                     <button type="submit" class="btn btn-success w-100">Resolver formulario</button>
@@ -265,17 +265,17 @@
               <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
             </svg>
             <h3>Desasignar formulario</h3>
-            <div id="texdes"></div>
+            <div id="msgdes"></div>
           </div>
           <div class="modal-footer">
             <div class="w-100">
               <div class="row">
                 <div class="col">
-                  <a href="/admin/formularios" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
+                  <a href="" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
                 </div>
                 <div class="col">
                   <form action="/admin/formularios/desasignar" method="POST">
-                    <input type="hidden" id="desasig" name="iddocu" value="">
+                    <input type="hidden" id="iddesa" name="iddocu" value="">
                     <button type="submit" class="btn btn-danger w-100">Desasignar formulario</button>
                   </form>
                 </div>
@@ -286,27 +286,28 @@
       </div>
     </div>
 
-  <script src="/js/ayuda.js"></script>
-  <script src="/js/formularios.js"></script>
-  <script>
-    const elemBuscar = document.getElementById('buscarFormBox');
-    const orgList = <%- datos.formularios %>
-    const estadosDocumento = <%- datos.estadosDocumento %>
+    <script src="/js/ayuda.js"></script>
+    <script src="/js/formularios.js"></script>
+    <script>
+      const orgList = <%- datos.formularios %>
+      const estadosDocumento = <%- datos.estadosDocumento %>
+      
+      let state = {
+        'querySet': orgList,
+        'page': 1,
+        'rows': 9,
+        'window': 3,
+      }
+      
+      // events
+      const elemBuscar = document.getElementById('buscarFormBox');
+      elemBuscar.onchange = (event) => {
+        setCookie('filtro', event.target.value, .5) // medio dia
+      }
+      elemBuscar.value = getCookie('filtro')
 
-    let state = {
-      'querySet': orgList,
-      'page': 1,
-      'rows': 9,
-      'window': 3,
-    }
-
-    // events
-    elemBuscar.onchange = (event) => {
-      setCookie('filtro', event.target.value, .5) // medio dia
-    }
-    elemBuscar.value = getCookie('filtro')
-
-    arrayFilter(elemBuscar.value)
+      // inicializa tabla
+      arrayFilter(elemBuscar.value)
   </script>
   </body>
 </html>

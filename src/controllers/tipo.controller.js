@@ -1,5 +1,5 @@
 import axios from "axios";
-import {tiposMovimiento} from "../public/js/enumeraciones";
+import { tiposMovimiento } from "../public/js/enumeraciones";
 
 export const mainPage = async (req, res) => {
   const user = req.user;
@@ -7,7 +7,7 @@ export const mainPage = async (req, res) => {
   try {
     const result = await axios.post("http://localhost:8000/api/tipos", {});
     const datos = {
-      tipos: result.data
+      tipos: JSON.stringify(result.data),
     }
 
     res.render("admin/tipos", { user, datos });

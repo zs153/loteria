@@ -3,12 +3,13 @@ import { tiposMovimiento, estadosCarga } from "../public/js/enumeraciones";
 
 export const mainPage = async (req, res) => {
   const user = req.user;
+  const carga = {}
 
   try {
-    const result = await axios.post("http://localhost:8000/api/cargas");
+    const result = await axios.post("http://localhost:8000/api/cargas", carga);
     const datos = {
       cargas: JSON.stringify(result.data),
-      estadosCarga,
+      estadosCarga: JSON.stringify(estadosCarga),
     };
 
     res.render("admin/cargas", { user, datos });

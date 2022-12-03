@@ -17,11 +17,10 @@ export const mainPage = async (req, res) => {
   const usuario = {}
 
   try {
-    const result = await axios.post('http://localhost:8000/api/usuarios')
+    const result = await axios.post('http://localhost:8000/api/usuarios', usuario)
     const datos = {
       usuarios: JSON.stringify(result.data),
-      estadosUsuario,
-      tiposRol,
+      estadosUsuario: JSON.stringify(estadosUsuario),
     }
 
     res.render('admin/usuarios', { user, datos })

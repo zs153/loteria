@@ -215,7 +215,7 @@ export const smssPage = async (req, res) => {
       formulario,
       formularioData,
       smss: JSON.stringify(result.data),
-      estadosSms,
+      estadosSms: JSON.stringify(estadosSms),
     }
 
     res.render("admin/formularios/smss", { user, datos });
@@ -286,7 +286,7 @@ export const smssEditPage = async (req, res) => {
   }
 }
 
-// otros
+// otras pages
 export const ejercicioPage = async (req, res) => {
   const user = req.user;
   const fecha = new Date();
@@ -354,7 +354,11 @@ export const insert = async (req, res) => {
       movimiento,
     });
 
-    res.redirect("/admin/formularios");
+    if (req.body.verall === 's') {
+      res.redirect("/admin/formularios/vertodo");
+    } else {
+      res.redirect("/admin/formularios");
+    }
   } catch (error) {
     let msg = "No se ha podido crear el documento.";
 
@@ -393,13 +397,13 @@ export const update = async (req, res) => {
       movimiento,
     });
 
-    res.redirect("/admin/formularios");
+    if (req.body.verall === 's') {
+      res.redirect("/admin/formularios/vertodo");
+    } else {
+      res.redirect("/admin/formularios");
+    }
   } catch (error) {
     let msg = "No se ha podido actualizar el documento.";
-
-    if (error.response.data.errorNum === 20100) {
-      msg = "El documento ya existe. Verifique los datos introducidos";
-    }
 
     res.render("admin/error400", {
       alerts: [{ msg }],
