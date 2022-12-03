@@ -2,28 +2,18 @@ import oracledb from "oracledb";
 import { simpleExecute } from "../services/database.js";
 
 const baseQuery = `SELECT 
-    idusua,
-    nomusu,
-    ofiusu,
-    rolusu,
-    userid,
-    emausu,
-    perusu,
-    telusu,
-    pwdusu,
-    stausu
-  FROM usuarios
-`;
-const largeQuery = `SELECT 
     uu.idusua,
     uu.nomusu,
+    uu.ofiusu,
+    uu.rolusu,
     uu.userid,
+    uu.emausu,
+    uu.perusu,
     uu.telusu,
     uu.stausu,
-    uu.ofiusu,
     oo.desofi
   FROM usuarios uu
-  INNER JOIN oficinas oo ON oo.idofic = ofiusu
+  INNER JOIN oficinas oo ON oo.idofic = uu.ofiusu
 `;
 const insertSql = `BEGIN FORMULARIOS_PKG.INSERTUSUARIO(
     :nomusu,
