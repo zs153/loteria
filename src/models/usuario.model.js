@@ -10,6 +10,7 @@ const baseQuery = `SELECT
     uu.emausu,
     uu.perusu,
     uu.telusu,
+    uu.pwdusu,
     uu.stausu,
     oo.desofi
   FROM usuarios uu
