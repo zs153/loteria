@@ -545,7 +545,11 @@ export const desasignar = async (req, res) => {
       });
     }
 
-    res.redirect("/admin/formularios");
+    if (req.body.verall === 's') {
+      res.redirect("/admin/formularios/vertodo");
+    } else {
+      res.redirect("/admin/formularios");
+    }
   } catch (error) {
     const msg = "No se ha podido desasignar el documento.";
 

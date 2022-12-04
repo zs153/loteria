@@ -47,8 +47,12 @@
       }
 
       .pagination {
+        display: flex;
+        padding-left: 0;
+        list-style: none;
         float: right;
-      }
+        margin-bottom: 0;
+      }      
     </style>
   </head>
   <body class="antialiased">
@@ -108,7 +112,7 @@
                     <tbody id="table-body">
                     </tbody>
                   </table>
-                  <div id="pagination-wrapper" class="pagination py-1"></div>
+                  <div id="pagination-wrapper" class="py-1"></div>
                 </div>
               </div>
             </div>
@@ -276,7 +280,8 @@
                 <div class="col">
                   <form action="/admin/formularios/desasignar" method="POST">
                     <input type="hidden" id="iddesa" name="iddocu" value="">
-                    <button type="submit" class="btn btn-danger w-100">Desasignar formulario</button>
+                    <input type="hidden" name="verall" id="verall" value="">
+                    <button type="submit" class="btn btn-danger w-100" onclick="checkVer()">Desasignar formulario</button>
                   </form>
                 </div>
               </div>
@@ -289,6 +294,11 @@
     <script src="/js/ayuda.js"></script>
     <script src="/js/formularios.js"></script>
     <script>
+      const checkVer = () => {
+        document.getElementById('verall').value = localStorage.getItem('vertodo')
+      }
+    </script>
+    <script>
       const orgList = <%- datos.formularios %>
       const estadosDocumento = <%- datos.estadosDocumento %>
       
@@ -296,7 +306,7 @@
         'querySet': orgList,
         'page': 1,
         'rows': 9,
-        'window': 3,
+        'window': 2,
       }
       
       // events

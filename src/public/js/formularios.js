@@ -92,7 +92,7 @@ const pageButtons = (pages) => {
   }
 
   if (maxRight > pages) {
-    maxLeft = pages - (state.window - 1)
+    maxLeft = pages - state.window
 
     if (maxLeft < 1) {
       maxLeft = 1
@@ -101,10 +101,10 @@ const pageButtons = (pages) => {
   }
 
   for (let page = maxLeft; page <= maxRight; page++) {
-    wrapper.innerHTML += `<button value=${page} class="page-item btn btn-primary">${page}</button>`
+    wrapper.innerHTML += `<li value=${page} class="page-item btn">${page}</li>`
   }
-  wrapper.innerHTML = `<button value=${1} class="page-item btn btn-primary">&#171; Primero</button>` + wrapper.innerHTML
-  wrapper.innerHTML += `<button value=${pages} class="page-item btn btn-primary">Último &#187;</button>`
+
+  wrapper.innerHTML = `<ul class="pagination "><li value=${1} class="page-item btn">&#171; Primero</li>` + wrapper.innerHTML + `<li value=${pages} class="page-item btn">Último &#187;</li></ul>`
 
   const elem = document.getElementsByClassName('page-item')
   for (let i = 0; i < elem.length; i++) {
@@ -271,12 +271,6 @@ const buildTable = (state, estadosDocumento) => {
             <li class="nav-item">
               <a href="#" class="nav-link" onclick="{document.getElementById('iddesa').value ='${element.IDDOCU}', document.getElementById('msgdes').innerHTML ='<p>${element.REFDOC}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-desasignar">
                 <i class="bi bi-reply dropdown-item-icon"></i>Desasignar
-              </a>
-            </li>
-            <li class="nav-item list-divider"></li>
-            <li class="nav-item ">
-              <a href="/admin/formularios/smss/${element.IDDOCU}" class="nav-link">                    
-                <i class="bi bi-chat dropdown-item-icon"></i>Gestión sms
               </a>
             </li>
           </ul>
