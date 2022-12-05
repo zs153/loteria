@@ -30,10 +30,6 @@
       margin-left: 5px;
     }
 
-    .pagination {
-      float: right;
-    }
-
     .subtitulo {
       margin: 0;
       align-items: center;
@@ -43,6 +39,60 @@
       font-size: 0.8em;
     }
   </style>
+    <style>
+      #pagination-wrapper {
+        float: right;
+      }
+    
+      #pagination-wrapper a {
+        cursor: pointer;
+      }
+    
+      #pagination-wrapper ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+      }
+    
+      #pagination-wrapper ul li {
+        color: #7D7D7D;
+        display: flex;
+      }
+    
+      #pagination-wrapper ul li a {
+        background-color: #ffffff;
+        padding: 5px 10px;
+        border: 1px solid #c7c7c7;
+        border-right: 0;
+      }
+    
+      #pagination-wrapper ul li.active a {
+        background-color: #E6E6E6;
+      }
+    
+      #pagination-wrapper ul li:first-child a {
+        border-radius: 5px 0 0 5px;
+      }
+    
+      #pagination-wrapper ul li:last-child a {
+        border-radius: 0 5px 5px 0;
+        border-right: 1px solid #c7c7c7;
+      }
+    
+      #pagination-wrapper i {
+        cursor: default;
+        background-color: #ffffff;
+        padding: 5px 10px;
+        border: 1px solid #c7c7c7;
+        border-right: 0;
+      }
+    
+      #pagination-wrapper .disabled a {
+        background-color: #ffffff;
+        cursor: default;
+      }
+    </style>
 </head>
 
 <body class="antialiased">
@@ -102,7 +152,7 @@
                     <tbody id="table-body">
                     </tbody>
                   </table>
-                  <div id="pagination-wrapper" class="pagination py-1"></div>
+                  <div id="pagination-wrapper" class="py-1"></div>
                   <div class="ms-auto d-flex py-1">
                     <a href="/admin/formularios" class="btn btn-white">Volver</a>
                   </div>
@@ -166,7 +216,7 @@
     }
 
     // events
-    const elemBuscar = document.getElementById('buscarFormBox');
+    const elemBuscar = document.getElementById('buscarRefesBox');
     elemBuscar.onchange = (event) => {
       setCookie('filtro', event.target.value, .5) // medio dia
     }

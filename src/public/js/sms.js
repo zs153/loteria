@@ -58,7 +58,7 @@ const arrayFilter = (value) => {
   state.querySet = trimmedData
   state.page = 1
 
-  buildTable(state, estadosDocumento)
+  buildTable(state, estadosSms)
 }
 const pagination = (querySet, page, rows) => {
   const trimStart = (page - 1) * rows
@@ -69,41 +69,6 @@ const pagination = (querySet, page, rows) => {
   return {
     'querySet': trimmedData,
     'pages': pages,
-  }
-}
-const pageButtons = (pages) => {
-  let wrapper = document.getElementById('pagination-wrapper')
-  let maxLeft = (state.page - Math.floor(state.window / 2))
-  let maxRight = (state.page + Math.floor(state.window / 2))
-
-  wrapper.innerHTML = ``
-  if (maxLeft < 1) {
-    maxLeft = 1
-    maxRight = state.window
-  }
-
-  if (maxRight > pages) {
-    maxLeft = pages - (state.window - 1)
-
-    if (maxLeft < 1) {
-      maxLeft = 1
-    }
-    maxRight = pages
-  }
-
-  for (let page = maxLeft; page <= maxRight; page++) {
-    wrapper.innerHTML += `<button value=${page} class="page-item btn btn-primary">${page}</button>`
-  }
-  wrapper.innerHTML = `<button value=${1} class="page-item btn btn-primary">&#171; Primero</button>` + wrapper.innerHTML
-  wrapper.innerHTML += `<button value=${pages} class="page-item btn btn-primary">Último &#187;</button>`
-
-  const elem = document.getElementsByClassName('page-item')
-  for (let i = 0; i < elem.length; i++) {
-    elem[i].addEventListener('click', (e) => {
-      state.page = Number(e.target.value)
-
-      buildTable(state)
-    })
   }
 }
 const buildTable = (state, estadosSms) => {
@@ -185,4 +150,74 @@ const buildTable = (state, estadosSms) => {
     row.appendChild(cell)
     table.appendChild(row)
   })
+
+  createPagination(data.pages, state.page)
+}
+const createPagination = (pages, page) => {
+  let str = `<ul>`;
+  let active;
+  let pageCutLow = page - 1;
+  let pageCutHigh = page + 1;
+
+  if (pages === 1) {
+    str += `<li class="page-item disabled"><a>Pág</a></li>`;
+  }
+
+  if (page > 1) {
+    str += `<li class="page-item previous no"><a onclick="onclickPage(${pages}, ${page - 1})">&#9664</a></li>`;
+  }
+
+  if (pages < 6) {
+    for (let p = 1; p <= pages; p++) {
+      active = page === p ? "active" : "no";
+      str += `<li class="${active}"><a onclick="onclickPage(${pages}, ${p})">${p}</a></li>`;
+    }
+  } else {
+    if (page > 2) {
+      str += `<li class="no page-item"><a onclick="onclickPage(${pages}, 1)">1</a></li>`;
+      if (page > 3) {
+        str += `<li class="out-of-range"><i>...</i></li>`;
+      }
+    }
+
+    if (page === 1) {
+      pageCutHigh += 2;
+    } else if (page === 2) {
+      pageCutHigh += 1;
+    }
+    if (page === pages) {
+      pageCutLow -= 2;
+    } else if (page === pages - 1) {
+      pageCutLow -= 1;
+    }
+    for (let p = pageCutLow; p <= pageCutHigh; p++) {
+      if (p === 0) {
+        p += 1;
+      }
+      if (p > pages) {
+        continue
+      }
+      active = page === p ? "active" : "no";
+      str += `<li class="${active}"><a onclick="onclickPage(${pages}, ${p})">${p}</a></li>`;
+    }
+
+    if (page < pages - 1) {
+      if (page < pages - 2) {
+        str += `<li class="out-of-range"><i>...</i></li>`;
+      }
+      str += `<li class="page-item no"><a onclick="onclickPage(${pages}, ${pages})">${pages}</a></li>`;
+    }
+  }
+
+  if (page < pages) {
+    str += `<li class="page-item next no"><a onclick="onclickPage(${pages}, ${page + 1})">&#9654</a></li>`;
+  }
+  str += `</ul>`;
+
+  document.getElementById('pagination-wrapper').innerHTML = str;
+}
+const onclickPage = (pages, page) => {
+  createPagination(pages, page)
+  state.page = page
+  buildTable(state, estadosSms)
 }

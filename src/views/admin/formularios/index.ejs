@@ -28,31 +28,51 @@
       .sortable .th-sort-desc::after {
         margin-left: 5px;
       }
-    
-      .dots-menu>.nav-item>.nav-info {
-        border-radius: 14px;
-        color: #777;
-        display: block;
-        line-height: 1.2;
-        position: relative;
-        text-decoration: none;
-        transition: background-color .3s;
-      }
-    
-      .dots-menu>.nav-avatar {
-        display: block;
+    </style>
+    <style>
+      #pagination-wrapper {
         float: right;
-        margin: 0;
-        position: relative;
       }
-
-      .pagination {
-        display: flex;
-        padding-left: 0;
+      #pagination-wrapper a {
+        cursor: pointer;
+      }
+      #pagination-wrapper ul {
         list-style: none;
-        float: right;
-        margin-bottom: 0;
-      }      
+        padding: 0;
+        margin: 0;
+        display: flex;
+      }
+      #pagination-wrapper ul li {
+        color: #7D7D7D;
+        display: flex;
+      }
+      #pagination-wrapper ul li a {
+        background-color: #ffffff;
+        padding: 5px 10px;
+        border: 1px solid #c7c7c7;
+        border-right: 0;
+      }
+      #pagination-wrapper ul li.active a {
+        background-color: #E6E6E6;
+      }
+      #pagination-wrapper ul li:first-child a {
+        border-radius: 5px 0 0 5px;
+      }
+      #pagination-wrapper ul li:last-child a {
+        border-radius: 0 5px 5px 0;
+        border-right: 1px solid #c7c7c7;
+      }
+      #pagination-wrapper i {
+        cursor: default;
+        background-color: #ffffff;
+        padding: 5px 10px;
+        border: 1px solid #c7c7c7;
+        border-right: 0;
+      }
+      #pagination-wrapper .disabled a {
+        background-color: #ffffff;
+        cursor: default;
+      }
     </style>
   </head>
   <body class="antialiased">
@@ -62,7 +82,7 @@
     <div class="page-wrapper">
       <div class="page-body">
         <div class="container-xl">
-          <div class="row row-deck row-cards">
+          <div class="row">
             <div class="col-12">
               <div class="card">
                 <div class="card-header">
@@ -287,6 +307,102 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal modal-blur fade" id="modal-revisar" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-status bg-success"></div>
+              <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Revisar formulario</h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-2">
+                        <div class="mb-1">
+                          <label class="form-label">NIF/NIE</label>
+                          <input type="text" name="nifcon" id="nifcon" class="form-control"readonly />
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="mb-1">
+                          <label class="form-label">Nombre</label>
+                          <input type="text" name="nomcon" id="nomcon" class="form-control" readonly />
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="mb-1">
+                          <label class="form-label">Correo electrónico</label>
+                          <input type="text" name="emacon" id="emacon" class="form-control" readonly />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="mb-1">
+                          <div class="form-label">Tipo</div>
+                          <input type="text" name="tipdoc" id="tipdoc" class="form-control" readonly />
+                        </div>
+                      </div>
+                      <div class="col-2">
+                        <div class="mb-1">
+                          <label class="form-label">Ejercicio</label>
+                          <input type="text" name="ejedoc" id="ejedoc" class="form-control" readonly />
+                        </div>
+                      </div>
+                      <div class="col-1">
+                        <div class="mb-1">
+                          <label class="form-label">Adm</label>
+                          <input type="text" name="fundoc" id="fundoc" class="form-control" readonly />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-3">
+                        <div class="mb-1">
+                          <label class="form-label">Fecha</label>
+                          <input type="text" name="fecdoc" id="fecdoc" class="form-control" readonly />
+                        </div>
+                      </div>
+                      <div class="col-5">
+                        <div class="mb-1">
+                          <div class="form-label">Oficina</div>
+                          <input type="text" name="ofidoc" id="ofidoc" class="form-control" readonly />
+                        </div>
+                      </div>
+                      <div class="col-2">
+                        <div class="mb-3">
+                          <label class="form-label">Teléfono</label>
+                          <input type="text" name="telcon" id="telcon" class="form-control" readonly />
+                        </div>
+                      </div>
+                      <div class="col-2">
+                        <div class="mb-1">
+                          <label class="form-label">Movil</label>
+                          <input type="text" name="movcon" id="movcon" class="form-control" readonly />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <small></small>
+                        <div class="mb-1">
+                          <label class="form-label">Observaciones</label>
+                          <textarea type="text" name="obsdoc" id="obsdoc" class="form-control" rows="3"
+                            style="resize: vertical" readonly></textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer text-end">
+                    <div class="d-flex">
+                      <a href="#" class="btn btn-white" data-bs-dismiss="modal">Volver</a>
+                    </div>
+                  </div>
+              </div>
         </div>
       </div>
     </div>

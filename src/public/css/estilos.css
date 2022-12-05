@@ -4991,6 +4991,22 @@ tbody tr:hover i {
   color: #777;
   transition: background-color 300ms;
 }
+.dots-menu>.nav-item>.nav-info {
+  border-radius: 14px;
+  color: #777;
+  display: block;
+  line-height: 1.2;
+  position: relative;
+  text-decoration: none;
+  transition: background-color .3s;
+}
+
+.dots-menu>.nav-avatar {
+  display: block;
+  float: right;
+  margin: 0;
+  position: relative;
+}
 .dots-menu > .nav-item:hover > .nav-link {
   color: #585858;
   /* color: #8aa8bd; */
