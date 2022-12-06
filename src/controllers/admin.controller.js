@@ -1,7 +1,6 @@
 import axios from 'axios'
-import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import { secret } from '../config/settings'
+
 import {
   arrTiposRol,
   arrTiposPerfil,
@@ -19,13 +18,17 @@ export const perfilPage = async (req, res) => {
   const usuario = {
     USERID: user.userID,
   }
+  const oficina = {}
+
   try {
+    const oficinas = await axios.post('http://localhost:8000/api/oficinas', oficina)
     const result = await axios.post('http://localhost:8000/api/usuario', {
       usuario,
     })
 
     const datos = {
       usuario: result.data,
+      oficinas: oficinas.data,
       arrTiposRol,
       arrTiposPerfil,
     }
@@ -76,7 +79,6 @@ export const updatePerfil = async (req, res) => {
   const usuario = {
     IDUSUA: user.id,
     NOMUSU: req.body.nomusu.toUpperCase(),
-    OFIUSU: req.body.ofiusu,
     EMAUSU: req.body.emausu,
     TELUSU: req.body.telusu,
   }
@@ -94,25 +96,7 @@ export const updatePerfil = async (req, res) => {
       }
     )
 
-    const accessToken = jwt.sign(
-      {
-        id: user.id,
-        userID: user.userID,
-        rol: user.rol,
-        oficina: usuario.OFIUSU,
-      },
-      `${secret}`,
-      { expiresIn: '8h' }
-    )
-    const options = {
-      path: '/',
-      sameSite: true,
-      maxAge: 1000 * 60 * 60 * 8, // 8 horas
-      httpOnly: true,
-    }
-
-    res.cookie('auth', accessToken, options)
-    res.redirect('/log/logout')
+    res.redirect('/admin')
   } catch (error) {
     res.redirect('/admin')
   }

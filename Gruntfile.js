@@ -15,8 +15,8 @@ module.exports = function (grunt) {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
       },
       js: {
-        src: ['src/<%= pkg.name %>.js'],
-        dest: 'dist/ba-<%= pkg.name %>.js'
+        src: ['dist/controllers/*.js'],
+        dest: 'dist/scripts.js'
       },
       css: {
         src: ['src/public/css/*.css'],
@@ -26,6 +26,10 @@ module.exports = function (grunt) {
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+      },
+      js: {
+        src: ['src/app.js'],
+        dest: 'dist/app.min.js'
       },
       css: {
         src: 'src/public/css/styles.css',
@@ -40,7 +44,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
   // Default task.
-  grunt.registerTask('default-js', ['clean', 'concat', 'uglify']);
+  grunt.registerTask('concat-js', ['concat:js']);
+  grunt.registerTask('default-js', ['uglify:js']);
   grunt.registerTask('default-css', ['concat:css', 'uglify:css']);
 
 };

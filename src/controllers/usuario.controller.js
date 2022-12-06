@@ -1,7 +1,5 @@
 import axios from 'axios'
 import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
-import { secret } from '../config/settings'
 import {
   arrTiposRol,
   arrTiposPerfil,
@@ -83,40 +81,6 @@ export const editPage = async (req, res) => {
     }
 
     res.render('admin/usuarios/edit', { user, datos })
-  } catch (error) {
-    const msg = 'No se ha podido acceder a los datos de la aplicación.'
-
-    res.render('admin/error400', {
-      alerts: [{ msg }],
-    })
-  }
-}
-export const perfilPage = async (req, res) => {
-  const user = req.user
-  let usuario = {
-    userid: req.params.userid,
-  }
-
-  try {
-    const result = await axios.post('http://localhost:8000/api/usuario', {
-      usuario,
-    })
-
-    usuario = {
-      IDUSUA: result.data.IDUSUA,
-      NOMUSU: result.data.NOMUSU,
-      OFIUSU: result.data.OFIUSU,
-      USERID: result.data.USERID,
-      EMAUSU: result.data.EMAUSU,
-      TELUSU: result.data.TELUSU,
-    }
-
-    const datos = {
-      usuario,
-      tiposRol,
-    }
-
-    res.render('admin/usuarios/perfil', { user, datos })
   } catch (error) {
     const msg = 'No se ha podido acceder a los datos de la aplicación.'
 
@@ -230,78 +194,5 @@ export const remove = async (req, res) => {
     res.render('admin/error400', {
       alerts: [{ msg }],
     })
-  }
-}
-export const changePassword = async (req, res) => {
-  const user = req.user
-  const salt = await bcrypt.genSalt(10)
-  const passHash = await bcrypt.hash(req.body.pwdusu, salt)
-  const usuario = {
-    idusua: req.body.idusua,
-    pwdusu: passHash,
-  }
-  const movimiento = {
-    usumov: user.id,
-    tipmov: tiposMovimiento.cambioPassword,
-  }
-
-  try {
-    const result = await axios.post(
-      'http://localhost:8000/api/usuarios/cambio',
-      {
-        usuario,
-        movimiento,
-      }
-    )
-
-    res.redirect('/admin/usuarios')
-  } catch (error) {
-    res.redirect('/admin/usuarios')
-  }
-}
-export const updatePerfil = async (req, res) => {
-  const user = req.user
-  const usuario = {
-    IDUSUA: req.body.idusua,
-    NOMUSU: req.body.nomusu,
-    OFIUSU: req.body.ofiusu,
-    EMAUSU: req.body.emausu,
-    TELUSU: req.body.telusu,
-  }
-  const movimiento = {
-    USUMOV: user.id,
-    TIPMOV: tiposMovimiento.modificarPerfil,
-  }
-
-  try {
-    const result = await axios.post(
-      'http://localhost:8000/api/usuarios/perfil',
-      {
-        usuario,
-        movimiento,
-      }
-    )
-
-    const accessToken = jwt.sign(
-      {
-        id: user.id,
-        userID: user.userID,
-        rol: user.rol,
-        oficina: usuario.OFIUSU,
-      },
-      `${secret}`,
-      { expiresIn: '8h' }
-    )
-    const options = {
-      path: '/',
-      sameSite: true,
-      maxAge: 1000 * 60 * 60 * 8, // 8 horas
-      httpOnly: true,
-    }
-
-    res.cookie('auth', accessToken, options)
-    res.redirect('/admin')
-  } catch (error) {
-    res.redirect('/admin')
   }
 }
