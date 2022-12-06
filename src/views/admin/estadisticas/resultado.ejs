@@ -8,7 +8,7 @@
   <title>Estadística</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
   <!-- styles -->
-  <link rel="stylesheet" href="/css/styles.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
   <!-- apexcharts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.35.3/apexcharts.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/easy-pie-chart/2.1.6/easypiechart.min.js"></script>
@@ -115,167 +115,165 @@
 <body class="antialiased">
   <div class="wrapper">
     <%- include('../../partials/header') %>
-      <%- include('../../partials/navbar', {opcion: 'ADMINISTRACION' }) %>
-        <div class="page-wrapper">
-          <div class="page-body">
-            <div class="container-xl">
-              <div class="d-flex">
-                <span>Carga: <%- datos.carga.REFCAR %></span>
-                <span class="ms-3">Periodo: <%- datos.strPeriodo.desde %> al <%- datos.strPeriodo.hasta %></span>
-                <a href="#" class="ms-auto" data-bs-toggle="modal" data-bs-target="#modal-config">
-                  <i class="bi bi-gear" style="font-size: 0.9rem; color: #626976;"></i>
-                </a>
+    <%- include('../../partials/navbar', {opcion: 'ADMINISTRACION' }) %>
+    <div class="page-wrapper">
+      <div class="page-body">
+        <div class="container-xl">
+          <div class="d-flex">
+            <span>Carga: <%- datos.carga.REFCAR %></span>
+            <span class="ms-3">Periodo: <%- datos.strPeriodo.desde %> al <%- datos.strPeriodo.hasta %></span>
+            <a href="#" class="ms-auto" data-bs-toggle="modal" data-bs-target="#modal-config">
+              <i class="bi bi-gear" style="font-size: 0.9rem; color: #626976;"></i>
+            </a>
+          </div>
+          <div class="row row-deck row-cards">
+            <div class="col-lg-4">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex align-items-center">
+                    <div class="subheader">Pendientes</div>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <div class="h1 ms-auto">
+                      <%- Intl.NumberFormat('de-DE').format(datos.situacion.PEN) %>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="row row-deck row-cards">
-                <div class="col-lg-4">
-                  <div class="card">
-                    <div class="card-body">
-                      <div class="d-flex align-items-center">
-                        <div class="subheader">Pendientes</div>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <div class="h1 ms-auto">
-                          <%- Intl.NumberFormat('de-DE').format(datos.situacion.PEN) %>
-                        </div>
-                      </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex align-items-center">
+                    <div class="subheader">Adjudicadas</div>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <div class="h1 ms-auto">
+                        <%- Intl.NumberFormat('de-DE').format(datos.situacion.ASI) %>
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-4">
-                  <div class="card">
-                    <div class="card-body">
-                      <div class="d-flex align-items-center">
-                        <div class="subheader">Adjudicadas</div>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <div class="h1 ms-auto">
-                            <%- Intl.NumberFormat('de-DE').format(datos.situacion.ASI) %>
-                        </div>
-                      </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex align-items-center">
+                    <div class="subheader">Resueltas</div>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <div class="h1 ms-auto">
+                        <%- Intl.NumberFormat('de-DE').format(datos.situacion.RES) %>
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-4">
-                  <div class="card">
-                    <div class="card-body">
-                      <div class="d-flex align-items-center">
-                        <div class="subheader">Resueltas</div>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <div class="h1 ms-auto">
-                            <%- Intl.NumberFormat('de-DE').format(datos.situacion.RES) %>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+              </div>
+            </div>
+            <div class="col-lg-6 mt-1">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Actividad</h3>
                 </div>
-                <div class="col-lg-6 mt-1">
+                <div class="card-body">
+                  <div id="chart-actuac"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 mt-1">
+              <div class="row row-cards">
+                <div class="col-12">
                   <div class="card">
                     <div class="card-header">
-                      <h3 class="card-title">Actividad</h3>
+                      <h3 class="card-title">Oficinas</h3>
                     </div>
                     <div class="card-body">
-                      <div id="chart-actuac"></div>
+                      <table class="table table-vcenter table-striped sortable" id="tblOficinas">
+                        <thead>
+                          <tr class="header">
+                            <th>Oficina</th>
+                            <th class="w-5">Pend</th>
+                            <th class="w-5">Adju</th>
+                            <th class="w-5">Resu</th>
+                            <th class="w-6">Total</th>
+                          </tr>
+                        </thead>
+                        <tbody id="table-body">
+                          <% datos.oficinas.map(element=> { %>
+                            <tr>
+                              <td>
+                                <div class="d-flex align-items-center">
+                                  <div class="flex-fill">
+                                    <% if (element.DESOFI===null) { %>
+                                      <div class="font-weight-medium">TOTAL</div>
+                                    <% } else { %>
+                                      <div class="font-weight-medium">
+                                        <%- element.DESOFI %>
+                                      </div>
+                                    <% } %>
+                                  </div>
+                                </div>
+                              </td>
+                              <td class="w-6">
+                                <div class="d-flex align-items-center">
+                                  <div class="flex-fill">
+                                    <div class="font-weight-medium">
+                                      <%- element.PEN %>
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td class="w-6">
+                                <div class="d-flex align-items-center">
+                                  <div class="flex-fill">
+                                    <div class="font-weight-medium">
+                                      <%- element.ADJ %>
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td class="w-6">
+                                <div class="d-flex align-items-center">
+                                  <div class="flex-fill">
+                                    <div class="font-weight-medium">
+                                      <%- element.RES %>
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td class="w-6">
+                                <div class="d-flex align-items-center">
+                                  <div class="flex-fill">
+                                    <div class="font-weight-medium">
+                                      <%- element.TOT %>
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          <% }) %>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-6 mt-1">
-                  <div class="row row-cards">
-                    <div class="col-12">
-                      <div class="card">
-                        <div class="card-header">
-                          <h3 class="card-title">Oficinas</h3>
-                        </div>
-                        <div class="card-body">
-                          <table class="table table-vcenter table-striped sortable" id="tblOficinas">
-                            <thead>
-                              <tr class="header">
-                                <th>Oficina</th>
-                                <th class="w-5">Pend</th>
-                                <th class="w-5">Adju</th>
-                                <th class="w-5">Resu</th>
-                                <th class="w-6">Total</th>
-                              </tr>
-                            </thead>
-                            <tbody id="table-body">
-                              <% datos.oficinas.map(element=> { %>
-                                <tr>
-                                  <td>
-                                    <div class="d-flex align-items-center">
-                                      <div class="flex-fill">
-                                        <% if (element.DESOFI===null) { %>
-                                          <div class="font-weight-medium">TOTAL</div>
-                                        <% } else { %>
-                                          <div class="font-weight-medium">
-                                            <%- element.DESOFI %>
-                                          </div>
-                                        <% } %>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td class="w-6">
-                                    <div class="d-flex align-items-center">
-                                      <div class="flex-fill">
-                                        <div class="font-weight-medium">
-                                          <%- element.PEN %>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td class="w-6">
-                                    <div class="d-flex align-items-center">
-                                      <div class="flex-fill">
-                                        <div class="font-weight-medium">
-                                          <%- element.ADJ %>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td class="w-6">
-                                    <div class="d-flex align-items-center">
-                                      <div class="flex-fill">
-                                        <div class="font-weight-medium">
-                                          <%- element.RES %>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td class="w-6">
-                                    <div class="d-flex align-items-center">
-                                      <div class="flex-fill">
-                                        <div class="font-weight-medium">
-                                          <%- element.TOT %>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                              <% }) %>
-                            </tbody>
-                          </table>
-                        </div>
+                <div class="col-12 mt-1">
+                  <div class="card" style="display: -webkit-box;">
+                    <div class="col-4 mx-auto w-auto">
+                      <div id="chart-pendientes" class="chart" data-percent="<%- datos.ratios.pendientes %>">
+                        <span class="percent"></span>
+                        <span class="subpercent">Pendiente</span>
                       </div>
                     </div>
-                    <div class="col-12 mt-1">
-                      <div class="card" style="display: -webkit-box;">
-                        <div class="col-4 mx-auto w-auto">
-                          <div id="chart-pendientes" class="chart" data-percent="<%- datos.ratios.pendientes %>">
-                            <span class="percent"></span>
-                            <span class="subpercent">Pendiente</span>
-                          </div>
-                        </div>
-                        <div class="col-4 mx-auto w-auto">
-                          <div id="chart-asignadas" class="chart" data-percent="<%- datos.ratios.asignadas %>">
-                            <span class="percent"></span>
-                            <span class="subpercent">Adjudicado</span>
-                          </div>
-                        </div>
-                        <div class="col-4 mx-auto w-auto">
-                          <div id="chart-resueltas" class="chart" data-percent="<%- datos.ratios.resueltas %>">
-                            <span class="percent"></span>
-                            <span class="subpercent">Resuelto</span>
-                          </div>
-                        </div>
+                    <div class="col-4 mx-auto w-auto">
+                      <div id="chart-asignadas" class="chart" data-percent="<%- datos.ratios.asignadas %>">
+                        <span class="percent"></span>
+                        <span class="subpercent">Adjudicado</span>
+                      </div>
+                    </div>
+                    <div class="col-4 mx-auto w-auto">
+                      <div id="chart-resueltas" class="chart" data-percent="<%- datos.ratios.resueltas %>">
+                        <span class="percent"></span>
+                        <span class="subpercent">Resuelto</span>
                       </div>
                     </div>
                   </div>
@@ -284,7 +282,9 @@
             </div>
           </div>
         </div>
-        <%- include('../../partials/footer') %>
+      </div>
+    </div>
+    <%- include('../../partials/footer') %>
   </div>
 
   <div class="modal modal-blur fade" id="modal-config" tabindex="-1" role="dialog" aria-hidden="true">
@@ -340,7 +340,7 @@
     </div>
   </div>
 
-  <script src="/js/ayuda.min.js"></script>
+  <script src="/js/ayuda.js"></script>
   <script>
     const cboC = document.getElementById('cbocar');
 

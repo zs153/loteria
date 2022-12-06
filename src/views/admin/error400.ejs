@@ -7,7 +7,7 @@
     <title>Error 400</title>
     <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
     <!-- styles -->
-    <link rel="stylesheet" href="/css/styles.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
   </head>
   <body class="anti aliased border-top-wide border-primary d-flex flex-column">
     <div class="flex-fill d-flex align-items-center justify-content-center">
@@ -16,15 +16,13 @@
           <div class="empty-header">404</div>
           <p class="empty-title">Se ha generado una página de error</p>
           <!-- <p class="empty-subtitle text-muted">Revisa los datos intoducidos</p> -->
-          <% if(typeof alerts !='undefined') { %> <% alerts.map(function
-          (alert){ %>
-          <div
-            class="alert alert-warning alert-dismissible fade show"
-            role="alert"
-          >
-            <%- alert.msg %>
-          </div>
-          <% }) %> <% } %>
+          <% if(typeof alerts !='undefined') { %> 
+            <% alerts.map(function (alert){ %>
+              <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <%- alert.msg %>
+              </div>
+            <% }) %>
+          <% } %>
           <div class="empty-action">
             <input
               class="btn btn-primary"

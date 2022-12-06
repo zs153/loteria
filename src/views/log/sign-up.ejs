@@ -7,25 +7,24 @@
     <title>Registro</title>
     <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
     <!-- styles -->
-    <link rel="stylesheet" href="/css/styles.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
   </head>
   <body class="antialiased border-top-wide border-primary d-flex flex-column">
     <div class="flex-fill d-flex flex-column justify-content-center py-4">
       <div class="container-tight py-6">
         <div class="text-center mb-4">
-          <a href="."
-            ><img src="/img/logoFormularios.png" height="36" alt=""
-          /></a>
+          <a href="."><img src="/img/logoFormularios.png" height="36" alt=""/></a>
         </div>
-        <% if(typeof alerts !='undefined' ) { %> <% alerts.map(function (alert){
-        %>
-        <div
-          class="alert alert-warning alert-dismissible fade show"
-          role="alert"
-        >
-          <%- alert.msg %>
-        </div>
-        <% }) %> <% } %>
+        <% if(typeof alerts !='undefined' ) { %> 
+          <% alerts.map(function (alert){ %>
+            <div
+              class="alert alert-warning alert-dismissible fade show"
+              role="alert"
+            >
+              <%- alert.msg %>
+            </div>
+          <% }) %>
+        <% } %>
         <form
           action="/log/registro"
           method="POST"
@@ -116,7 +115,6 @@
 
         return true;
       };
-
       const setSuccess = (element) => {
         const inputControl = element.parentElement;
         const errorDisplay = inputControl.querySelector(".invalid-feedback");

@@ -8,76 +8,76 @@
   <title>Estadística</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
-  <link rel="stylesheet" href="/css/styles.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body class="antialiased">
   <div class="wrapper">
     <%- include('../../partials/header') %>
-      <%- include('../../partials/navbar', {opcion: 'ADMINISTRACION' }) %>
-        <div class="page-wrapper">
-          <div class="page-body">
-            <div class="container-xl">
-              <div class="row">
-                <div class="col-12">
-                  <div class="card mt-3">
-                    <form action="/admin/estadisticas" method="POST" onsubmit="return validate();">
-                      <input type="hidden" id="refdoc" name="refdoc">
-                      <div class="card-header">
-                        <h3 class="card-title">Estadística</h3>
-                      </div>
-                      <div class="card-body">
-                        <div class="row">
-                          <div class="col-6">
-                            <div class="mb-1">
-                              <div class="input-control">
-                                <label class="form-label required">Desde</label>
-                                <input type="date" name="desde" id="desde" class="form-control" value="<%- datos.desde %>" />
-                                <div class="invalid-feedback"></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-6">
-                            <div class="mb-1">
-                              <div class="input-control">
-                                <label class="form-label required">Hasta</label>
-                                <input type="date" name="hasta" id="hasta" class="form-control" value="<%- datos.hasta %>" />
-                                <div class="invalid-feedback"></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-12">
-                            <div class="mb-1">
-                              <div class="form-label">Carga</div>
-                              <select class="form-select" id="cbocar" name="refcar" value="">
-                                <% datos.cargas.map(element=> { %>
-                                <option value="<%- element.REFCAR %>">
-                                  <%- element.DESCAR %>
-                                </option>
-                                <% }) %>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="card-footer text-end">
-                        <div class="d-flex">
-                          <button type="submit" class="btn btn-success ms-auto">Generar estadística</button>
-                        </div>
-                      </div>
-                    </form>
+    <%- include('../../partials/navbar', {opcion: 'ADMINISTRACION' }) %>
+    <div class="page-wrapper">
+      <div class="page-body">
+        <div class="container-xl">
+          <div class="row">
+            <div class="col-12">
+              <div class="card mt-3">
+                <form action="/admin/estadisticas" method="POST" onsubmit="return validate();">
+                  <input type="hidden" id="refdoc" name="refdoc">
+                  <div class="card-header">
+                    <h3 class="card-title">Estadística</h3>
                   </div>
-                </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="mb-1">
+                          <div class="input-control">
+                            <label class="form-label required">Desde</label>
+                            <input type="date" name="desde" id="desde" class="form-control" value="<%- datos.desde %>" />
+                            <div class="invalid-feedback"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="mb-1">
+                          <div class="input-control">
+                            <label class="form-label required">Hasta</label>
+                            <input type="date" name="hasta" id="hasta" class="form-control" value="<%- datos.hasta %>" />
+                            <div class="invalid-feedback"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="mb-1">
+                          <div class="form-label">Carga</div>
+                          <select class="form-select" id="cbocar" name="refcar" value="">
+                            <% datos.cargas.map(element=> { %>
+                            <option value="<%- element.REFCAR %>">
+                              <%- element.DESCAR %>
+                            </option>
+                            <% }) %>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer text-end">
+                    <div class="d-flex">
+                      <button type="submit" class="btn btn-success ms-auto">Generar estadística</button>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
         </div>
-        <%- include('../../partials/footer') %>
+      </div>
+    </div>
+    <%- include('../../partials/footer') %>
   </div>
 
-  <script src="/js/ayuda.min.js"></script>
+  <script src="/js/ayuda.js"></script>
   <script>
     const cboC = document.getElementById('cbocar');
 
@@ -116,7 +116,6 @@
 
       return true
     }
-
     const setSuccess = (element) => {
       const inputControl = element.parentElement;
       const errorDisplay = inputControl.querySelector('.invalid-feedback');

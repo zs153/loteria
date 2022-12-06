@@ -8,7 +8,7 @@
   <title>Tipo</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
-  <link rel="stylesheet" href="/css/styles.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body class="antialiased">
@@ -64,7 +64,7 @@
     <%- include('../../partials/footer') %>
   </div>
 
-  <script src="/js/ayuda.min.js"></script>
+  <script src="/js/ayuda.js"></script>
   <script>
     const destip = document.getElementById('destip')
     const ayutip = document.getElementById('ayutip')
@@ -72,7 +72,6 @@
     const validate = () => {
       const destipValue = destip.value.trim()
       const ayutipValue = ayutip.value.trim()
-
 
       if (destipValue === '') {
         setError(destip, 'Descripción requerida')
@@ -91,7 +90,6 @@
 
       return true
     }
-
     const setSuccess = (element) => {
       const inputControl = element.parentElement;
       const errorDisplay = inputControl.querySelector('.invalid-feedback');

@@ -7,7 +7,7 @@
     <title>Usuario registrado</title>
     <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
     <!-- styles -->
-    <link rel="stylesheet" href="/css/styles.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
   </head>
   <body class="anti aliased border-top-wide border-primary d-flex flex-column">
     <div class="flex-fill d-flex align-items-center justify-content-center">
@@ -21,15 +21,13 @@
             La contraseña puede cambiarse en el menu de usuario una vez iniciada
             la sesión
           </p>
-          <% if(typeof alerts !='undefined') { %> <% alerts.map(function
-          (alert){ %>
-          <div
-            class="alert alert-warning alert-dismissible fade show"
-            role="alert"
-          >
-            <%- alert.msg %>
-          </div>
-          <% }) %> <% } %>
+          <% if(typeof alerts !='undefined') { %> 
+            <% alerts.map(function(alert){ %>
+              <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <%- alert.msg %>
+              </div>
+            <% }) %>
+          <% } %>
           <div class="empty-action">
             <a href="/" class="btn btn-primary">Iniciar sesión</a>
           </div>
