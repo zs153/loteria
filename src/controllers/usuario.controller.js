@@ -99,11 +99,7 @@ const perfilFromRec = (req) => {
   const perfil = {
     idusua: req.body.usuario.IDUSUA,
     nomusu: req.body.usuario.NOMUSU,
-    ofiusu: req.body.usuario.OFIUSU,
-    rolusu: req.body.usuario.ROLUSU,
-    userid: req.body.usuario.USERID,
     emausu: req.body.usuario.EMAUSU,
-    perusu: req.body.usuario.PERUSU,
     telusu: req.body.usuario.TELUSU,
   }
   const movimiento = {

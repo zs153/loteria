@@ -83,7 +83,6 @@ const olvidoSql = `BEGIN FORMULARIOS_PKG.FORGOTPASSWORD(
 const perfilSql = `BEGIN FORMULARIOS_PKG.UPDATEPERFILUSUARIO(
   :idusua,
   :nomusu,
-  :ofiusu,
   :emausu,
   :telusu, 
   :usumov,
