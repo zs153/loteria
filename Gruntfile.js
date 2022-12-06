@@ -28,8 +28,8 @@ module.exports = function (grunt) {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
       },
       js: {
-        src: ['dist/public/js/usuarios.js'],
-        dest: 'dist/public/js/usuarios.js'
+        src: ['dist/app.js'],
+        dest: 'dist/app.js'
       },
       css: {
         src: 'src/public/css/styles.css',
