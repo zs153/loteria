@@ -96,7 +96,7 @@ export const updatePerfil = async (req, res) => {
       }
     )
 
-    res.redirect('/admin')
+    res.redirect('.')
   } catch (error) {
     res.redirect('/admin')
   }
