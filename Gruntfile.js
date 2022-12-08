@@ -14,10 +14,6 @@ module.exports = function (grunt) {
       options: {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
       },
-      js: {
-        src: ['dist/controllers/*.js'],
-        dest: 'dist/scripts.js'
-      },
       css: {
         src: ['src/public/css/*.css'],
         dest: 'src/public/css/styles.css'
@@ -46,6 +42,7 @@ module.exports = function (grunt) {
   // Default task.
   grunt.registerTask('concat-js', ['concat:js']);
   grunt.registerTask('default-js', ['uglify:js']);
-  grunt.registerTask('default-css', ['concat:css', 'uglify:css']);
+  // grunt.registerTask('default-css', ['concat:css', 'uglify:css']);
+  grunt.registerTask('default-css', ['concat:css']);
 
 };
