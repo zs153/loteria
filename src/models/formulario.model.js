@@ -141,10 +141,10 @@ export const find = async (context) => {
 
   if (context.IDDOCU) {
     binds.iddocu = context.IDDOCU
-    query += `WHERE iddocu = :iddocu`
+    query += `WHERE dd.iddocu = :iddocu`
   } else if (context.REFDOC) {
     binds.refdoc = context.REFDOC
-    query += `WHERE refdoc = :refdoc`
+    query += `WHERE dd.refdoc = :refdoc`
   } else if (context.LIQDOC) {
     binds.liqdoc = context.LIQDOC
     if (context.TIPVIS === 1) {

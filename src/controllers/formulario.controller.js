@@ -363,7 +363,7 @@ export const borrarReferencia = async (req, res) => {
   }
 }
 
-// referencia
+// sms
 export const sms = async (req, res) => {
   const context = req.body.sms
 
@@ -395,7 +395,6 @@ export const smss = async (req, res) => {
   }
 }
 export const crearSms = async (req, res) => {
-  console.log(insertSmsFromRec(req))
   try {
     const result = await DAL.insertSms(insertSmsFromRec(req))
 
