@@ -37,7 +37,7 @@ export const addPage = async (req, res) => {
   const fecha = new Date();
   const formulario = {
     ISOFEC: fecha.toISOString().slice(0, 10),
-    EJEFRA: fecha.getFullYear() - 1,
+    EJEDOC: fecha.getFullYear() - 1,
     OFIDOC: user.oficina,
     FUNDOC: user.userID,
     STADOC: estadosDocumento.pendiente,
@@ -361,10 +361,6 @@ export const insert = async (req, res) => {
     }
   } catch (error) {
     let msg = "No se ha podido crear el documento.";
-
-    if (error.response.data.errorNum === 20100) {
-      msg = "El documento ya existe.";
-    }
 
     res.render("admin/error400", {
       alerts: [{ msg }],

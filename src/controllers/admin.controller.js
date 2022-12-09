@@ -18,17 +18,14 @@ export const perfilPage = async (req, res) => {
   const usuario = {
     USERID: user.userID,
   }
-  const oficina = {}
 
   try {
-    const oficinas = await axios.post('http://localhost:8000/api/oficinas', oficina)
     const result = await axios.post('http://localhost:8000/api/usuario', {
       usuario,
     })
 
     const datos = {
       usuario: result.data,
-      oficinas: oficinas.data,
       arrTiposRol,
       arrTiposPerfil,
     }
@@ -61,7 +58,7 @@ export const changePassword = async (req, res) => {
   }
 
   try {
-    const result = await axios.post(
+    await axios.post(
       'http://localhost:8000/api/usuarios/cambio',
       {
         usuario,
@@ -88,7 +85,7 @@ export const updatePerfil = async (req, res) => {
   }
 
   try {
-    const result = await axios.post(
+    await axios.post(
       'http://localhost:8000/api/usuarios/perfil',
       {
         usuario,
