@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Tipo</title>
+  <title>Tipos</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
@@ -31,8 +31,7 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">Descripción</label>
-                            <input type="text" name="destip" id="destip" class="form-control"
-                              style="text-transform: uppercase;" value="" />
+                            <input type="text" name="destip" id="destip" class="form-control" style="text-transform: uppercase;" value="" />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -42,7 +41,7 @@
                       <div class="col-12">
                         <div class="mb-1">
                           <label class="form-label required">Texto ayuda</label>
-                          <textarea type="text" name="ayutip" id="ayutip" class="form-control" rows="3" style="resize: vertical"><%- datos.tipo.ayutip %></textarea>
+                          <textarea type="text" name="ayutip" id="ayutip" class="form-control" rows="3" style="resize: vertical"></textarea>
                           <div class="invalid-feedback"></div>
                         </div>
                       </div>
@@ -51,7 +50,7 @@
                   <div class="card-footer text-end">
                     <div class="d-flex">
                       <a href="/admin/tipos" class="btn btn-white">Cancelar</a>
-                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear tipo</button>
+                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear nuevo tipo</button>
                     </div>
                   </div>
                 </form>
@@ -64,7 +63,7 @@
     <%- include('../../partials/footer') %>
   </div>
 
-  <script src="/js/ayuda.js"></script>
+  <script src="/js/ayuda.min.js"></script>
   <script>
     const destip = document.getElementById('destip')
     const ayutip = document.getElementById('ayutip')

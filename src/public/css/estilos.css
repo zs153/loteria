@@ -1,4 +1,4 @@
-*,
+e*,
 *::before,
 *::after {
   box-sizing: border-box;
@@ -4968,10 +4968,12 @@ Card table
 }
 
 /* dots-menu */
-tbody i {
+tbody i,
+tbody svg {
   display: none;
 }
-tbody tr:hover i {
+tbody tr:hover i,
+tbody tr:hover svg {
   display: block;
 }
 

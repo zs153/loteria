@@ -25,6 +25,7 @@ import {
   insertSms,
   updateSms,
   removeSms,
+  smssReadonlyPage,
 } from '../controllers/formulario.controller'
 
 const formularioRouter = express.Router()
@@ -46,6 +47,7 @@ formularioRouter.get('/formularios/referencias/edit/:iddoc/:idref', authRoutes, 
 formularioRouter.get('/formularios/smss/:iddoc', authRoutes, smssPage)
 formularioRouter.get('/formularios/smss/add/:iddoc', authRoutes, smssAddPage)
 formularioRouter.get('/formularios/smss/edit/:iddoc/:idsms', authRoutes, smssEditPage)
+formularioRouter.get('/formularios/smss/readonly/:iddoc', authRoutes, smssReadonlyPage)
 
 // procedures post
 formularioRouter.post("/formularios/insert", authRoutes, insert);

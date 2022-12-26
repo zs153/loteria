@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Sms</title>
+  <title>Mensajes</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
@@ -61,9 +61,9 @@
                   <table class="table table-vcenter table-striped sortable" id="tblSmss">
                     <thead>
                       <tr class="header">
-                        <th class="w-5"></th>
-                        <th>Fecha</th>
-                        <th>Movil</th>
+                        <th class="w-4"></th>
+                        <th class="w-6">Fecha</th>
+                        <th class="w-8">Móvil</th>
                         <th>Texto</th>
                         <th class="w-5"></th>
                       </tr>
@@ -106,7 +106,7 @@
           <div class="w-100">
             <div class="row">
               <div class="col">
-                <a href="/admin/formularios/smss/<%- datos.formulario.IDDOCU %>" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
+                <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
               </div>
               <div class="col">
                 <form action="/admin/formularios/smss/delete" method="POST">
@@ -122,11 +122,12 @@
     </div>
   </div>
 
-  <script src="/js/ayuda.js"></script>
+  <script src="/js/ayuda.min.js"></script>
   <script src="/js/sms.js"></script>
     <script>
       const orgList = <%- datos.smss %>
-      const estadosSms = <%- datos.estadosSms %>
+      const formulario = <%- JSON.stringify(datos.formulario) %>
+      const estadosSms = <%- JSON.stringify(datos.estadosSms) %>
 
       let state = {
         'querySet': orgList,
@@ -142,7 +143,7 @@
       }
       elemBuscar.value = getCookie('filtro')
 
-      arrayFilter(elemBuscar.value)
+      arrayFilter(elemBuscar.value, formulario, estadosSms)
     </script>
 </body>
 

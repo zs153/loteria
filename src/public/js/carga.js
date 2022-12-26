@@ -74,7 +74,7 @@ const pagination = (querySet, page, rows) => {
     'pages': pages,
   }
 }
-const buildTable = (state) => {
+const buildTable = (state, estados) => {
   const table = document.getElementById('table-body')
   const data = pagination(state.querySet, state.page, state.rows)
   const myList = data.querySet
@@ -84,8 +84,8 @@ const buildTable = (state) => {
     // col1
     const row = document.createElement('tr')
     let cell = document.createElement('td')
-    cell.classList.add("w-5")
-    if (element.STACAR === estadosCarga.procesado) {
+    cell.classList.add("w-4")
+    if (element.STACAR === estados.procesado) {
       cell.innerHTML = `<div class="align-items-center py-1">
         <span class="avatar avatar-rounded bg-green-lt">
           <h6>PROC</h6>
@@ -101,6 +101,7 @@ const buildTable = (state) => {
     row.appendChild(cell)
     // col2
     cell = document.createElement('td')
+    cell.classList.add("w-6")
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
       <div class="flex-fill">
         <div class="font-weight-medium">${element.STRFEC}</div>
@@ -133,6 +134,7 @@ const buildTable = (state) => {
     row.appendChild(cell)
     // col6
     cell = document.createElement('td')
+    cell.classList.add("w-6")
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
       <div class="flex-fill">
         <div class="font-weight-medium">${element.NUMREG}</div>
@@ -211,5 +213,5 @@ const createPagination = (pages, page) => {
 const onclickPage = (pages, page) => {
   createPagination(pages, page)
   state.page = page
-  buildTable(state)
+  buildTable(state, estadosCarga)
 }

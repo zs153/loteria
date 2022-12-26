@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Usuario</title>
+  <title>Usuarios</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
@@ -48,14 +48,18 @@
                       </div>
                       <div class="col-2">
                         <div class="mb-1">
-                          <div class="form-label">Estado</div>
-                          <select class="form-select" id="cboest" name="stausu" value="">
-                            <% datos.arrEstadosUsuario.map(element=> { %>
-                              <option value="<%= element.id %>" <%- element.id===datos.usuario.STAUSU
-                                ? " selected" :"" %>><%= element.des %>
-                              </option>
-                              <% }) %>
-                          </select>
+                          <div class="input-control">
+                            <div class="form-label required">Estado</div>
+                            <select class="form-select" id="cboest" name="stausu" value="">
+                              <option value="0">SELECCIONE ESTADO</option>
+                              <% datos.arrEstadosUsuario.map(element=> { %>
+                                <option value="<%= element.id %>">
+                                  <%= element.des %>
+                                </option>
+                                <% }) %>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -82,38 +86,50 @@
                     <div class="row">
                       <div class="col-4">
                         <div class="mb-1">
-                          <div class="form-label">Oficina</div>
-                          <select class="form-select" id="cboofi" name="ofiusu" value="">
-                            <% datos.oficinas.map(element=> { %>
-                              <option value="<%= element.IDOFIC %>">
-                                <%= element.DESOFI %>
+                          <div class="input-control">
+                            <div class="form-label required">Oficina</div>
+                            <select class="form-select form-control" id="cboofi" name="ofiusu" value="">
+                              <option value="0">SELECCIONE OFICINA</option>
+                              <% datos.oficinas.map(element=> { %>
+                              <option value="<%- element.IDOFIC %>">
+                                <%- element.DESOFI %>
                               </option>
                               <% }) %>
-                          </select>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                          </div>
                         </div>
                       </div>
                       <div class="col-4">
                         <div class="mb-1">
-                          <div class="form-label">Rol</div>
-                          <select class="form-select" id="cborol" name="rolusu" value="">
+                          <div class="input-control">
+                            <div class="form-label required">Rol</div>
+                            <select class="form-select" id="cborol" name="rolusu" value="">
+                              <option value="0">SELECCIONE ROL</option>
                               <% datos.filteredRol.map(element=> { %>
-                                <option value="<%- element.id %>">
-                                  <%- element.des %>
-                                </option>
-                              <% }) %>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-4">
-                        <div class="mb-1">
-                          <div class="form-label">Perfil</div>
-                          <select class="form-select" id="cboper" name="perusu" value="">
-                            <% datos.arrTiposPerfil.map(element=> { %>
                               <option value="<%- element.id %>">
                                 <%- element.des %>
                               </option>
                               <% }) %>
-                          </select>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="mb-1">
+                          <div class="input-control">
+                            <div class="form-label required">Perfil</div>
+                            <select class="form-select" id="cboper" name="perusu" value="">
+                              <option value="0">SELECCIONE PERFIL</option>
+                              <% datos.arrTiposPerfil.map(element=> { %>
+                              <option value="<%- element.id %>">
+                                <%- element.des %>
+                              </option>
+                              <% }) %>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -121,7 +137,7 @@
                   <div class="card-footer text-end">
                     <div class="d-flex">
                       <a href="/admin/usuarios" class="btn btn-white">Cancelar</a>
-                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear usuario</button>
+                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear nuevo usuario</button>
                     </div>
                   </div>
                 </form>
@@ -134,18 +150,26 @@
     <%- include('../../partials/footer') %>
   </div>
 
-  <script src="/js/ayuda.js"></script>
+  <script src="/js/ayuda.min.js"></script>
   <script>
     const userid = document.getElementById('userid')
     const nomusu = document.getElementById('nomusu')
     const emausu = document.getElementById('emausu')
     const telusu = document.getElementById('telusu')
-    
+    const cboest = document.getElementById('cboest')
+    const cboofi = document.getElementById('cboofi')
+    const cborol = document.getElementById('cborol')
+    const cboper = document.getElementById('cboper')
+
     const validate = () => {
       const useridValue = userid.value.trim()
       const nomusuValue = nomusu.value.trim()
       const emausuValue = emausu.value.trim()
       const telusuValue = telusu.value.trim()
+      const cboestValue = cboest.value
+      const cboofiValue = cboofi.value
+      const cborolValue = cborol.value
+      const cboperValue = cboper.value
 
       if (useridValue === '') {
         setError(userid, 'UserID requerido')
@@ -158,6 +182,13 @@
         setError(nomusu, 'Nombre requerido')
         setTimeout(function () {
           setSuccess(nomusu)
+        }, 3000)
+        return false
+      }
+      if (cboestValue === '0') {
+        setError(cboest, 'Estado requerido')
+        setTimeout(function () {
+          setSuccess(cboest)
         }, 3000)
         return false
       }
@@ -175,8 +206,31 @@
         }, 3000)
         return false
       }
+      if (cboofiValue === '0') {
+        setError(cboofi, 'Oficina requerida')
+        setTimeout(function () {
+          setSuccess(cboofi)
+        }, 3000)
+        return false
+      }
+      if (cborolValue === '0') {
+        setError(cborol, 'Rol requerido')
+        setTimeout(function () {
+          setSuccess(cborol)
+        }, 3000)
+        return false
+      }
+      if (cboperValue === '0') {
+        setError(cboper, 'Perfil requerido')
+        setTimeout(function () {
+          setSuccess(cboper)
+        }, 3000)
+        return false
+      }
+
       return true
     }
+    
     const setSuccess = (element) => {
       const inputControl = element.parentElement;
       const errorDisplay = inputControl.querySelector('.invalid-feedback');

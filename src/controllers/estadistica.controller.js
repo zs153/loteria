@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { tiposMovimiento } from '../public/js/enumeraciones'
+import { estadosDocumento, tiposMovimiento } from '../public/js/enumeraciones'
 
 // pages
 export const mainPage = async (req, res) => {
@@ -41,50 +41,70 @@ export const generarEstadistica = async (req, res) => {
     REFDOC: req.body.refdoc,
   }
   const carga = {
-    REFCAR: req.body.refdoc,
+    REFCAR: req.body.refcar,
   }
 
   try {
+    const cargas = await axios.post('http://localhost:8000/api/cargas', {})
     const situacion = await axios.post('http://localhost:8000/api/estadisticas/situacion', {
       formulario,
+      tipos: {
+        PENDOC: estadosDocumento.pendiente,
+        ASIDOC: estadosDocumento.asignado,
+        RESDOC: estadosDocumento.resuelto,
+      },
     })
     const oficinas = await axios.post('http://localhost:8000/api/estadisticas/oficinas', {
       carga,
+      tipos: {
+        PENDOC: estadosDocumento.pendiente,
+        ASIDOC: estadosDocumento.asignado,
+        RESDOC: estadosDocumento.resuelto,
+      },
     })
     const actuacion = await axios.post('http://localhost:8000/api/estadisticas/actuacion', {
       formulario,
-      tiposMovimiento,
       periodo,
+      tipos: {
+        ASIDOC: tiposMovimiento.asignarFormulario,
+        RESDOC: tiposMovimiento.resolverFormulario,
+        DESDOC: tiposMovimiento.desasignarFormulario,
+      },
     })
 
     const serieA = []
     const serieR = []
+    const serieD = []
+    const contadores = {
+      pendientes: situacion.data.PEN,
+      adjudicadas: situacion.data.ASI,
+      resueltas: situacion.data.RES,
+      total: situacion.TOT,
+    }
 
     actuacion.data.map(itm => {
-      serieA.push({ x: itm.FEC, y: itm.ASI })
-      serieR.push({ x: itm.FEC, y: itm.RES })
+      serieA.push([new Date(itm.FECHA).getTime(), itm.ADJ])
+      serieR.push([new Date(itm.FECHA).getTime(), itm.RES])
+      serieD.push([new Date(itm.FECHA).getTime(), itm.DES])
     })
 
-    const totalSituacion = situacion.data.TOT
     const ratios = {
-      pendientes: Math.round((situacion.data.PEN * 100 / totalSituacion) * 100) / 100.0,
-      asignadas: Math.round((situacion.data.ASI * 100 / totalSituacion) * 100) / 100.0,
-      resueltas: Math.round((situacion.data.RES * 100 / totalSituacion) * 100) / 100.0,
+      asignadas: Math.round((contadores.adjudicadas * 100 / contadores.total) * 100) / 100.0,
+      resueltas: Math.round((contadores.resueltas * 100 / contadores.total) * 100) / 100.0,
+      pendientes: Math.round((contadores.pendientes * 100 / contadores.total) * 100) / 100.0,
     }
 
     const datos = {
+      formulario,
       carga,
-      strPeriodo: {
-        desde: new Date(periodo.DESDE).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }),
-        hasta: new Date(periodo.HASTA).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }),
-      },
-      periodo,
-      actuacion: actuacion.data,
       oficinas: oficinas.data,
-      situacion: situacion.data,
+      cargas: cargas.data,
+      periodo,
+      contadores,
       ratios,
       serieA: JSON.stringify(serieA),
       serieR: JSON.stringify(serieR),
+      serieD: JSON.stringify(serieD),
     }
 
     res.render('admin/estadisticas/resultado', { user, datos })

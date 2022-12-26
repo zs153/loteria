@@ -1,6 +1,5 @@
 import axios from 'axios'
 import bcrypt from 'bcrypt'
-
 import {
   arrTiposRol,
   arrTiposPerfil,
@@ -58,13 +57,10 @@ export const changePassword = async (req, res) => {
   }
 
   try {
-    await axios.post(
-      'http://localhost:8000/api/usuarios/cambio',
-      {
-        usuario,
-        movimiento,
-      }
-    )
+    await axios.post("http://localhost:8000/api/usuarios/cambio", {
+      usuario,
+      movimiento,
+    })
 
     res.redirect('/log/logout')
   } catch (error) {
@@ -85,13 +81,10 @@ export const updatePerfil = async (req, res) => {
   }
 
   try {
-    await axios.post(
-      'http://localhost:8000/api/usuarios/perfil',
-      {
-        usuario,
-        movimiento,
-      }
-    )
+    await axios.post("http://localhost:8000/api/usuarios/perfil", {
+      usuario,
+      movimiento,
+    })
 
     res.redirect('.')
   } catch (error) {

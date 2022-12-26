@@ -3,10 +3,9 @@ import { tiposMovimiento } from "../public/js/enumeraciones";
 
 export const mainPage = async (req, res) => {
   const user = req.user;
-  const oficina = {}
 
   try {
-    const result = await axios.post("http://localhost:8000/api/oficinas", oficina);
+    const result = await axios.post("http://localhost:8000/api/oficinas", {});
     const datos = {
       oficinas: JSON.stringify(result.data),
     }
@@ -22,18 +21,9 @@ export const mainPage = async (req, res) => {
 };
 export const addPage = async (req, res) => {
   const user = req.user;
-  const oficina = {
-    IDOFIC: 0,
-    DESOFI: "",
-    CODOFI: "",
-  };
 
   try {
-    const datos = {
-      oficina,
-    };
-
-    res.render("admin/oficinas/add", { user, datos });
+    res.render("admin/oficinas/add", { user });
   } catch (error) {
     const msg = "No se ha podido acceder a los datos de la aplicación.";
 

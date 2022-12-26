@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Referencia</title>
+  <title>Referencias</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
@@ -34,7 +34,7 @@
                           <div class="input-control">
                             <label class="form-label required">NIF/NIE</label>
                             <input type="text" name="nifref" id="nifref" class="form-control"
-                              style="text-transform: uppercase;" value="<%- datos.referencia.NIFREF %>" />
+                              style="text-transform: uppercase;" value="<%- datos.referencia.NIFREF %>" autofocus/>
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -42,12 +42,9 @@
                       <div class="col-8">
                         <div class="mb-1">
                           <div class="form-label">Tipo</div>
-                          <select class="form-select" id="cbotip" name="tipref" value="<%- datos.referencia.TIPREF %>"
-                            autofocus>
-                            <option value="0">SELECCIONE UN TIPO</option>
+                          <select class="form-select" id="cbotip" name="tipref" value="<%- datos.referencia.TIPREF %>">
                             <% datos.tipos.map(element=> { %>
-                            <option value="<%- element.IDTIPO %>"
-                              <%- element.IDTIPO === datos.referencia.TIPREF ? " selected" :"" %>>
+                            <option value="<%- element.IDTIPO %>"<%- element.IDTIPO === datos.referencia.TIPREF ? " selected" :"" %>>
                               <%- element.DESTIP %>
                             </option>
                             <% }) %>
@@ -55,12 +52,22 @@
                         </div>
                       </div>
                     </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="mb-1">
+                          <div class="input-control">
+                            <label class="form-label required">Descripción</label>
+                            <input type="text" name="desref" id="desref" class="form-control" value="<%- datos.referencia.DESREF %>" />
+                            <div class="invalid-feedback"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div class="card-footer text-end">
                     <div class="d-flex">
-                      <a href="/admin/formularios/referencias/<%- datos.formulario.IDDOCU %>"
-                        class="btn btn-white">Cancelar</a>
-                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Modificar referencia</button>
+                      <a href="/admin/formularios/referencias/<%- datos.formulario.IDDOCU %>" class="btn btn-white">Cancelar</a>
+                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Actualizar referencia</button>
                     </div>
                   </div>
                 </form>
@@ -72,7 +79,7 @@
     </div>
     <%- include('../../../partials/footer') %>
   </div>
-  <script src="/js/ayuda.js"></script>
+  <script src="/js/ayuda.min.js"></script>
 
   <script>
     const nifref = document.getElementById('nifref')

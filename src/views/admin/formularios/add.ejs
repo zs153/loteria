@@ -22,9 +22,8 @@
             <div class="col-12">
               <div class="card">
                 <form id="form" action="/admin/formularios/insert" method="POST" onsubmit="return validate();">
-                  <input type="hidden" name="verall" id="verall" value="">
                   <div class="card-header">
-                    <h3 class="card-title">Nuevo formulario</h3>
+                    <h3 class="card-title">Formulario</h3>
                   </div>
                   <div class="card-body">
                     <div class="row">
@@ -62,12 +61,12 @@
                     <div class="row">
                       <div class="col-9">
                         <div class="mb-1">
-                          <div class="form-label">Tipo</div>
+                          <div class="form-label required">Tipo</div>
                           <div class="input-control">
-                            <select class="form-select form-control" id="cbotip" name="tipdoc" value="<%- datos.formulario.TIPDOC %>">
+                            <select class="form-select form-control" id="cbotip" name="tipdoc" value="">
                               <option value="0">SELECCIONE UN TIPO</option>
                               <% datos.tipos.map(element=> { %>
-                                <option value="<%- element.IDTIPO %>" <%- element.IDTIPO === datos.formulario.TIPDOC ? " selected" :"" %>>
+                                <option value="<%- element.IDTIPO %>">
                                   <%- element.DESTIP %>
                                 </option>
                               <% }) %>
@@ -125,7 +124,7 @@
                       <div class="col-2">
                         <div class="mb-1">
                           <div class="input-control">
-                            <label class="form-label">Movil</label>
+                            <label class="form-label">Móvil</label>
                             <input type="text" name="movcon" id="movcon" class="form-control" value="" />
                             <div class="invalid-feedback"></div>
                           </div>
@@ -145,7 +144,7 @@
                   <div class="card-footer text-end">
                     <div class="d-flex">
                       <input type="submit" class="btn btn-white" action="action" onclick="window.history.go(-1); return false;" value="Cancelar" />
-                      <button type="submit" class="btn btn-success ms-auto" onclick="checkVer()">Crear formulario</button>
+                      <button type="submit" class="btn btn-success ms-auto" onclick="checkVer()">Crear nuevo formulario</button>
                     </div>
                   </div>
                 </form>
@@ -158,7 +157,7 @@
     <%- include('../../partials/footer') %>
   </div>
 
-  <script src="/js/ayuda.js"></script>
+  <script src="/js/ayuda.min.js"></script>
   <script>
     const nifcon = document.getElementById('nifcon')
     const nomcon = document.getElementById('nomcon')
@@ -166,6 +165,55 @@
     const fecdoc = document.getElementById('fecdoc')
     const tipdoc = document.getElementById('cbotip')
 
+    let eleNombre = document.getElementById('nomcon')
+    let eleDiscri = document.getElementById('iddisc')
+
+    nifcon.addEventListener('blur', async () => {
+      if (eleNif.value !== '') {        
+        const xhr = new XMLHttpRequest();
+
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            const gentes = JSON.parse(xhr.response)
+            const discriminantes = document.getElementById('iddisc')
+
+            if (gentes.length > 1) {
+              discriminantes.innerHTML = ''
+              gentes.map((item) => {
+                const li = document.createElement('li')
+                li.textContent = item.NIFGEN + ` ${item.DISGEN} ` + item.NOMGEN
+                discriminantes.appendChild(li)
+              })
+              const li = document.createElement('li')
+              li.textContent = 'Introduzca discriminante'
+              discriminantes.appendChild(li)
+
+              eleDiscri.style.display = 'block'
+              eleNif.focus()
+            } else {
+              if (gentes.NOMGEN) {
+                eleNif.value = gentes.NIFGEN
+                eleNombre.value = gentes.NOMGEN
+              } else {
+                eleNombre.value = ''
+              }
+              eleDiscri.style.display = 'none'
+            }
+          } else {
+            eleNombre.value = ''
+          }
+        };
+        try {
+          xhr.open('POST', 'http://localhost:8000/api/gentes', true);
+          xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+          xhr.send(JSON.stringify({ nifgen: nifcon.value.toUpperCase() }))
+        } catch (error) {
+          eleNombre.value = ''
+        }
+      }
+    })
+
+    //proc
     const validate = () => {
       const nifconValue = nifcon.value.trim().toUpperCase().slice(0, 9)
       const nomconValue = nomcon.value.trim()
@@ -280,56 +328,6 @@
     const checkVer = () => {
       document.getElementById('verall').value = localStorage.getItem('vertodo')
     }
-  </script>
-  <script>
-    const eleNif = document.getElementById('nifcon')
-    const eleNombre = document.getElementById('nomcon')
-    const eleDiscri = document.getElementById('iddisc')
-
-    eleNif.addEventListener('blur', async () => {
-      if (eleNif.value !== '') {        
-        const xhr = new XMLHttpRequest();
-
-        xhr.onload = function () {
-          if (xhr.status === 200) {
-            const gentes = JSON.parse(xhr.response)
-            const discriminantes = document.getElementById('iddisc')
-
-            if (gentes.length > 1) {
-              discriminantes.innerHTML = ''
-              gentes.map((item) => {
-                const li = document.createElement('li')
-                li.textContent = item.NIFGEN + ` ${item.DISGEN} ` + item.NOMGEN
-                discriminantes.appendChild(li)
-              })
-              const li = document.createElement('li')
-              li.textContent = 'Introduzca discriminante'
-              discriminantes.appendChild(li)
-
-              eleDiscri.style.display = 'block'
-              eleNif.focus()
-            } else {
-              if (gentes.NOMGEN) {
-                eleNif.value = gentes.NIFGEN
-                eleNombre.value = gentes.NOMGEN
-              } else {
-                eleNombre.value = ''
-              }
-              eleDiscri.style.display = 'none'
-            }
-          } else {
-            eleNombre.value = ''
-          }
-        };
-        try {
-          xhr.open('POST', 'http://localhost:8000/api/gentes', true);
-          xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-          xhr.send(JSON.stringify({ nifgen: eleNif.value.toUpperCase() }))
-        } catch (error) {
-          eleNombre.value = ''
-        }
-      }
-    })
   </script>
 </body>
 

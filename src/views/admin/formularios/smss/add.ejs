@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Sms</title>
+  <title>Mensajes</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
@@ -24,25 +24,24 @@
                 <form id="form" action="/admin/formularios/smss/insert" method="POST" onsubmit="return validate();">
                   <input type="hidden" name="iddocu" id="iddocu" value="<%- datos.formulario.IDDOCU %>">
                   <div class="card-header">
-                    <h3 class="card-title">Sms</h3>
+                    <h3 class="card-title">Nuevo Sms</h3>
                   </div>
                   <div class="card-body">
                     <div class="row">
                       <div class="col-4">
                         <div class="mb-1">
-                          <div class="input-control">
-                            <label class="form-label required">Móvil</label>
-                            <input type="text" name="movsms" id="movsms" class="form-control" value="<%- datos.sms.MOVSMS %>" autofocus/>
-                            <div class="invalid-feedback"></div>
-                          </div>
+                          <label class="form-label required">Móvil</label>
+                          <input type="text" name="movsms" id="movsms" class="form-control" value="<%- datos.sms.MOVSMS %>" readonly/>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-12">
                           <div class="mb-1">
-                            <label class="form-label required">Texto</label>
-                            <textarea type="text" name="texsms" id="texsms" class="form-control" rows="3" style="resize: vertical"></textarea>
-                            <div class="invalid-feedback"></div>
+                            <div class="input-control required">
+                              <label class="form-label required">Texto</label>
+                              <textarea type="text" name="texsms" id="texsms" class="form-control" rows="3" style="resize: vertical"></textarea>
+                              <div class="invalid-feedback"></div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -63,23 +62,14 @@
     </div>
     <%- include('../../../partials/footer') %>
   </div>
-  <script src="/js/ayuda.js"></script>
+  <script src="/js/ayuda.min.js"></script>
 
   <script>
-    const movsms = document.getElementById('movsms')
     const texsms = document.getElementById('texsms')
 
     const validate = () => {
-      const movsmsValue = movsms.value.trim()
       const texsmsValue = texsms.value.trim()
 
-      if (movsmsValue === '' || movsmsValue.length !== 9) {
-        setError(movsms, 'Móvil requerido')
-        setTimeout(function () {
-          setSuccess(movsms)
-        }, 3000)
-        return false
-      }
       if (texsmsValue === '' || texsmsValue.length > 140) {
         setError(texsms, 'Texto requerido (longitud máxima 140 caracteres)')
         setTimeout(function () {

@@ -4,9 +4,9 @@ import {
   mainPage,
   addPage,
   editPage,
-  insertTipo,
-  updateTipo,
-  deleteTipo,
+  insert,
+  update,
+  remove,
 } from "../controllers/tipo.controller";
 
 const tipoRouter = express.Router();
@@ -17,8 +17,8 @@ tipoRouter.get("/tipos/add", verifyTokenAndAdmin, addPage);
 tipoRouter.get("/tipos/edit/:id", verifyTokenAndAdmin, editPage);
 
 // procedures
-tipoRouter.post("/tipos/insert", verifyTokenAndAdmin, insertTipo);
-tipoRouter.post("/tipos/update", verifyTokenAndAdmin, updateTipo);
-tipoRouter.post("/tipos/delete", verifyTokenAndAdmin, deleteTipo);
+tipoRouter.post("/tipos/insert", verifyTokenAndAdmin, insert);
+tipoRouter.post("/tipos/update", verifyTokenAndAdmin, update);
+tipoRouter.post("/tipos/delete", verifyTokenAndAdmin, remove);
 
 export default tipoRouter;

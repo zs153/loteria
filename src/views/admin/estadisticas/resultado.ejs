@@ -21,12 +21,6 @@
       line-height: 1.6;
       color: #626976;
     }
-
-    .h1 {
-      font-size: 3.5rem;
-      color:rgb(87, 87, 87)
-    }
-
     .progress-container {
       display: flex;
       height: 1rem;
@@ -36,7 +30,6 @@
       text-align: center;
       color: #fff;
     }
-
     .chart {
       position: relative;
       display: inline-block;
@@ -46,49 +39,40 @@
       margin-bottom: 10px;
       text-align: center;
     }
-
     .chart canvas {
       position: absolute;
       top: 0;
       left: 0;
     }
-
     .percent {
       display: inline-block;
       line-height: 110px;
       z-index: 2;
     }
-
     .subpercent {
       display: block;
       z-index: 4;
     }
-
     .percent:after {
       content: '%';
       margin-left: 0;
       font-size: .8em;
     }
-
     .subpercent:after {
       margin-left: 0;
       font-size: .8em;
     }
-
     .progress-separated {
       border-right: 2px solid #fff;
     }
-
     .tooltip {
       position: relative;
       display: inline-block;
     }
-
     .tooltip:hover .tooltiptext {
       visibility: visible;
       opacity: 1;
     }
-
     .tooltiptext {
       visibility: hidden;
       width: 180px;
@@ -119,8 +103,8 @@
       <div class="page-body">
         <div class="container-xl">
           <div class="d-flex">
-            <span>Carga: <%- datos.carga.REFCAR %></span>
-            <span class="ms-3">Periodo: <%- datos.strPeriodo.desde %> al <%- datos.strPeriodo.hasta %></span>
+            <span>Referencia: <%- datos.carga.REFCAR %></span>
+            <span class="ms-3">Periodo: <%- datos.periodo.DESDE.split('-').reverse().join('/') %> al <%- datos.periodo.HASTA.split('-').reverse().join('/') %></span>
             <a href="#" class="ms-auto" data-bs-toggle="modal" data-bs-target="#modal-config">
               <span class="nav-link-icon d-md-none d-lg-inline-block">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24">
@@ -138,9 +122,7 @@
                     <div class="subheader">Pendientes</div>
                   </div>
                   <div class="d-flex align-items-center">
-                    <div class="h1 ms-auto">
-                      <%- Intl.NumberFormat('de-DE').format(datos.situacion.PEN) %>
-                    </div>
+                    <div class="page-title-lg"><%- Intl.NumberFormat('de-DE').format(datos.contadores.pendientes) %></div>
                   </div>
                 </div>
               </div>
@@ -152,9 +134,7 @@
                     <div class="subheader">Adjudicadas</div>
                   </div>
                   <div class="d-flex align-items-center">
-                    <div class="h1 ms-auto">
-                        <%- Intl.NumberFormat('de-DE').format(datos.situacion.ASI) %>
-                    </div>
+                    <div class="page-title-lg"><%- Intl.NumberFormat('de-DE').format(datos.contadores.adjudicadas) %></div>
                   </div>
                 </div>
               </div>
@@ -166,9 +146,7 @@
                     <div class="subheader">Resueltas</div>
                   </div>
                   <div class="d-flex align-items-center">
-                    <div class="h1 ms-auto">
-                        <%- Intl.NumberFormat('de-DE').format(datos.situacion.RES) %>
-                    </div>
+                    <div class="page-title-lg"><%- Intl.NumberFormat('de-DE').format(datos.contadores.resueltas) %></div>
                   </div>
                 </div>
               </div>
@@ -191,7 +169,7 @@
                       <h3 class="card-title">Oficinas</h3>
                     </div>
                     <div class="card-body">
-                      <table class="table table-vcenter table-striped sortable" id="tblOficinas">
+                      <table class="table table-vcenter table-striped" id="tblOficinas">
                         <thead>
                           <tr class="header">
                             <th>Oficina</th>
@@ -307,6 +285,11 @@
                   <div class="mb-1">
                     <div class="form-label">Carga</div>
                     <select class="form-select form-control" id="cbocar" name="refcar" value="">
+                      <% datos.cargas.map(element=> { %>
+                      <option value="<%- element.REFCAR %>">
+                        <%- element.DESCAR %>
+                      </option>
+                      <% }) %>
                     </select>
                   </div>
                 </div>
@@ -337,36 +320,23 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-white" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
-            <button type="submit" class="btn btn-primary ms-auto">Generar estadística</button>
+            <button type="submit" class="btn btn-success ms-auto">Generar estadística</button>
           </div>
         </form>
       </div>
     </div>
   </div>
 
-  <script src="/js/ayuda.js"></script>
+  <script src="/js/ayuda.min.js"></script>
   <script>
+    const element = document.querySelector('#chart-pendientes');
+    const element1 = document.querySelector('#chart-asignadas');
+    const element2 = document.querySelector('#chart-resueltas');
+    const desde = document.getElementById('desde')
+    const hasta = document.getElementById('hasta')
     const cboC = document.getElementById('cbocar');
-
-    cboC.addEventListener('change', (e) => {
-      document.getElementById('refdoc').value = e.target.options[e.target.selectedIndex].value
-    })
-  </script>
-  <script>
-    const changeProgress = (element, texto, valor, progress) => {
-      element.style.width = `${progress}%`;
-      element.innerHTML = `<div class="tooltip" style="display: block;">${valor}
-        <span class="tooltiptext">
-          <p>${texto}</p>
-          <p>Total: ${valor}</p>
-          <p>Porcentaje: ${progress}%</p>
-        </span>
-      </div>`
-    };
-  </script>
-  <script>
     const options = {
-      colors: ['#f76707', '#74b816'],
+      colors: ['#4263eb', '#74b816', '#f76707'],
       chart: {
         locales: [{
           "name": "es",
@@ -435,6 +405,9 @@
       },
       series: [
         {
+          name: 'Desasignado',
+          data: <%- datos.serieD %>
+        },        {
           name: 'Adjudicado',
           data: <%- datos.serieA %>
         },
@@ -447,14 +420,7 @@
         type: 'datetime',
       }
     }
-
     const chart = new ApexCharts(document.querySelector("#chart-actuac"), options);
-    chart.render();   
-  </script>
-  <script>
-    const element = document.querySelector('#chart-pendientes');
-    const element1 = document.querySelector('#chart-asignadas');
-    const element2 = document.querySelector('#chart-resueltas');
 
     const chartPendientes = new EasyPieChart(element, {
       easing: 'easeOutElastic',
@@ -472,7 +438,7 @@
     const chartAdjudicadas = new EasyPieChart(element1, {
       easing: 'easeOutElastic',
       delay: 3000,
-      barColor: '#f76707',
+      barColor: '#74b816',
       trackColor: '#f2f3f4',
       scaleColor: false,
       lineWidth: 3,
@@ -485,7 +451,7 @@
     const chartResueltas = new EasyPieChart(element2, {
       easing: 'easeOutElastic',
       delay: 3000,
-      barColor: '#74b816',
+      barColor: '#f76707',
       trackColor: '#f2f3f4',
       scaleColor: false,
       lineWidth: 3,
@@ -495,23 +461,26 @@
         this.el.children[0].innerHTML = Math.round(percent * 100) / 100;
       }
     });
-  </script>
-  <script>
-    const desde = document.getElementById('desde')
-    const hasta = document.getElementById('hasta')
+    
+    cboC.addEventListener('change', (e) => {
+      document.getElementById('refdoc').value = e.target.options[e.target.selectedIndex].value
+    })
 
+    // inicializa chart
+    chart.render();   
+    
+    //proc
     const validate = () => {
       const desdeValue = desde.value
       const hastaValue = hasta.value
-
+      const cbocarValue = cboC.value
+      
       if (isNaN(Date.parse(desdeValue))) {
         setError(desde, 'Fecha requerida')
         setTimeout(function () {
           setSuccess(desde)
         }, 3000)
         return false
-      } else {
-        setSuccess(desde)
       }
       if (isNaN(Date.parse(hastaValue))) {
         setError(hasta, 'Fecha requerida')
@@ -519,13 +488,17 @@
           setSuccess(hasta)
         }, 3000)
         return false
-      } else {
-        setSuccess(hasta)
+      }
+      if (cbocarValue === '0') {
+        setError(cboC, 'Carga requerida')
+        setTimeout(function () {
+          setSuccess(cboC)
+        }, 3000)
+        return false
       }
 
       return true
     }
-
     const setSuccess = (element) => {
       const inputControl = element.parentElement;
       const errorDisplay = inputControl.querySelector('.invalid-feedback');
@@ -542,32 +515,6 @@
       element.classList.add('is-invalid');
       inputControl.classList.remove('is-valid');
     }
-  </script>
-  <script>
-    const Cargas = () => {
-      const xhr = new XMLHttpRequest();
-
-      xhr.onload = function () {
-        if (xhr.status === 200) {
-          const cargas = JSON.parse(xhr.response)
-          const cbo = document.getElementById('cbocar')
-
-          cargas.map((itm) => {
-            const option = document.createElement('option')
-            option.value = itm.REFCAR
-            option.text = itm.DESCAR
-
-            cbo.appendChild(option)
-          })
-
-          document.getElementById('refdoc').value = cbo.options[cbo.selectedIndex].value
-        }
-      };
-      xhr.open('POST', 'http://localhost:8000/api/cargas', true);
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-      xhr.send()
-    }
-    Cargas();
   </script>
 </body>
 

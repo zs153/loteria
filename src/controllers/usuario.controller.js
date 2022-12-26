@@ -6,8 +6,6 @@ import {
   arrEstadosUsuario,
   estadosUsuario,
   tiposMovimiento,
-  tiposRol,
-  tiposPerfil,
 } from '../public/js/enumeraciones'
 
 export const mainPage = async (req, res) => {
@@ -32,18 +30,11 @@ export const mainPage = async (req, res) => {
 }
 export const addPage = async (req, res) => {
   const user = req.user
-  const usuario = {
-    STAUSU: estadosUsuario.activo,
-    ROLUSU: tiposRol.usuario,
-    PERUSU: tiposPerfil.general,
-  }
   const filteredRol = arrTiposRol.filter(itm => itm.id <= user.rol)
 
   try {
     const result = await axios.post('http://localhost:8000/api/oficinas')
-
     const datos = {
-      usuario,
       oficinas: result.data,
       filteredRol,
       arrTiposPerfil,
@@ -111,21 +102,14 @@ export const insert = async (req, res) => {
   }
 
   try {
-    const result = await axios.post(
-      'http://localhost:8000/api/usuarios/insert',
-      {
-        usuario,
-        movimiento,
-      }
-    )
+    await axios.post("http://localhost:8000/api/usuarios/insert", {
+      usuario,
+      movimiento,
+    })
 
     res.redirect('/admin/usuarios')
   } catch (error) {
     let msg = 'No se ha podido crear el nuevo usuario.'
-
-    if (error.response.data.errorNum === 20100) {
-      msg = 'El usuario ya está registrado'
-    }
 
     res.render('admin/error400', {
       alerts: [{ msg }],
@@ -160,11 +144,6 @@ export const update = async (req, res) => {
   } catch (error) {
     let msg =
       'No se han podido modificar los datos del usuario. Verifique los datos introducidos'
-
-    if (error.response.data.errorNum === 20100) {
-      msg =
-        'El usuario ya está registrado. Verifique el userID y la contraseña.'
-    }
 
     res.render('admin/error400', {
       alerts: [{ msg }],

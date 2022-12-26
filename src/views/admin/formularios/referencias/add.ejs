@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Referencia</title>
+  <title>Referencias</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
@@ -23,7 +23,6 @@
               <div class="card">
                 <form id="form" action="/admin/formularios/referencias/insert" method="POST" onsubmit="return validate();">
                   <input type="hidden" name="iddocu" id="iddocu" value="<%- datos.formulario.IDDOCU %>">
-                  <input type="hidden" name="desref" id="desref" value="<%- datos.referencia.DESREF %>">
                   <div class="card-header">
                     <h3 class="card-title">Referencia</h3>
                   </div>
@@ -33,7 +32,7 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">NIF/NIE</label>
-                            <input type="text" name="nifref" id="nifref" class="form-control" style="text-transform: uppercase;" value="<%- datos.referencia.NIFREF %>" />
+                            <input type="text" name="nifref" id="nifref" class="form-control" style="text-transform: uppercase;" value="" autofocus/>
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -41,11 +40,9 @@
                       <div class="col-8">
                         <div class="mb-1">
                           <div class="form-label">Tipo</div>
-                          <select class="form-select" id="cbotip" name="tipref" value="<%- datos.referencia.TIPREF %>"
-                            autofocus>
-                            <option value="0">SELECCIONE UN TIPO</option>
+                          <select class="form-select" id="cbotip" name="tipref" value="<%- datos.referencia.TIPREF %>">
                             <% datos.tipos.map(element=> { %>
-                            <option value="<%- element.IDTIPO %>" <%- element.IDTIPO === datos.referencia.TIPREF ? " selected" :"" %>>
+                            <option value="<%- element.IDTIPO %>"<%- element.IDTIPO === datos.referencia.TIPREF ? " selected": "" %> >
                               <%- element.DESTIP %>
                             </option>
                             <% }) %>
@@ -53,11 +50,22 @@
                         </div>
                       </div>
                     </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="mb-1">
+                          <div class="input-control">
+                            <label class="form-label required">Descripción</label>
+                            <input type="text" name="desref" id="desref" class="form-control" value="<%- datos.referencia.DESREF %>" />
+                            <div class="invalid-feedback"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div class="card-footer text-end">
                     <div class="d-flex">
                       <a href="/admin/formularios/referencias/<%- datos.formulario.IDDOCU %>" class="btn btn-white">Cancelar</a>
-                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear referencia</button>
+                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear nueva referencia</button>
                     </div>
                   </div>
                 </form>
@@ -69,13 +77,17 @@
     </div>
     <%- include('../../../partials/footer') %>
   </div>
-  <script src="/js/ayuda.js"></script>
+  <script src="/js/ayuda.min.js"></script>
 
   <script>
     const nifref = document.getElementById('nifref')
+    const desref = document.getElementById('desref')
+    const cbotip = document.getElementById('cbotip')
 
     const validate = () => {
       const nifrefValue = nifref.value.trim().toUpperCase()
+      const desrefValue = desref.value.trim()
+      const cbotipValue = cbotip.value
 
       if (nifrefValue === '') {
         setError(nifref, 'NIF/NIE requerido')
@@ -123,7 +135,20 @@
           return false
         }
       }
-
+      if (cbotipValue === '0') {
+        setError(cbotip, 'Tipo requerido')
+        setTimeout(function () {
+          setSuccess(cbotip)
+        }, 3000)
+        return false
+      }
+      if (desrefValue === '') {
+        setError(desref, 'Descripción requerida')
+        setTimeout(function () {
+          setSuccess(desref)
+        }, 3000)
+        return false
+      }
       return true
     }
     const setSuccess = (element) => {

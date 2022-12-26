@@ -42,7 +42,7 @@ module.exports = function (grunt) {
   // Default task.
   grunt.registerTask('concat-js', ['concat:js']);
   grunt.registerTask('default-js', ['uglify:js']);
-  // grunt.registerTask('default-css', ['concat:css', 'uglify:css']);
+  grunt.registerTask('default-css', ['concat:css', 'uglify:css']);
   grunt.registerTask('concat-css', ['concat:css']);
 
 };

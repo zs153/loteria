@@ -10,7 +10,7 @@ export const mainPage = async (req, res) => {
   const user = req.user;
   const formulario = {
     LIQDOC: user.userID,
-    TIPVIS: estadosDocumento.pendiente + estadosDocumento.asignado,
+    STADOC: estadosDocumento.pendiente + estadosDocumento.asignado,
   };
 
   try {
@@ -40,11 +40,10 @@ export const addPage = async (req, res) => {
     EJEDOC: fecha.getFullYear() - 1,
     OFIDOC: user.oficina,
     FUNDOC: user.userID,
-    STADOC: estadosDocumento.pendiente,
   };
 
   try {
-    const tipos = await axios.post("http://localhost:8000/api/tipos")
+    const tipos = await axios.post("http://localhost:8000/api/tipos", {})
     const oficinas = await axios.post("http://localhost:8000/api/oficinas")
     const datos = {
       formulario,
@@ -104,7 +103,7 @@ export const referenciasPage = async (req, res) => {
     const ret = await axios.post("http://localhost:8000/api/formulario", {
       formulario,
     })
-    const result = await axios.post("http://localhost:8000/api/formularios/referencias", {
+    const referencias = await axios.post("http://localhost:8000/api/formularios/referencias", {
       formulario,
     })
 
@@ -116,7 +115,7 @@ export const referenciasPage = async (req, res) => {
     const datos = {
       formulario,
       formularioData,
-      referencias: JSON.stringify(result.data),
+      referencias: JSON.stringify(referencias.data),
     }
 
     res.render("admin/formularios/referencias", { user, datos });
@@ -140,7 +139,6 @@ export const referenciasAddPage = async (req, res) => {
       formulario,
     });
     const referencia = {
-      NIFREF: '',
       DESREF: result.data.REFDOC,
       TIPREF: result.data.TIPDOC,
     }
@@ -171,7 +169,7 @@ export const referenciasEditPage = async (req, res) => {
 
   try {
     const tipos = await axios.post("http://localhost:8000/api/tipos", {})
-    const result = await axios.post("http://localhost:8000/api/formularios/referencia", {
+    const result = await axios.post("http://localhost:8000/api/referencia", {
       referencia,
     });
     const datos = {
@@ -199,23 +197,23 @@ export const smssPage = async (req, res) => {
   };
 
   try {
-    const ret = await axios.post("http://localhost:8000/api/formulario", {
+    const result = await axios.post("http://localhost:8000/api/formulario", {
       formulario,
     })
-    const result = await axios.post("http://localhost:8000/api/formularios/smss", {
+    const smss = await axios.post("http://localhost:8000/api/formularios/smss", {
       formulario,
     })
 
     const formularioData = {
-      NIFCON: ret.data.NIFCON,
-      NOMCON: ret.data.NOMCON,
-      EJEDOC: ret.data.EJEDOC,
+      NIFCON: result.data.NIFCON,
+      NOMCON: result.data.NOMCON,
+      EJEDOC: result.data.EJEDOC,
     }
     const datos = {
       formulario,
       formularioData,
-      smss: JSON.stringify(result.data),
-      estadosSms: JSON.stringify(estadosSms),
+      smss: JSON.stringify(smss.data),
+      estadosSms,
     }
 
     res.render("admin/formularios/smss", { user, datos });
@@ -238,9 +236,7 @@ export const smssAddPage = async (req, res) => {
       formulario,
     });
     const sms = {
-      TEXSMS: '',
       MOVSMS: result.data.MOVCON,
-      STASMS: estadosSms.pendiente,
     }
     const datos = {
       formulario,
@@ -267,7 +263,7 @@ export const smssEditPage = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8000/api/formularios/sms", {
+    const result = await axios.post("http://localhost:8000/api/sms", {
       sms,
     });
     const datos = {
@@ -279,6 +275,41 @@ export const smssEditPage = async (req, res) => {
   } catch (error) {
     const msg =
       "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+export const smssReadonlyPage = async (req, res) => {
+  const user = req.user;
+  const formulario = {
+    IDDOCU: req.params.iddoc,
+  };
+
+  try {
+    const ret = await axios.post("http://localhost:8000/api/formulario", {
+      formulario,
+    })
+    const smss = await axios.post("http://localhost:8000/api/formularios/smss", {
+      formulario,
+    })
+
+    const formularioData = {
+      NIFCON: ret.data.NIFCON,
+      NOMCON: ret.data.NOMCON,
+      EJEDOC: ret.data.EJEDOC,
+    }
+    const datos = {
+      formulario,
+      formularioData,
+      smss: smss.data,
+      estadosSms,
+    }
+
+    res.render("admin/formularios/smss/readonly", { user, datos });
+  } catch (error) {
+    const msg = "No se ha podido acceder a los datos de la aplicación.";
 
     res.render("admin/error400", {
       alerts: [{ msg }],
@@ -301,11 +332,7 @@ export const ejercicioPage = async (req, res) => {
     })
 
     formulario = result.data
-    formulario.FECISO = fecha.toISOString().substring(0, 10)
     formulario.EJEDOC = fecha.getFullYear()
-    formulario.FUNDOC = user.userID
-    formulario.LIQDOC = user.userID
-    formulario.STADOC = estadosDocumento.asignado
 
     const datos = {
       formulario,
@@ -326,7 +353,7 @@ export const ejercicioPage = async (req, res) => {
 // procs formulario
 export const insert = async (req, res) => {
   const user = req.user;
-  const referencia = "Z" + randomString(10, "1234567890YMGS");
+  const referencia = "F" + randomString(10, "1234567890YMGS");
   const formulario = {
     FECDOC: req.body.fecdoc,
     NIFCON: req.body.nifcon.toUpperCase(),
@@ -340,8 +367,8 @@ export const insert = async (req, res) => {
     OFIDOC: req.body.ofidoc,
     OBSDOC: req.body.obsdoc,
     FUNDOC: req.body.fundoc,
-    LIQDOC: "PEND",
-    STADOC: estadosDocumento.pendiente,
+    LIQDOC: user.userID,
+    STADOC: estadosDocumento.asignado,
   };
   const movimiento = {
     USUMOV: user.id,
@@ -523,8 +550,7 @@ export const desasignar = async (req, res) => {
       formulario,
     });
 
-    if (result.data.STADOC === estadosDocumento.asignado ||
-      result.data.STADOC === estadosDocumento.resuelto) {
+    if (result.data.STADOC === estadosDocumento.asignado) {
       formulario = {
         IDDOCU: result.data.IDDOCU,
         LIQDOC: "PEND",
@@ -554,26 +580,40 @@ export const desasignar = async (req, res) => {
     });
   }
 }
-export const verTodo = async (req, res) => {
+export const ejercicio = async (req, res) => {
   const user = req.user;
+  const referencia = "R" + randomString(10, "1234567890YMGS");
+  const fecha = new Date()
   const formulario = {
+    FECDOC: fecha.toISOString().slice(0, 10),
+    NIFCON: req.body.nifcon,
+    NOMCON: req.body.nomcon,
+    EMACON: req.body.emacon,
+    TELCON: req.body.telcon,
+    MOVCON: req.body.movcon,
+    REFDOC: referencia,
+    TIPDOC: req.body.tipdoc,
+    EJEDOC: req.body.ejedoc,
+    OFIDOC: user.oficina,
+    OBSDOC: req.body.obsdoc,
+    FUNDOC: user.userID,
     LIQDOC: user.userID,
-    TIPVIS: estadosDocumento.resuelto,
+    STADOC: estadosDocumento.asignado,
+  };
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.nuevoEjercicioFormularios,
   };
 
   try {
-    const result = await axios.post("http://localhost:8000/api/formularios", {
+    await axios.post("http://localhost:8000/api/formularios/insert", {
       formulario,
+      movimiento,
     });
-    const datos = {
-      formularios: JSON.stringify(result.data),
-      estadosDocumento: JSON.stringify(estadosDocumento),
-      verTodo: true,
-    };
 
-    res.render("admin/formularios", { user, datos });
+    res.redirect("/admin/formularios");
   } catch (error) {
-    const msg = "No se ha podido acceder a los datos de la aplicación.";
+    const msg = "No se ha podido insertar el nuevo ejercicio.";
 
     res.render("admin/error400", {
       alerts: [{ msg }],
@@ -623,6 +663,7 @@ export const updateReferencia = async (req, res) => {
   };
   const referencia = {
     IDREFE: req.body.idrefe,
+    FECREF: fecha.toISOString().slice(0, 10),
     NIFREF: req.body.nifref.toUpperCase(),
     TIPREF: req.body.tipref,
   };
@@ -664,7 +705,7 @@ export const removeReferencia = async (req, res) => {
       referencia,
       movimiento,
     });
-    console.log(formulario)
+
     res.redirect(`/admin/formularios/referencias/${formulario.IDDOCU}`);
   } catch (error) {
     const msg = "No se ha podido borrar el relacionado.";
@@ -678,10 +719,12 @@ export const removeReferencia = async (req, res) => {
 // sms
 export const insertSms = async (req, res) => {
   const user = req.user;
+  const fecha = new Date()
   const formulario = {
     IDDOCU: req.body.iddocu,
   };
   const sms = {
+    FECSMS: fecha.toISOString().substring(0, 10),
     TEXSMS: req.body.texsms,
     MOVSMS: req.body.movsms,
     STASMS: estadosSms.pendiente,
@@ -709,11 +752,13 @@ export const insertSms = async (req, res) => {
 }
 export const updateSms = async (req, res) => {
   const user = req.user;
+  const fecha = new Date()
   const formulario = {
     IDDOCU: req.body.iddocu,
   }
   const sms = {
     IDSMSS: req.body.idsmss,
+    FECSMS: fecha.toISOString().substring(0, 10),
     TEXSMS: req.body.texsms,
     MOVSMS: req.body.movsms,
   };
@@ -766,41 +811,27 @@ export const removeSms = async (req, res) => {
   }
 }
 
-// procs otros
-export const ejercicio = async (req, res) => {
+// otros
+export const verTodo = async (req, res) => {
   const user = req.user;
-  const referencia = "R" + randomString(10, "1234567890YMGS");
-  const fecha = new Date()
   const formulario = {
-    FECDOC: fecha.toISOString().slice(0, 10),
-    NIFCON: req.body.nifcon,
-    NOMCON: req.body.nomcon,
-    EMACON: req.body.emacon,
-    TELCON: req.body.telcon,
-    MOVCON: req.body.movcon,
-    REFDOC: referencia,
-    TIPDOC: req.body.tipdoc,
-    EJEDOC: req.body.ejedoc,
-    OFIDOC: user.oficina,
-    OBSDOC: req.body.obsdoc,
-    FUNDOC: user.userID,
     LIQDOC: user.userID,
-    STADOC: estadosDocumento.asignado,
-  };
-  const movimiento = {
-    USUMOV: user.id,
-    TIPMOV: tiposMovimiento.nuevoEjercicioFormularios,
+    STADOC: estadosDocumento.resuelto,
   };
 
   try {
-    await axios.post("http://localhost:8000/api/formularios/insert", {
+    const result = await axios.post("http://localhost:8000/api/formularios", {
       formulario,
-      movimiento,
     });
+    const datos = {
+      formularios: JSON.stringify(result.data),
+      estadosDocumento: JSON.stringify(estadosDocumento),
+      verTodo: true,
+    };
 
-    res.redirect("/admin/formularios");
+    res.render("admin/formularios", { user, datos });
   } catch (error) {
-    const msg = "No se ha podido insertar el nuevo ejercicio.";
+    const msg = "No se ha podido acceder a los datos de la aplicación.";
 
     res.render("admin/error400", {
       alerts: [{ msg }],
@@ -809,7 +840,7 @@ export const ejercicio = async (req, res) => {
 }
 
 // helpers
-function randomString(long, chars) {
+const randomString = (long, chars) => {
   let result = "";
 
   for (let i = long; i > 0; --i) {

@@ -14,7 +14,7 @@
 <body class="antialiased">
   <div class="wrapper">
     <%- include('../../partials/header') %>
-    <%- include('../../partials/navbar', {opcion: 'formularioS'}) %>
+    <%- include('../../partials/navbar', {opcion: 'FORMULARIO'}) %>
     <div class="page-wrapper">
       <div class="page-body">
         <div class="container-xl">
@@ -51,8 +51,7 @@
                       <div class="col-4">
                         <div class="mb-1">
                           <label class="form-label">Correo electrónico</label>
-                          <input type="text" name="emacon" id="emacon" class="form-control"
-                            value="<%- datos.formulario.EMACON %>" readonly />
+                          <input type="text" name="emacon" id="emacon" class="form-control" value="<%- datos.formulario.EMACON %>" readonly />
                         </div>
                       </div>
                     </div>
@@ -60,10 +59,9 @@
                       <div class="col-6">
                         <div class="mb-1">
                           <div class="form-label">Tipo</div>
-                          <select class="form-select" id="cbotip" name="tipdoc" value="<%- datos.formulario.TIPDOC %>" autofocus>
-                            <option value="0">SELECCIONE UN TIPO</option>
+                          <select class="form-select" id="cbotip" name="tipdoc" value="<%- datos.formulario.TIPDOC %>" readonly>
                             <% datos.tipos.map(element=> { %>
-                              <option value="<%- element.IDTIPO %>" <%- element.IDTIPO === datos.formulario.TIPDOC ? " selected" :"" %>>
+                              <option value="<%- element.IDTIPO %>" <%- element.IDTIPO === datos.formulario.TIPDOC ? " selected" :" disabled" %>>
                                 <%- element.DESTIP %>
                               </option>
                             <% }) %>
@@ -74,7 +72,7 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">Ejercicio</label>
-                            <input type="number" name="ejedoc" id="ejedoc" class="form-control" value="<%- datos.formulario.EJEDOC %>" />
+                            <input type="number" name="ejedoc" id="ejedoc" class="form-control" value="<%- datos.formulario.EJEDOC %>" autofocus />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -107,7 +105,7 @@
                   <div class="card-footer text-end">
                     <div class="d-flex">
                       <a href="/admin/formularios" class="btn btn-white">Cancelar</a>
-                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear ejercicio</button>
+                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear nuevo ejercicio</button>
                     </div>
                   </div>
                 </form>
@@ -119,7 +117,7 @@
     </div>
     <%- include('../../partials/footer') %>
   </div>
-  <script src="/js/ayuda.js"></script>
+  <script src="/js/ayuda.min.js"></script>
   <script>
     const ejedoc = document.getElementById('ejedoc')
 

@@ -21,18 +21,9 @@ export const mainPage = async (req, res) => {
 };
 export const addPage = async (req, res) => {
   const user = req.user;
-  const tipo = {
-    IDTIPO: 0,
-    DESTIP: "",
-    AYUTIP: "",
-  };
 
   try {
-    const datos = {
-      tipo,
-    };
-
-    res.render("admin/tipos/add", { user, datos });
+    res.render("admin/tipos/add", { user });
   } catch (error) {
     const msg = "No se ha podido acceder a los datos de la aplicación.";
 
@@ -65,7 +56,7 @@ export const editPage = async (req, res) => {
     });
   }
 };
-export const insertTipo = async (req, res) => {
+export const insert = async (req, res) => {
   const user = req.user;
   const tipo = {
     DESTIP: req.body.destip.toUpperCase(),
@@ -73,7 +64,7 @@ export const insertTipo = async (req, res) => {
   };
   const movimiento = {
     USUMOV: user.id,
-    TIPMOV: tiposMovimiento.crearOficina,
+    TIPMOV: tiposMovimiento.crearTipo,
   };
 
   try {
@@ -86,25 +77,21 @@ export const insertTipo = async (req, res) => {
   } catch (error) {
     let msg = "No se ha podido crear el tipo.";
 
-    if (error.response.data.errorNum === 20100) {
-      msg = "El tipo ya existe.";
-    }
-
     res.render("admin/error400", {
       alerts: [{ msg }],
     });
   }
 };
-export const updateTipo = async (req, res) => {
+export const update = async (req, res) => {
   const user = req.user;
   const tipo = {
     IDTIPO: req.body.idtipo,
-    DESTIP: req.body.destip,
+    DESTIP: req.body.destip.toUpperCase(),
     AYUTIP: req.body.ayutip,
   };
   const movimiento = {
     USUMOV: user.id,
-    TIPMOV: tiposMovimiento.modificarOficina,
+    TIPMOV: tiposMovimiento.modificarTipo,
   };
 
   try {
@@ -118,23 +105,19 @@ export const updateTipo = async (req, res) => {
     let msg =
       "No se ha podido actualizar el tipo. Verifique los datos introducidos";
 
-    if (error.response.data.errorNum === 20100) {
-      msg = "El tipo ya existe";
-    }
-
     res.render("admin/error400", {
       alerts: [{ msg }],
     });
   }
 };
-export const deleteTipo = async (req, res) => {
+export const remove = async (req, res) => {
   const user = req.user;
   const tipo = {
     IDTIPO: req.body.idtipo,
   };
   const movimiento = {
     USUMOV: user.id,
-    TIPMOV: tiposMovimiento.modificarOficina,
+    TIPMOV: tiposMovimiento.borrarTipo,
   };
 
   try {
