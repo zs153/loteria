@@ -146,6 +146,7 @@ const insertSmsFromRec = (req) => {
     iddocu: req.body.formulario.IDDOCU,
   }
   const sms = {
+    fecsms: req.body.sms.FECSMS,
     texsms: req.body.sms.TEXSMS,
     movsms: req.body.sms.MOVSMS,
     stasms: req.body.sms.STASMS,
@@ -160,6 +161,7 @@ const insertSmsFromRec = (req) => {
 const updateSmsFromRec = (req) => {
   const sms = {
     idsmss: req.body.sms.IDSMSS,
+    fecsms: req.body.sms.FECSMS,
     texsms: req.body.sms.TEXSMS,
     movsms: req.body.sms.MOVSMS,
   }
@@ -293,21 +295,6 @@ export const resolver = async (req, res) => {
 }
 
 // referencia
-export const referencia = async (req, res) => {
-  const context = req.body.referencia
-
-  try {
-    const result = await DAL.findReferencia(context)
-
-    if (result.length === 1) {
-      return res.status(200).json(result[0])
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
 export const referencias = async (req, res) => {
   const context = req.body.formulario
 
@@ -364,21 +351,6 @@ export const borrarReferencia = async (req, res) => {
 }
 
 // sms
-export const sms = async (req, res) => {
-  const context = req.body.sms
-
-  try {
-    const result = await DAL.findSms(context)
-
-    if (result.length === 1) {
-      return res.status(200).json(result[0])
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
 export const smss = async (req, res) => {
   const context = req.body.formulario
 

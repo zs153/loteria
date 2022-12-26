@@ -4,10 +4,13 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { puerto } from '../config/settings'
+// rutas
 import apiOficinaRouter from '../routes/oficina.router'
 import apiUsuarioRouter from '../routes/usuario.router'
 import apiFormularioRouter from '../routes/formulario.router'
 import apiTipoRouter from '../routes/tipo.router'
+import apiReferenciaRouter from '../routes/referencia.router'
+import apiSmsRouter from '../routes/sms.router'
 import apiGenteRouter from '../routes/gente.router'
 import apiCargaRouter from '../routes/carga.router'
 import apiEstadisticaRouter from '../routes/estadistica.router'
@@ -31,6 +34,8 @@ function initialize() {
     app.use('/api', apiUsuarioRouter)
     app.use('/api', apiFormularioRouter)
     app.use('/api', apiTipoRouter)
+    app.use('/api', apiReferenciaRouter)
+    app.use('/api', apiSmsRouter)
     app.use('/api', apiGenteRouter)
     app.use('/api', apiCargaRouter)
     app.use('/api', apiEstadisticaRouter)
@@ -39,7 +44,7 @@ function initialize() {
     httpServer
       .listen(puerto)
       .on('listening', () => {
-        console.log(`Server listening on port: ${puerto} `)
+        console.log(`Web server listening on port: ${puerto} `)
 
         resolve()
       })
@@ -65,14 +70,3 @@ function close() {
 }
 
 module.exports.close = close
-
-const iso8601RegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/
-
-function reviveJson(key, value) {
-  // revive ISO 8601 date strings to instances of Date
-  if (typeof value === 'string' && iso8601RegExp.test(value)) {
-    return new Date(value)
-  } else {
-    return value
-  }
-}

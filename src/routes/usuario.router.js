@@ -5,10 +5,9 @@ import {
   insert,
   update,
   remove,
-  registro,
+  cambio,
+  olvido,
   perfil,
-  cambioPassword,
-  olvidoPassword,
 } from "../controllers/usuario.controller";
 
 const apiUsuarioRouter = express.Router();
@@ -19,11 +18,8 @@ apiUsuarioRouter.post("/usuarios", usuarios);
 apiUsuarioRouter.post("/usuarios/insert", insert);
 apiUsuarioRouter.post("/usuarios/update", update);
 apiUsuarioRouter.post("/usuarios/delete", remove);
-apiUsuarioRouter.post("/usuarios/updatePerfil", perfil);
-
+apiUsuarioRouter.post("/usuarios/cambio", cambio);
+apiUsuarioRouter.post("/usuarios/forgot", olvido);
 apiUsuarioRouter.post("/usuarios/perfil", perfil);
-apiUsuarioRouter.post("/usuarios/cambio", cambioPassword);
-apiUsuarioRouter.post("/usuarios/registro", registro);
-apiUsuarioRouter.post("/usuarios/forgot", olvidoPassword);
 
 export default apiUsuarioRouter;

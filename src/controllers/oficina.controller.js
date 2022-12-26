@@ -54,7 +54,7 @@ export const oficina = async (req, res) => {
 }
 export const oficinas = async (req, res) => {
   const bind = {}
-  
+
   try {
     const result = await DAL.find(bind)
 
@@ -67,7 +67,6 @@ export const oficinas = async (req, res) => {
     res.status(500).end()
   }
 }
-
 export const crear = async (req, res) => {
   try {
     const result = await DAL.insert(insertFromRec(req))

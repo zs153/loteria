@@ -1,18 +1,17 @@
 import * as DAL from "../models/gente.model";
 
-export const gentes = async (req, res) => {
-  const nifgen = req.body.nifgen;
-
-  const gente = {
-    nifgen,
+export const gente = async (req, res) => {
+  let context = {
+    nifgen: req.body.NIFGEN,
   }
 
-  if (nifgen.length > 9) {
-    gente.disgen = nifgen.slice(-1);
+  if (context.nifgen.length > 9) {
+    context.disgen = context.nifgen.slice(-1);
+    context.nifgen = context.nifgen.slice(0, 9);
   }
 
   try {
-    const rows = await DAL.find(gente);
+    const rows = await DAL.find(context);
 
     if (rows.length === 1) {
       return res.status(200).json(rows[0]);

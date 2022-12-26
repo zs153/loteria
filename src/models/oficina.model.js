@@ -37,8 +37,11 @@ export const find = async (context) => {
   if (context.IDOFIC) {
     binds.idofic = context.IDOFIC
     query += `WHERE idofic = :idofic`
+  } else if (context.CODOFI) {
+    binds.codofi = context.CODOFI
+    query += `WHERE codofi = :codofi`
   }
-  
+
   const result = await simpleExecute(query, binds)
   return result.rows
 }

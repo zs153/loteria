@@ -1,18 +1,17 @@
 import oracledb from 'oracledb'
-import { sms } from '../controllers/formulario.controller.js'
 import { simpleExecute } from '../services/database.js'
 
 const baseQuery = `SELECT 
-    oo.desofi,
-    tt.destip,
-    dd.*,
-    TO_CHAR(dd.fecdoc, 'DD/MM/YYYY') STRFEC
+  oo.desofi,
+  tt.destip,
+  dd.*,
+  TO_CHAR(dd.fecdoc, 'DD/MM/YYYY') STRFEC
 FROM documentos dd
 INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc
 INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc
 `
 const insertSql = `BEGIN FORMULARIOS_PKG.INSERTFORMULARIO(
-  to_date(:fecdoc,'YYYY-MM-DD'),
+  TO_DATE(:fecdoc,'YYYY-MM-DD'),
   :nifcon,
   :nomcon,
   :emacon,
@@ -72,16 +71,18 @@ const resolverConSmsSql = `BEGIN FORMULARIOS_PKG.RESOLVERCONSMSFORMULARIO(
   :tipmov 
 ); END;
 `
-const baseReferenciasQuery = `SELECT 
+const referenciasQuery = `SELECT 
   rr.*,
   tt.destip,
   TO_CHAR(rr.fecref, 'DD/MM/YYYY') AS STRFEC
 FROM referencias rr
+INNER JOIN referenciasdocumento rd ON rd.idrefe = rr.idrefe
 INNER JOIN tipos tt ON tt.idtipo = rr.tipref
+WHERE rd.iddocu = :iddocu
 `
 const insertReferenciaSql = `BEGIN FORMULARIOS_PKG.INSERTREFERENCIA(
   :iddocu,
-  to_date(:fecref,'YYYY-MM-DD'),
+  TO_DATE(:fecref,'YYYY-MM-DD'),
   :nifref,
   :desref,
   :tipref,
@@ -104,13 +105,16 @@ const deleteReferenciaSql = `BEGIN FORMULARIOS_PKG.DELETEREFERENCIA(
   :tipmov 
 ); END;
 `
-const baseSmssQuery = `SELECT 
+const smssQuery = `SELECT 
   ss.*,
-  TO_CHAR(ss.fecsms, 'DD/MM/YYYY') AS STRFEC
+  TO_CHAR(ss.fecsms, 'DD/MM/YYYY') "STRFEC"
 FROM smss ss
+INNER JOIN smssdocumento sd ON sd.idsmss = ss.idsmss
+WHERE sd.iddocu = :iddocu
 `
 const insertSmsSql = `BEGIN FORMULARIOS_PKG.INSERTSMS(
   :iddocu,
+  TO_DATE(:fecsms, 'YYYY-MM-DD'),
   :texsms,
   :movsms,
   :stasms,
@@ -121,6 +125,7 @@ const insertSmsSql = `BEGIN FORMULARIOS_PKG.INSERTSMS(
 `
 const updateSmsSql = `BEGIN FORMULARIOS_PKG.UPDATESMS(
   :idsmss,
+  TO_DATE(:fecsms, 'YYYY-MM-DD'),
   :texsms,
   :movsms,
   :usumov,
@@ -147,26 +152,13 @@ export const find = async (context) => {
     query += `WHERE dd.refdoc = :refdoc`
   } else if (context.LIQDOC) {
     binds.liqdoc = context.LIQDOC
-    if (context.TIPVIS === 1) {
-      // mostrar asignados al liquidador y todos los pendientes
-      query += `WHERE dd.liqdoc = :liqdoc
-          AND BITAND(dd.stadoc,1) > 0
-        UNION ALL
-        SELECT
-          oo.desofi,
-          tt.destip,
-          dd.*,
-          TO_CHAR(dd.fecdoc, 'DD/MM/YYYY') STRFEC
-        FROM documentos dd
-        INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc
-        INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc
-        WHERE dd.stadoc = 0
-      `
+    binds.stadoc = context.STADOC
+    if (context.STADOC === 1) {
+      query += `WHERE (dd.liqdoc = :liqdoc AND dd.stadoc = :stadoc) OR dd.stadoc = 0
+      ORDER BY dd.stadoc DESC`
     } else {
-      // mostrar los resueltos por el liquidador
       query += `WHERE dd.liqdoc = :liqdoc 
-        AND BITAND(dd.stadoc,2) > 0
-      `
+        AND dd.stadoc = :stadoc`
     }
   }
 
@@ -262,19 +254,13 @@ export const resolver = async (bind) => {
 
 // referencia
 export const findReferencia = async (context) => {
-  let query = baseReferenciasQuery
+  let query = referenciasQuery
   let binds = {}
 
-  if (context.IDREFE) {
-    binds.idrefe = context.IDREFE
-    query += `WHERE rr.idrefe = :idrefe`
-  } else if (context.IDDOCU) {
-    binds.iddocu = context.IDDOCU
-    query += `INNER JOIN referenciasdocumento rd ON rd.idrefe = rr.idrefe    
-      WHERE rd.iddocu = :iddocu`
-  }
-
+  console.log(query, binds)
+  binds.iddocu = context.IDDOCU
   const result = await simpleExecute(query, binds)
+
   return result.rows
 }
 export const insertReferencia = async (bind) => {
@@ -322,19 +308,12 @@ export const removeReferencia = async (bind) => {
 
 // sms
 export const findSms = async (context) => {
-  let query = baseSmssQuery
+  let query = smssQuery
   let binds = {}
 
-  if (context.IDSMSS) {
-    binds.idsmss = context.IDSMSS
-    query += `WHERE ss.idsmss = :idsmss`
-  } else if (context.IDDOCU) {
-    binds.iddocu = context.IDDOCU
-    query += `INNER JOIN smssdocumento sd ON sd.idsmss = ss.idsmss
-      WHERE sd.iddocu = :iddocu`
-  }
-
+  binds.iddocu = context.IDDOCU
   const result = await simpleExecute(query, binds)
+
   return result.rows
 }
 export const insertSms = async (bind) => {
@@ -342,6 +321,7 @@ export const insertSms = async (bind) => {
     dir: oracledb.BIND_OUT,
     type: oracledb.NUMBER,
   }
+
   console.log(insertSmsSql, bind)
   try {
     const result = await simpleExecute(insertSmsSql, bind)

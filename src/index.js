@@ -25,7 +25,7 @@ async function startup() {
     console.log('Initializing web server module')
 
     await webServer.initialize().then(
-      console.log('Web server inicializado')
+      console.log('Servidor web inicializado')
     )
   } catch (err) {
     console.error(err)

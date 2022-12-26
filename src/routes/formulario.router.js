@@ -11,9 +11,7 @@ import {
   crearReferencia,
   borrarReferencia,
   referencias,
-  referencia,
   modificarReferencia,
-  sms,
   smss,
   crearSms,
   modificarSms,
@@ -33,14 +31,12 @@ apiFormularioRouter.post('/formularios/unasign', desasignar)
 apiFormularioRouter.post('/formularios/resolver', resolver)
 
 // referencia
-apiFormularioRouter.post('/formularios/referencia', referencia)
 apiFormularioRouter.post('/formularios/referencias', referencias)
 apiFormularioRouter.post('/formularios/referencias/insert', crearReferencia)
 apiFormularioRouter.post('/formularios/referencias/update', modificarReferencia)
 apiFormularioRouter.post('/formularios/referencias/delete', borrarReferencia)
 
 // sms
-apiFormularioRouter.post('/formularios/sms', sms)
 apiFormularioRouter.post('/formularios/smss', smss)
 apiFormularioRouter.post('/formularios/smss/insert', crearSms)
 apiFormularioRouter.post('/formularios/smss/update', modificarSms)

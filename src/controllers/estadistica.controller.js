@@ -4,29 +4,41 @@ const situacionFromRec = (req) => {
   const formulario = {
     refdoc: req.body.formulario.REFDOC,
   }
+  const tipos = {
+    pendoc: req.body.tipos.PENDOC,
+    asidoc: req.body.tipos.ASIDOC,
+    resdoc: req.body.tipos.RESDOC,
+  }
 
-  return Object.assign(formulario)
+  return Object.assign(formulario, tipos)
 }
 const oficinasFromRec = (req) => {
   const carga = {
     refcar: req.body.carga.REFCAR,
   }
+  const tipos = {
+    pendoc: req.body.tipos.PENDOC,
+    asidoc: req.body.tipos.ASIDOC,
+    resdoc: req.body.tipos.RESDOC,
+  }
 
-  return carga
+  return Object.assign(carga, tipos)
 }
 const actuacionFromRec = (req) => {
-  const periodo = {
-    desfec: req.body.periodo.DESDE,
-    hasfec: req.body.periodo.HASTA,
-  }
   const formulario = {
     refdoc: req.body.formulario.REFDOC,
   }
-  const tipos = {
-    tipoAsign: req.body.tiposMovimiento.asignarFormulario,
-    tipoResol: req.body.tiposMovimiento.resolverFormulario,
+  const periodo = {
+    desde: req.body.periodo.DESDE,
+    hasta: req.body.periodo.HASTA,
   }
-  return Object.assign(periodo, formulario, tipos)
+  const tipos = {
+    asidoc: req.body.tipos.ASIDOC,
+    resdoc: req.body.tipos.RESDOC,
+    desdoc: req.body.tipos.DESDOC,
+  }
+
+  return Object.assign(formulario, periodo, tipos)
 }
 
 export const estadisticasSituacion = async (req, res) => {
@@ -65,6 +77,7 @@ export const estadisticasActuacion = async (req, res) => {
       res.status(404).end()
     }
   } catch (err) {
+    console.log(err)
     res.status(500).end()
   }
 }

@@ -1,11 +1,11 @@
 import express from "express";
 import {
-  gentes,
+  gente,
 } from "../controllers/gente.controller";
 
 const apiGenteRouter = express.Router();
 
 // tipos
-apiGenteRouter.post("/gentes", gentes);
+apiGenteRouter.post("/gente", gente);
 
 export default apiGenteRouter;

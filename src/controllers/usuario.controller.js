@@ -49,28 +49,6 @@ const deleteFromRec = (req) => {
 
   return Object.assign(usuario, movimiento)
 }
-const registroFromRec = (req) => {
-  const usuario = {
-    nomusu: req.body.usuario.NOMUSU,
-    ofiusu: req.body.usuario.OFIUSU,
-    rolusu: req.body.usuario.ROLUSU,
-    userid: req.body.usuario.USERID,
-    emausu: req.body.usuario.EMAUSU,
-    perusu: req.body.usuario.PERUSU,
-    telusu: req.body.usuario.TELUSU,
-    stausu: req.body.usuario.STAUSU,
-    pwdusu: req.body.usuario.PWDUSU,
-    tipmov: req.body.usuario.TIPMOV,
-  }
-  const movimiento = {
-    tipmov: req.body.movimiento.TIPMOV,
-  }
-  const passwd = {
-    saltus: req.body.passwd.SALTUS,
-  }
-
-  return Object.assign(usuario, movimiento, passwd)
-}
 const cambioFromRec = (req) => {
   const cambio = {
     idusua: req.body.usuario.IDUSUA,
@@ -87,16 +65,17 @@ const olvidoFromRec = (req) => {
   const usuario = {
     emausu: req.body.usuario.EMAUSU,
     pwdusu: req.body.usuario.PWDUSU,
+    saltus: req.body.usuario.SALTUS,
   }
   const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
-    saltus: req.body.movimiento.SALTUS,
   }
 
   return Object.assign(usuario, movimiento)
 }
 const perfilFromRec = (req) => {
-  const perfil = {
+  const usuario = {
     idusua: req.body.usuario.IDUSUA,
     nomusu: req.body.usuario.NOMUSU,
     emausu: req.body.usuario.EMAUSU,
@@ -107,7 +86,7 @@ const perfilFromRec = (req) => {
     tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(perfil, movimiento)
+  return Object.assign(usuario, movimiento)
 }
 
 export const usuario = async (req, res) => {
@@ -126,8 +105,10 @@ export const usuario = async (req, res) => {
   }
 }
 export const usuarios = async (req, res) => {
+  const context = req.body
+
   try {
-    const rows = await DAL.find({})
+    const rows = await DAL.find(context)
 
     res.status(200).json(rows)
   } catch (err) {
@@ -174,20 +155,7 @@ export const remove = async (req, res) => {
     res.status(500).end()
   }
 }
-export const registro = async (req, res) => {
-  try {
-    const result = await DAL.register(registroFromRec(req))
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(403).end()
-  }
-}
-export const cambioPassword = async (req, res) => {
+export const cambio = async (req, res) => {
   try {
     const result = await DAL.change(cambioFromRec(req))
 
@@ -200,7 +168,7 @@ export const cambioPassword = async (req, res) => {
     res.status(500).end()
   }
 }
-export const olvidoPassword = async (req, res) => {
+export const olvido = async (req, res) => {
   try {
     const result = await DAL.forgot(olvidoFromRec(req))
 

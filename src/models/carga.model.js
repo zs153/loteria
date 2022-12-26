@@ -16,22 +16,6 @@ const insertSql = `BEGIN FORMULARIOS_PKG.INSERTCARGA(
   :idcarg
 ); END;
 `;
-const updateSql = `BEGIN FORMULARIOS_PKG.UPDATECARGA(
-  :idcarg,
-  :descar,
-  :ficcar,
-  :refcar,
-  :stacar,
-  :usumov,
-  :tipmov
-); END;
-`;
-const removeSql = `BEGIN FORMULARIOS_PKG.DELETECARGA(
-  :idcarg,
-  :usumov,
-  :tipmov 
-); END;
-`;
 
 export const find = async (context) => {
   let query = baseQuery;
@@ -39,7 +23,7 @@ export const find = async (context) => {
 
   if (context.IDCARG) {
     binds.idcarg = context.IDCARG;
-    query += `WHERE idcarg = :idcarg`;
+    query += `WHERE cc.idcarg = :idcarg`;
   }
 
   const result = await simpleExecute(query, binds);
@@ -60,30 +44,4 @@ export const insert = async (bind) => {
   }
 
   return bind;
-};
-export const update = async (bind) => {
-  let result;
-
-  try {
-    await simpleExecute(updateSql, bind);
-
-    result = bind;
-  } catch (error) {
-    result = null;
-  }
-
-  return result;
-};
-export const remove = async (bind) => {
-  let result;
-
-  try {
-    await simpleExecute(removeSql, bind);
-
-    result = bind;
-  } catch (error) {
-    result = null;
-  }
-
-  return result;
 };
