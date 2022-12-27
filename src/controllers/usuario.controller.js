@@ -105,7 +105,7 @@ export const usuario = async (req, res) => {
   }
 }
 export const usuarios = async (req, res) => {
-  const context = req.body
+  const context = req.body.usuario
 
   try {
     const rows = await DAL.find(context)

@@ -1,27 +1,37 @@
 import { simpleExecute } from '../services/database.js'
 
-const estadisticaSituacionSql = `SELECT 
-  refdoc,
-  SUM(CASE WHEN stadoc = :pendoc THEN 1 ELSE 0 END) "PEN",
-  SUM(CASE WHEN stadoc = :asidoc THEN 1 ELSE 0 END) "ASI",
-  SUM(CASE WHEN stadoc = :resdoc THEN 1 ELSE 0 END) "RES",
-  COUNT(*) "TOT"
-FROM documentos
-WHERE refdoc = :refdoc
-GROUP BY refdoc
+const estadisticaUsuariosSql = `SELECT 
+  p1.userid, p1.ADJ, p1.RES, ROUND(100 * p1.ADJ/s.TOT, 2) "PORADJ", ROUND(100 * p1.RES/s.TOT, 2) "PORRES"
+FROM (
+    WITH 
+    vUsuarios AS (
+      SELECT uu.userid FROM usuarios uu
+    )
+    SELECT uu.userid,
+        SUM(CASE WHEN dd.stadoc = 1 THEN 1 ELSE 0 END) "ADJ",
+        SUM(CASE WHEN dd.stadoc = 2 THEN 1 ELSE 0 END) "RES"
+    FROM vUsuarios uu
+    LEFT JOIN documentos dd ON dd.liqdoc = uu.userid AND dd.refdoc = :refdoc
+    GROUP BY uu.userid
+) p1, (SELECT COUNT(*) "TOT" FROM documentos WHERE refdoc = :refdoc) s
 `
-const estadisticaOficinaSql = `WITH
-vOficinas AS (
-  SELECT oo.idofic FROM oficinas oo
-)
-SELECT v.idofic "OFI", oo.desofi,
+const estadisticaOficinaSql = `SELECT 
+  oo.desofi, 
+  SUM(p1.pen) "PEN", 
+  SUM(p1.adj) "ADJ", 
+  SUM(p1.res) "RES",
+  SUM(p1.pen + p1.adj + p1.res) "TOT"
+FROM oficinas oo
+LEFT JOIN (
+SELECT dd.ofidoc,
   SUM(CASE WHEN dd.stadoc = :pendoc THEN 1 ELSE 0 END) "PEN",
-  SUM(CASE WHEN dd.stadoc = :asidoc THEN 1 ELSE 0 END) "ASI",
+  SUM(CASE WHEN dd.stadoc = :asidoc THEN 1 ELSE 0 END) "ADJ",
   SUM(CASE WHEN dd.stadoc = :resdoc THEN 1 ELSE 0 END) "RES"
-FROM vOficinas v
-LEFT JOIN (SELECT ofidoc,stadoc,refdoc FROM documentos) dd ON dd.ofidoc = v.idofic AND dd.refdoc = :refcar
-LEFT JOIN oficinas oo ON oo.idofic = dd.ofidoc
-GROUP BY v.idofic, oo.desofi
+FROM documentos dd
+WHERE dd.refdoc = :refdoc
+GROUP BY dd.ofidoc) p1 ON p1.ofidoc = oo.idofic
+GROUP BY CUBE(desofi)
+ORDER BY desofi
 `
 const estadisticaActuacionSql = `WITH 
 vDates AS (
@@ -29,14 +39,14 @@ vDates AS (
 FROM dual
 CONNECT BY rownum <= TO_DATE(:hasta,'YYYY-MM-DD') - TO_DATE(:desde,'YYYY-MM-DD') + 1
 )
-SELECT v.fecha "FECHA",
+SELECT TO_CHAR(v.fecha, 'YYYY-MM-DD') "FECHA",
   SUM(CASE WHEN mm.tipmov = :asidoc THEN 1 ELSE 0 END) "ASI",
   SUM(CASE WHEN mm.tipmov = :resdoc THEN 1 ELSE 0 END) "RES",
   SUM(CASE WHEN mm.tipmov = :desdoc THEN 1 ELSE 0 END) "DES"
 FROM vDates v
-LEFT JOIN movimientos mm ON TRUNC(mm.fecmov) = v.fecha
-LEFT JOIN movimientosdocumento md ON md.idmovi = mm.idmovi
-LEFT JOIN documentos dd ON dd.iddocu = md.iddocu AND dd.refdoc = :refdoc
+LEFT JOIN documentos dd ON dd.refdoc = :refdoc
+LEFT JOIN movimientosdocumento md ON md.iddocu = dd.iddocu
+LEFT JOIN movimientos mm ON mm.idmovi = md.idmovi AND TRUNC(mm.fecmov) = v.fecha
 GROUP BY v.fecha
 `
 

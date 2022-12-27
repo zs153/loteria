@@ -121,6 +121,7 @@ const updateReferenciaFromRec = (req) => {
   const referencia = {
     idrefe: req.body.referencia.IDREFE,
     nifref: req.body.referencia.NIFREF,
+    desref: req.body.referencia.DESREF,
     tipref: req.body.referencia.TIPREF,
   }
   const movimiento = {

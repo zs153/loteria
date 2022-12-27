@@ -1,14 +1,15 @@
 import { simpleExecute } from "../services/database.js";
 
 const baseQuery = `SELECT * FROM gentes
-WHERE nifgen = :nifgen;
+WHERE nifgen = :nifgen
 `
 
 export const find = async (context) => {
   let query = baseQuery;
-  let binds = {}
+  let binds = {
+    nifgen: context.nifgen
+  }
 
-  binds.nifgen = context.nifgen;
   if (context.disgen) {
     binds.disgen = context.disgen
     query += `AND disgen = :disgen`;

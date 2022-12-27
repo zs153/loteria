@@ -45,7 +45,6 @@ const removeSql = `BEGIN FORMULARIOS_PKG.DELETEUSUARIO(
 const cambioSql = `BEGIN FORMULARIOS_PKG.CHANGEPASSWORD(
   :idusua,
   :pwdusu,
-  :saltus, 
   :usumov,
   :tipmov
 ); END;
@@ -80,6 +79,9 @@ export const find = async (context) => {
   } else if (context.EMAUSU) {
     binds.emausu = context.EMAUSU;
     query += "WHERE uu.emausu = :emausu";
+  } else if (context.OFIUSU) {
+    binds.ofiusu = context.OFIUSU;
+    query += "WHERE uu.ofiusu = :ofiusu";
   }
 
   const result = await simpleExecute(query, binds);

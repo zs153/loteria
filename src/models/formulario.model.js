@@ -94,6 +94,7 @@ const insertReferenciaSql = `BEGIN FORMULARIOS_PKG.INSERTREFERENCIA(
 const updateReferenciaSql = `BEGIN FORMULARIOS_PKG.UPDATEREFERENCIA(
   :idrefe,
   :nifref,
+  :desref,
   :tipref,
   :usumov,
   :tipmov
@@ -257,7 +258,6 @@ export const findReferencia = async (context) => {
   let query = referenciasQuery
   let binds = {}
 
-  console.log(query, binds)
   binds.iddocu = context.IDDOCU
   const result = await simpleExecute(query, binds)
 
@@ -322,7 +322,6 @@ export const insertSms = async (bind) => {
     type: oracledb.NUMBER,
   }
 
-  console.log(insertSmsSql, bind)
   try {
     const result = await simpleExecute(insertSmsSql, bind)
 
