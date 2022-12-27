@@ -40,22 +40,11 @@ export const generarEstadistica = async (req, res) => {
   const formulario = {
     REFDOC: req.body.refdoc,
   }
-  const carga = {
-    REFCAR: req.body.refcar,
-  }
 
   try {
     const cargas = await axios.post('http://localhost:8000/api/cargas', {})
-    const situacion = await axios.post('http://localhost:8000/api/estadisticas/situacion', {
-      formulario,
-      tipos: {
-        PENDOC: estadosDocumento.pendiente,
-        ASIDOC: estadosDocumento.asignado,
-        RESDOC: estadosDocumento.resuelto,
-      },
-    })
     const oficinas = await axios.post('http://localhost:8000/api/estadisticas/oficinas', {
-      carga,
+      formulario,
       tipos: {
         PENDOC: estadosDocumento.pendiente,
         ASIDOC: estadosDocumento.asignado,
@@ -75,28 +64,22 @@ export const generarEstadistica = async (req, res) => {
     const serieA = []
     const serieR = []
     const serieD = []
-    const contadores = {
-      pendientes: situacion.data.PEN,
-      adjudicadas: situacion.data.ASI,
-      resueltas: situacion.data.RES,
-      total: situacion.TOT,
-    }
+    const contadores = oficinas.data.find(itm => itm.DESOFI === null)
 
     actuacion.data.map(itm => {
-      serieA.push([new Date(itm.FECHA).getTime(), itm.ADJ])
+      serieA.push([new Date(itm.FECHA).getTime(), itm.ASI])
       serieR.push([new Date(itm.FECHA).getTime(), itm.RES])
       serieD.push([new Date(itm.FECHA).getTime(), itm.DES])
     })
 
     const ratios = {
-      asignadas: Math.round((contadores.adjudicadas * 100 / contadores.total) * 100) / 100.0,
-      resueltas: Math.round((contadores.resueltas * 100 / contadores.total) * 100) / 100.0,
-      pendientes: Math.round((contadores.pendientes * 100 / contadores.total) * 100) / 100.0,
+      pendientes: Math.round((contadores.PEN * 100 / contadores.TOT) * 100) / 100.0,
+      asignadas: Math.round((contadores.ADJ * 100 / contadores.TOT) * 100) / 100.0,
+      resueltas: Math.round((contadores.RES * 100 / contadores.TOT) * 100) / 100.0,
     }
 
     const datos = {
       formulario,
-      carga,
       oficinas: oficinas.data,
       cargas: cargas.data,
       periodo,

@@ -106,13 +106,13 @@
                       <div class="col-5">
                         <div class="mb-1">
                           <div class="form-label">Oficina</div>
-                          <select class="form-select" id="cboofi" name="ofidoc" value="<%- datos.formulario.OFIDOC %>">
-                            <% datos.oficinas.map(element=> { %>
+                            <select class="form-select" id="cboofi" name="ofidoc" value="<%- datos.formulario.OFIDOC %>">
+                              <% datos.oficinas.map(element=> { %>
                               <option value="<%- element.IDOFIC %>" <%- element.IDOFIC === datos.formulario.OFIDOC ? " selected" :"" %>>
                                 <%- element.DESOFI %>
                               </option>
-                            <% }) %>
-                          </select>
+                              <% }) %>
+                            </select>
                         </div>
                       </div>
                       <div class="col-2">
@@ -165,10 +165,11 @@
     const fecdoc = document.getElementById('fecdoc')
     const tipdoc = document.getElementById('cbotip')
 
+    let eleNif = document.getElementById('nifcon')
     let eleNombre = document.getElementById('nomcon')
     let eleDiscri = document.getElementById('iddisc')
 
-    nifcon.addEventListener('blur', async () => {
+    eleNif.addEventListener('blur', async () => {
       if (eleNif.value !== '') {        
         const xhr = new XMLHttpRequest();
 
@@ -204,9 +205,9 @@
           }
         };
         try {
-          xhr.open('POST', 'http://localhost:8000/api/gentes', true);
+          xhr.open('POST', 'http://localhost:8000/api/gente', true);
           xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-          xhr.send(JSON.stringify({ nifgen: nifcon.value.toUpperCase() }))
+          xhr.send(JSON.stringify({ NIFGEN: eleNif.value.toUpperCase() }))
         } catch (error) {
           eleNombre.value = ''
         }

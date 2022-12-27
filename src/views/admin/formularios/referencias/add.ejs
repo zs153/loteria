@@ -142,8 +142,8 @@
         }, 3000)
         return false
       }
-      if (desrefValue === '') {
-        setError(desref, 'Descripción requerida')
+      if (desrefValue === '' || desrefValue.length > 11) {
+        setError(desref, 'Descripción requerida (máx 11 caracteres)')
         setTimeout(function () {
           setSuccess(desref)
         }, 3000)

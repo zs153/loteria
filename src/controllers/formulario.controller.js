@@ -41,10 +41,13 @@ export const addPage = async (req, res) => {
     OFIDOC: user.oficina,
     FUNDOC: user.userID,
   };
+  const oficina = user.rol === tiposRol.admin ? {} : { IDOFIC: user.oficina }
 
   try {
     const tipos = await axios.post("http://localhost:8000/api/tipos", {})
-    const oficinas = await axios.post("http://localhost:8000/api/oficinas")
+    const oficinas = await axios.post("http://localhost:8000/api/oficinas", {
+      oficina,
+    })
     const datos = {
       formulario,
       tipos: tipos.data,
@@ -65,10 +68,13 @@ export const editPage = async (req, res) => {
   let formulario = {
     IDDOCU: req.params.id,
   };
+  const oficina = user.rol === tiposRol.admin ? {} : { IDOFIC: user.oficina }
 
   try {
     const tipos = await axios.post("http://localhost:8000/api/tipos", {})
-    const oficinas = await axios.post("http://localhost:8000/api/oficinas", {})
+    const oficinas = await axios.post("http://localhost:8000/api/oficinas", {
+      oficina,
+    })
     const result = await axios.post("http://localhost:8000/api/formulario", {
       formulario,
     });
@@ -665,6 +671,7 @@ export const updateReferencia = async (req, res) => {
     IDREFE: req.body.idrefe,
     FECREF: fecha.toISOString().slice(0, 10),
     NIFREF: req.body.nifref.toUpperCase(),
+    DESREF: req.body.desref,
     TIPREF: req.body.tipref,
   };
   const movimiento = {

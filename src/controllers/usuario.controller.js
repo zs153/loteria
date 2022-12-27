@@ -6,14 +6,17 @@ import {
   arrEstadosUsuario,
   estadosUsuario,
   tiposMovimiento,
+  tiposRol,
 } from '../public/js/enumeraciones'
 
 export const mainPage = async (req, res) => {
   const user = req.user
-  const usuario = {}
+  const usuario = user.rol === tiposRol.admin ? {} : { OFIUSU: user.oficina }
 
   try {
-    const result = await axios.post('http://localhost:8000/api/usuarios', usuario)
+    const result = await axios.post('http://localhost:8000/api/usuarios', {
+      usuario,
+    })
     const datos = {
       usuarios: JSON.stringify(result.data),
       estadosUsuario: JSON.stringify(estadosUsuario),
@@ -31,11 +34,14 @@ export const mainPage = async (req, res) => {
 export const addPage = async (req, res) => {
   const user = req.user
   const filteredRol = arrTiposRol.filter(itm => itm.id <= user.rol)
+  const oficina = user.rol === tiposRol.admin ? {} : { IDOFIC: user.oficina }
 
   try {
-    const result = await axios.post('http://localhost:8000/api/oficinas')
+    const oficinas = await axios.post('http://localhost:8000/api/oficinas', {
+      oficina,
+    })
     const datos = {
-      oficinas: result.data,
+      oficinas: oficinas.data,
       filteredRol,
       arrTiposPerfil,
       arrEstadosUsuario,
@@ -52,17 +58,19 @@ export const addPage = async (req, res) => {
 }
 export const editPage = async (req, res) => {
   const user = req.user
+  const filteredRol = arrTiposRol.filter(itm => itm.id <= user.rol)
+  const oficina = user.rol === tiposRol.admin ? {} : { IDOFIC: user.oficina }
   const usuario = {
     IDUSUA: req.params.id,
   }
 
   try {
-    const oficinas = await axios.post('http://localhost:8000/api/oficinas')
+    const oficinas = await axios.post('http://localhost:8000/api/oficinas', {
+      oficina,
+    })
     const result = await axios.post('http://localhost:8000/api/usuario', {
       usuario,
     })
-    const filteredRol = arrTiposRol.filter(itm => itm.id <= user.rol)
-
     const datos = {
       usuario: result.data,
       oficinas: oficinas.data,

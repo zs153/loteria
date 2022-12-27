@@ -103,7 +103,7 @@
       <div class="page-body">
         <div class="container-xl">
           <div class="d-flex">
-            <span>Referencia: <%- datos.carga.REFCAR %></span>
+            <span>Referencia: <%- datos.formulario.REFDOC %></span>
             <span class="ms-3">Periodo: <%- datos.periodo.DESDE.split('-').reverse().join('/') %> al <%- datos.periodo.HASTA.split('-').reverse().join('/') %></span>
             <a href="#" class="ms-auto" data-bs-toggle="modal" data-bs-target="#modal-config">
               <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -122,7 +122,7 @@
                     <div class="subheader">Pendientes</div>
                   </div>
                   <div class="d-flex align-items-center">
-                    <div class="page-title-lg"><%- Intl.NumberFormat('de-DE').format(datos.contadores.pendientes) %></div>
+                    <div class="ms-auto" style="font-size: 2.5rem;"><%- Intl.NumberFormat('de-DE').format(datos.contadores.PEN) %></div>
                   </div>
                 </div>
               </div>
@@ -134,7 +134,7 @@
                     <div class="subheader">Adjudicadas</div>
                   </div>
                   <div class="d-flex align-items-center">
-                    <div class="page-title-lg"><%- Intl.NumberFormat('de-DE').format(datos.contadores.adjudicadas) %></div>
+                    <div class="ms-auto" style="font-size: 2.5rem;"><%- Intl.NumberFormat('de-DE').format(datos.contadores.ADJ) %></div>
                   </div>
                 </div>
               </div>
@@ -146,7 +146,7 @@
                     <div class="subheader">Resueltas</div>
                   </div>
                   <div class="d-flex align-items-center">
-                    <div class="page-title-lg"><%- Intl.NumberFormat('de-DE').format(datos.contadores.resueltas) %></div>
+                    <div class="ms-auto" style="font-size: 2.5rem;"><%- Intl.NumberFormat('de-DE').format(datos.contadores.RES) %></div>
                   </div>
                 </div>
               </div>
@@ -173,10 +173,10 @@
                         <thead>
                           <tr class="header">
                             <th>Oficina</th>
-                            <th class="w-5">Pend</th>
-                            <th class="w-5">Adju</th>
-                            <th class="w-5">Resu</th>
-                            <th class="w-6">Total</th>
+                            <th class="w-5 text-end">Pend</th>
+                            <th class="w-5 text-end">Adju</th>
+                            <th class="w-5 text-end">Resu</th>
+                            <th class="w-6 text-end">Total</th>
                           </tr>
                         </thead>
                         <tbody id="table-body">
@@ -195,7 +195,7 @@
                                   </div>
                                 </div>
                               </td>
-                              <td class="w-6">
+                              <td class="w-6 text-end">
                                 <div class="d-flex align-items-center">
                                   <div class="flex-fill">
                                     <div class="font-weight-medium">
@@ -204,7 +204,7 @@
                                   </div>
                                 </div>
                               </td>
-                              <td class="w-6">
+                              <td class="w-6 text-end">
                                 <div class="d-flex align-items-center">
                                   <div class="flex-fill">
                                     <div class="font-weight-medium">
@@ -213,7 +213,7 @@
                                   </div>
                                 </div>
                               </td>
-                              <td class="w-6">
+                              <td class="w-6 text-end">
                                 <div class="d-flex align-items-center">
                                   <div class="flex-fill">
                                     <div class="font-weight-medium">
@@ -222,7 +222,7 @@
                                   </div>
                                 </div>
                               </td>
-                              <td class="w-6">
+                              <td class="w-6 text-end">
                                 <div class="d-flex align-items-center">
                                   <div class="flex-fill">
                                     <div class="font-weight-medium">
@@ -283,14 +283,18 @@
               <div class="row">
                 <div class="col-12">
                   <div class="mb-1">
-                    <div class="form-label">Carga</div>
-                    <select class="form-select form-control" id="cbocar" name="refcar" value="">
-                      <% datos.cargas.map(element=> { %>
-                      <option value="<%- element.REFCAR %>">
-                        <%- element.DESCAR %>
-                      </option>
-                      <% }) %>
-                    </select>
+                    <div class="input-control">
+                      <div class="form-label">Carga</div>
+                      <select class="form-select form-control" id="cbocar" name="refcar" value="">
+                        <option value="0">SELECCIONE CARGA</option>
+                        <% datos.cargas.map(element=> { %>
+                        <option value="<%- element.REFCAR %>">
+                          <%- element.DESCAR %>
+                        </option>
+                        <% }) %>
+                      </select>
+                      <div class="invalid-feedback"></div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -336,7 +340,7 @@
     const hasta = document.getElementById('hasta')
     const cboC = document.getElementById('cbocar');
     const options = {
-      colors: ['#4263eb', '#74b816', '#f76707'],
+      colors: ['#8263eb', '#74b816', '#f76707'],
       chart: {
         locales: [{
           "name": "es",
