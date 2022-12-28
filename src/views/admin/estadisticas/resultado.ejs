@@ -85,14 +85,14 @@
             <div class="col-4">
               <div class="card">
                 <div class="card-body p-2">
-                  <div class="d-flex align-items-center">
-                    <div class="subheader">Pendientes</div>
-                  </div>
-                  <div class="d-flex align-items-center">
-                    <div id="chart-pendientes" class="chart" data-percent="<%- datos.ratios.pendientes %>">
-                      <span class="percent"></span>
+                  <div class="subheader">Pendientes</div>
+                  <div class="d-flex">
+                    <div class="page-title-lg"><%- Intl.NumberFormat('de-DE').format(datos.contadores.PEN) %></div>
+                    <div class="ms-auto">
+                      <div id="chart-pendientes" class="chart" data-percent="<%- datos.ratios.pendientes %>">
+                        <span class="percent"></span>
+                      </div>
                     </div>
-                    <div class="ms-auto" style="font-size: 2.5rem;"><%- Intl.NumberFormat('de-DE').format(datos.contadores.PEN) %></div>
                   </div>
                 </div>
               </div>
@@ -100,14 +100,14 @@
             <div class="col-4">
               <div class="card">
                 <div class="card-body p-2">
-                  <div class="d-flex align-items-center">
-                    <div class="subheader">Adjudicadas</div>
-                  </div>
-                  <div class="d-flex align-items-center">
-                    <div id="chart-asignadas" class="chart" data-percent="<%- datos.ratios.asignadas %>">
-                      <span class="percent"></span>
+                  <div class="subheader">Adjudicadas</div>
+                  <div class="d-flex">
+                    <div class="page-title-lg"><%- Intl.NumberFormat('de-DE').format(datos.contadores.ADJ) %></div>
+                    <div class="ms-auto">
+                      <div id="chart-asignadas" class="chart" data-percent="<%- datos.ratios.asignadas %>">
+                        <span class="percent"></span>
+                      </div>
                     </div>
-                    <div class="ms-auto" style="font-size: 2.5rem;"><%- Intl.NumberFormat('de-DE').format(datos.contadores.ADJ) %></div>
                   </div>
                 </div>
               </div>
@@ -115,14 +115,14 @@
             <div class="col-4">
               <div class="card">
                 <div class="card-body p-2">
-                  <div class="d-flex align-items-center">
-                    <div class="subheader">Resueltas</div>
-                  </div>
-                  <div class="d-flex align-items-center">
-                    <div id="chart-resueltas" class="chart" data-percent="<%- datos.ratios.resueltas %>">
-                      <span class="percent"></span>
+                  <div class="subheader">Resueltas</div>
+                  <div class="d-flex ">
+                    <div class="page-title-lg"><%- Intl.NumberFormat('de-DE').format(datos.contadores.RES) %></div>
+                    <div class="ms-auto">
+                      <div id="chart-resueltas" class="chart" data-percent="<%- datos.ratios.resueltas %>">
+                        <span class="percent"></span>
+                      </div>
                     </div>
-                    <div class="ms-auto" style="font-size: 2.5rem;"><%- Intl.NumberFormat('de-DE').format(datos.contadores.RES) %></div>
                   </div>
                 </div>
               </div>
@@ -368,7 +368,7 @@
     const hasta = document.getElementById('hasta')
     const cboC = document.getElementById('cbocar');
     const options = {
-      colors: ['#8263eb', '#74b816', '#f76707'],
+      colors: ['#8F00FF', '#F76707', '#74B816'],
       chart: {
         locales: [{
           "name": "es",
@@ -473,7 +473,7 @@
       size: '75',
       easing: 'easeOutElastic',
       delay: 3000,
-      barColor: '#74b816',
+      barColor: '#F76707',
       trackColor: '#f2f3f4',
       scaleColor: false,
       lineWidth: 3,
@@ -487,7 +487,7 @@
       size: '75',
       easing: 'easeOutElastic',
       delay: 3000,
-      barColor: '#f76707',
+      barColor: '#74B816',
       trackColor: '#f2f3f4',
       scaleColor: false,
       lineWidth: 3,
