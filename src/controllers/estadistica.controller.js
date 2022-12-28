@@ -1,11 +1,10 @@
 import * as DAL from '../models/estadistica.model'
 
-const situacionFromRec = (req) => {
+const usuariosFromRec = (req) => {
   const formulario = {
     refdoc: req.body.formulario.REFDOC,
   }
   const tipos = {
-    pendoc: req.body.tipos.PENDOC,
     asidoc: req.body.tipos.ASIDOC,
     resdoc: req.body.tipos.RESDOC,
   }
@@ -41,9 +40,9 @@ const actuacionFromRec = (req) => {
   return Object.assign(formulario, periodo, tipos)
 }
 
-export const estadisticasSituacion = async (req, res) => {
+export const estadisticasUsuarios = async (req, res) => {
   try {
-    const result = await DAL.statSituacion(situacionFromRec(req))
+    const result = await DAL.statUsuarios(usuariosFromRec(req))
 
     if (result !== null) {
       res.status(200).json(result)

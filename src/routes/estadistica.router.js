@@ -1,13 +1,13 @@
 import express from 'express'
 import {
   estadisticasOficinas,
-  estadisticasSituacion,
   estadisticasActuacion,
- } from '../controllers/estadistica.controller'
+  estadisticasUsuarios,
+} from '../controllers/estadistica.controller'
 
 const apiEstadisticaRouter = express.Router()
 
-apiEstadisticaRouter.post('/estadisticas/situacion', estadisticasSituacion)
+apiEstadisticaRouter.post('/estadisticas/usuarios', estadisticasUsuarios)
 apiEstadisticaRouter.post('/estadisticas/oficinas', estadisticasOficinas)
 apiEstadisticaRouter.post('/estadisticas/actuacion', estadisticasActuacion)
 
