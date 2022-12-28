@@ -13,30 +13,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.35.3/apexcharts.min.js"></script>
   <script src="/js/easypiechart.min.js"></script>
   <style>
-    .subheader {
-      font-size: .625rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: .04em;
-      line-height: 1.6;
-      color: #626976;
-    }
-    .progress-container {
-      display: flex;
-      height: 1rem;
-      width: 100%;
-      border-radius: 0.4rem;
-      background: #f2f3f4;
-      text-align: center;
-      color: #fff;
-    }
     .chart {
       position: relative;
       display: inline-block;
-      width: 110px;
-      height: 110px;
-      margin-top: 10px;
-      margin-bottom: 10px;
+      width: 75px;
+      height: 75px;
       text-align: center;
     }
     .chart canvas {
@@ -46,7 +27,7 @@
     }
     .percent {
       display: inline-block;
-      line-height: 110px;
+      line-height: 75px;
       z-index: 2;
     }
     .subpercent {
@@ -62,35 +43,21 @@
       margin-left: 0;
       font-size: .8em;
     }
-    .progress-separated {
-      border-right: 2px solid #fff;
+    .table-fixHead tbody {
+      overflow-y: scroll;
+      height: 110px;
+      display: block;
+      flex: 1 1 auto;
     }
-    .tooltip {
-      position: relative;
-      display: inline-block;
+    .table-fixHead thead {
+      display: table;
+      flex: 0 0 auto;
+      width: calc(100% - 16px) !important;
     }
-    .tooltip:hover .tooltiptext {
-      visibility: visible;
-      opacity: 1;
-    }
-    .tooltiptext {
-      visibility: hidden;
-      width: 180px;
-      color: black;
-      text-align: center;
-      border-radius: 6px;
-      padding: 4px;
-      position: absolute;
-      z-index: 1;
-      border: 1px solid rgb(233, 233, 233);
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-10%);
-      margin-bottom: 0.5rem;
-      margin-left: -2rem;
-      background-color: white;
-      opacity: 0;
-      transition: opacity 1s;
+    .table-fixHead tr {
+      display: table;
+      width: 100%;
+      table-layout: fixed;
     }
   </style>
 </head>
@@ -115,45 +82,54 @@
             </a>
           </div>
           <div class="row row-deck row-cards">
-            <div class="col-lg-4">
+            <div class="col-4">
               <div class="card">
-                <div class="card-body">
+                <div class="card-body p-2">
                   <div class="d-flex align-items-center">
                     <div class="subheader">Pendientes</div>
                   </div>
                   <div class="d-flex align-items-center">
+                    <div id="chart-pendientes" class="chart" data-percent="<%- datos.ratios.pendientes %>">
+                      <span class="percent"></span>
+                    </div>
                     <div class="ms-auto" style="font-size: 2.5rem;"><%- Intl.NumberFormat('de-DE').format(datos.contadores.PEN) %></div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-4">
               <div class="card">
-                <div class="card-body">
+                <div class="card-body p-2">
                   <div class="d-flex align-items-center">
                     <div class="subheader">Adjudicadas</div>
                   </div>
                   <div class="d-flex align-items-center">
+                    <div id="chart-asignadas" class="chart" data-percent="<%- datos.ratios.asignadas %>">
+                      <span class="percent"></span>
+                    </div>
                     <div class="ms-auto" style="font-size: 2.5rem;"><%- Intl.NumberFormat('de-DE').format(datos.contadores.ADJ) %></div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-4">
               <div class="card">
-                <div class="card-body">
+                <div class="card-body p-2">
                   <div class="d-flex align-items-center">
                     <div class="subheader">Resueltas</div>
                   </div>
                   <div class="d-flex align-items-center">
+                    <div id="chart-resueltas" class="chart" data-percent="<%- datos.ratios.resueltas %>">
+                      <span class="percent"></span>
+                    </div>
                     <div class="ms-auto" style="font-size: 2.5rem;"><%- Intl.NumberFormat('de-DE').format(datos.contadores.RES) %></div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-lg-6 mt-1">
+            <div class="col-6 mt-1">
               <div class="card">
-                <div class="card-header">
+                <div class="card-header p-1">
                   <h3 class="card-title">Actividad</h3>
                 </div>
                 <div class="card-body">
@@ -161,22 +137,22 @@
                 </div>
               </div>
             </div>
-            <div class="col-lg-6 mt-1">
+            <div class="col-6 mt-1">
               <div class="row row-cards">
                 <div class="col-12">
                   <div class="card">
-                    <div class="card-header">
+                    <div class="card-header p-1">
                       <h3 class="card-title">Oficinas</h3>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-2">
                       <table class="table table-vcenter table-striped" id="tblOficinas">
                         <thead>
                           <tr class="header">
-                            <th>Oficina</th>
-                            <th class="w-5 text-end">Pend</th>
-                            <th class="w-5 text-end">Adju</th>
-                            <th class="w-5 text-end">Resu</th>
-                            <th class="w-6 text-end">Total</th>
+                            <th class="p-1">Oficina</th>
+                            <th class="p-1 w-5 text-end">Pend</th>
+                            <th class="p-1 w-5 text-end">Adju</th>
+                            <th class="p-1 w-5 text-end">Resu</th>
+                            <th class="p-1 w-6 text-end">Total</th>
                           </tr>
                         </thead>
                         <tbody id="table-body">
@@ -239,24 +215,76 @@
                   </div>
                 </div>
                 <div class="col-12 mt-1">
-                  <div class="card" style="display: -webkit-box;">
-                    <div class="col-4 mx-auto w-auto">
-                      <div id="chart-pendientes" class="chart" data-percent="<%- datos.ratios.pendientes %>">
-                        <span class="percent"></span>
-                        <span class="subpercent">Pendiente</span>
-                      </div>
+                  <div class="card" style="height: 12rem">
+                    <div class="card-header p-1">
+                      <h3 class="card-title">Usuarios</h3>
                     </div>
-                    <div class="col-4 mx-auto w-auto">
-                      <div id="chart-asignadas" class="chart" data-percent="<%- datos.ratios.asignadas %>">
-                        <span class="percent"></span>
-                        <span class="subpercent">Adjudicado</span>
-                      </div>
-                    </div>
-                    <div class="col-4 mx-auto w-auto">
-                      <div id="chart-resueltas" class="chart" data-percent="<%- datos.ratios.resueltas %>">
-                        <span class="percent"></span>
-                        <span class="subpercent">Resuelto</span>
-                      </div>
+                    <div class="card-body p-2">
+                        <table class="table table-vcenter table-striped table-fixHead" id="tblUsuarios">
+                          <thead>
+                            <tr class="header">
+                              <th class="p-1">UserID</th>
+                              <th class="p-1 w-5 text-end">Adj</th>
+                              <th class="p-1 w-4 ps-1">(%)</th>
+                              <th class="p-1 w-5 text-end">Res</th>
+                              <th class="p-1 w-4 ps-1">(%)</th>
+                              <th class="p-1 w-3"></th>
+                            </tr>
+                          </thead>
+                          <tbody id="table-body">
+                            <% datos.usuarios.map(element=> { %>
+                            <tr>
+                              <td>
+                                <div class="d-flex align-items-center">
+                                  <div class="flex-fill">
+                                    <div class="font-weight-medium">
+                                      <%- element.USERID %>
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td class="w-5 text-end">
+                                <div class="d-flex align-items-center">
+                                  <div class="flex-fill">
+                                    <div class="font-weight-medium">
+                                      <%- element.ADJ %>
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td class="w-4">
+                                <div class="d-flex align-items-center">
+                                  <div class="flex-fill">
+                                    <div class="font-weight-medium text-blue ps-1">
+                                      (<%- element.PORADJ.toLocaleString() %>)
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td class="w-5 text-end">
+                                <div class="d-flex align-items-center">
+                                  <div class="flex-fill">
+                                    <div class="font-weight-medium">
+                                      <%- element.RES %>
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td class="w-4">
+                                <div class="d-flex align-items-center">
+                                  <div class="flex-fill">
+                                    <div class="font-weight-medium text-blue ps-1">
+                                      (<%- element.PORRES.toLocaleString() %>)
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td class="w-3"></td>
+                            </tr>
+                            
+                            <% }) %>
+                          </tbody>
+                        </table>
                     </div>
                   </div>
                 </div>
@@ -399,6 +427,7 @@
         }],
         defaultLocale: "es",
         type: 'bar',
+        height: '420',
         stacked: true,
         toolbar: {
           show: false,
@@ -427,6 +456,7 @@
     const chart = new ApexCharts(document.querySelector("#chart-actuac"), options);
 
     const chartPendientes = new EasyPieChart(element, {
+      size: '75',
       easing: 'easeOutElastic',
       delay: 3000,
       barColor: '#4263eb',
@@ -440,6 +470,7 @@
       }
     });
     const chartAdjudicadas = new EasyPieChart(element1, {
+      size: '75',
       easing: 'easeOutElastic',
       delay: 3000,
       barColor: '#74b816',
@@ -453,6 +484,7 @@
       }
     });
     const chartResueltas = new EasyPieChart(element2, {
+      size: '75',
       easing: 'easeOutElastic',
       delay: 3000,
       barColor: '#f76707',

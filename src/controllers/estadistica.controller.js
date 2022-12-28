@@ -43,6 +43,13 @@ export const generarEstadistica = async (req, res) => {
 
   try {
     const cargas = await axios.post('http://localhost:8000/api/cargas', {})
+    const usuarios = await axios.post('http://localhost:8000/api/estadisticas/usuarios', {
+      formulario,
+      tipos: {
+        ASIDOC: estadosDocumento.asignado,
+        RESDOC: estadosDocumento.resuelto,
+      },
+    })
     const oficinas = await axios.post('http://localhost:8000/api/estadisticas/oficinas', {
       formulario,
       tipos: {
@@ -81,6 +88,7 @@ export const generarEstadistica = async (req, res) => {
     const datos = {
       formulario,
       oficinas: oficinas.data,
+      usuarios: usuarios.data,
       cargas: cargas.data,
       periodo,
       contadores,
