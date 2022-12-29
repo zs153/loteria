@@ -19,8 +19,8 @@ export const mainPage = async (req, res) => {
       formulario,
     })
     const datos = {
-      formularios: JSON.stringify(result.data),
-      estadosDocumento: JSON.stringify(estadosDocumento),
+      formularios: result.data,
+      estadosDocumento: estadosDocumento,
       verTodo: false,
     }
 
@@ -128,7 +128,7 @@ export const referenciasPage = async (req, res) => {
     const datos = {
       formulario,
       formularioData,
-      referencias: JSON.stringify(referencias.data),
+      referencias: referencias.data,
     }
 
     res.render("admin/formularios/referencias", { user, datos });
@@ -231,7 +231,7 @@ export const smssPage = async (req, res) => {
     const datos = {
       formulario,
       formularioData,
-      smss: JSON.stringify(smss.data),
+      smss: smss.data,
       estadosSms,
     }
 
@@ -847,8 +847,8 @@ export const verTodo = async (req, res) => {
       formulario,
     });
     const datos = {
-      formularios: JSON.stringify(result.data),
-      estadosDocumento: JSON.stringify(estadosDocumento),
+      formularios: result.data,
+      estadosDocumento: estadosDocumento,
       verTodo: true,
     };
 

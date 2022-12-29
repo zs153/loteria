@@ -67,7 +67,7 @@ const arrayFilter = (value) => {
   state.querySet = trimmedData
   state.page = 1
 
-  buildTable(state, estadosDocumento)
+  buildTable(state)
 }
 const pagination = (querySet, page, rows) => {
   const trimStart = (page - 1) * rows
@@ -80,7 +80,7 @@ const pagination = (querySet, page, rows) => {
     'pages': pages,
   }
 }
-const buildTable = (state, estados) => {
+const buildTable = (state) => {
   const table = document.getElementById('table-body')
   const data = pagination(state.querySet, state.page, state.rows)
   const myList = data.querySet
@@ -91,13 +91,13 @@ const buildTable = (state, estados) => {
     const row = document.createElement('tr')
     let cell = document.createElement('td')
     cell.classList.add("w-4")
-    if (element.STADOC === estados.pendiente) {
+    if (element.STADOC === estadosDocumento.pendiente) {
       cell.innerHTML = `<div class="align-items-center py-1">
         <span class="avatar avatar-rounded bg-red-lt">
           <h6>${element.LIQDOC}</h6>
         </span>
       </div>`
-    } else if (element.STADOC === estados.asignado) {
+    } else if (element.STADOC === estadosDocumento.asignado) {
       if (element.NUMHIT === 0 && element.NUMEVE === 0) {
         cell.innerHTML = `<div class="align-items-center py-1">
           <span class="avatar avatar-rounded bg-blue-lt">
@@ -115,7 +115,7 @@ const buildTable = (state, estados) => {
         </li>
       </ul>`
       }
-    } else if (element.STADOC === estados.resuelto) {
+    } else {
       cell.innerHTML = `<div class="align-items-center py-1">
         <span class="avatar avatar-rounded bg-green-lt">
           <h6>${element.LIQDOC}</h6>
@@ -196,7 +196,7 @@ const buildTable = (state, estados) => {
     // col9
     cell = document.createElement('td')
     cell.classList.add("w-5")
-    if (element.STADOC === estados.pendiente) {
+    if (element.STADOC === estadosDocumento.pendiente) {
       cell.innerHTML = `<ul class="dots-menu">
         <li class="nav-item drop-right">
           <a href="#" class="nav-link">
@@ -232,7 +232,7 @@ const buildTable = (state, estados) => {
           </ul>
         </li>                              
       </ul>`
-    } else if (element.STADOC === estados.resuelto) {
+    } else if (element.STADOC === estadosDocumento.resuelto) {
       cell.innerHTML = `<ul class="dots-menu">
         <li class="nav-item drop-right">
           <a href="#" class="nav-link">
@@ -406,5 +406,5 @@ const createPagination = (pages, page) => {
 const onclickPage = (pages, page) => {
   createPagination(pages, page)
   state.page = page
-  buildTable(state, estadosDocumento)
+  buildTable(state)
 }

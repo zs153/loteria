@@ -360,8 +360,8 @@
       }
     </script>
     <script>
-      const orgList = <%- datos.formularios %>
-      const estadosDocumento = <%- datos.estadosDocumento %>
+      const orgList = <%- JSON.stringify(datos.formularios) %>
+      const estadosDocumento = <%- JSON.stringify(datos.estadosDocumento) %>
       
       let state = {
         'querySet': orgList,

@@ -40,10 +40,10 @@ export const generarEstadistica = async (req, res) => {
     DESDE: req.body.desde,
     HASTA: req.body.hasta,
   }
+  const carga = {}
   const formulario = {
     REFDOC: req.body.refdoc,
   }
-  const carga = {}
 
   try {
     const cargas = await axios.post('http://localhost:8000/api/cargas', {

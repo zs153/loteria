@@ -52,13 +52,13 @@ const sortTableByColumn = (table, column, asc = true) => {
   table.querySelector(`th:nth-child(${column + 1})`).classList.toggle("th-sort-asc", asc);
   table.querySelector(`th:nth-child(${column + 1})`).classList.toggle("th-sort-desc", !asc);
 }
-const arrayFilter = (value, formulario) => {
+const arrayFilter = (value) => {
   const filtro = value.toUpperCase()
   const trimmedData = orgList.filter(itm => Object.keys(itm).some(k => JSON.stringify(itm[k]).includes(filtro)))
   state.querySet = trimmedData
   state.page = 1
 
-  buildTable(state, formulario)
+  buildTable(state)
 }
 const pagination = (querySet, page, rows) => {
   const trimStart = (page - 1) * rows
@@ -71,7 +71,7 @@ const pagination = (querySet, page, rows) => {
     'pages': pages,
   }
 }
-const buildTable = (state, formulario) => {
+const buildTable = (state) => {
   const table = document.getElementById('table-body')
   const data = pagination(state.querySet, state.page, state.rows)
   const myList = data.querySet
@@ -84,7 +84,7 @@ const buildTable = (state, formulario) => {
     cell.classList.add("w-4")
     cell.innerHTML = `<div class="align-items-center py-1">
       <span class="avatar avatar-rounded bg-green-lt">
-        <h6>${element.DESREF.slice(0, 5)}</h6>
+        <h6>${element.IDREFE}</h6>
       </span>
     </div>`
     row.appendChild(cell)
@@ -216,5 +216,5 @@ const createPagination = (pages, page) => {
 const onclickPage = (pages, page) => {
   createPagination(pages, page)
   state.page = page
-  buildTable(state, fraude)
+  buildTable(state)
 }

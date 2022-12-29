@@ -10,7 +10,7 @@ export const mainPage = async (req, res) => {
       tipo,
     });
     const datos = {
-      tipos: JSON.stringify(result.data),
+      tipos: result.data,
     }
 
     res.render("admin/tipos", { user, datos });

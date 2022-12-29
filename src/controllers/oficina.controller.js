@@ -10,7 +10,7 @@ export const mainPage = async (req, res) => {
       oficina,
     });
     const datos = {
-      oficinas: JSON.stringify(result.data),
+      oficinas: result.data,
     }
 
     res.render("admin/oficinas", { user, datos });

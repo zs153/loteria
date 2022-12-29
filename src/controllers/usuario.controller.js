@@ -18,8 +18,8 @@ export const mainPage = async (req, res) => {
       usuario,
     })
     const datos = {
-      usuarios: JSON.stringify(result.data),
-      estadosUsuario: JSON.stringify(estadosUsuario),
+      usuarios: result.data,
+      estadosUsuario: estadosUsuario,
     }
 
     res.render('admin/usuarios', { user, datos })

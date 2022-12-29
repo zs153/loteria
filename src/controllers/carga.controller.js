@@ -11,7 +11,6 @@ export const mainPage = async (req, res) => {
     });
     const datos = {
       cargas: result.data,
-      estadosCarga,
     };
 
     res.render("admin/cargas", { user, datos });

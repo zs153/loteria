@@ -1,6 +1,3 @@
-// reiniciar vertodo
-localStorage.setItem('vertodo', 'n')
-
 // inicializa sort
 document.querySelectorAll(".sortable th").forEach(headerCell => {
   headerCell.addEventListener("click", () => {
@@ -61,7 +58,7 @@ const arrayFilter = (value) => {
   state.querySet = trimmedData
   state.page = 1
 
-  buildTable(state, estadosCarga)
+  buildTable(state)
 }
 const pagination = (querySet, page, rows) => {
   const trimStart = (page - 1) * rows
@@ -74,7 +71,7 @@ const pagination = (querySet, page, rows) => {
     'pages': pages,
   }
 }
-const buildTable = (state, estados) => {
+const buildTable = (state) => {
   const table = document.getElementById('table-body')
   const data = pagination(state.querySet, state.page, state.rows)
   const myList = data.querySet
@@ -85,19 +82,11 @@ const buildTable = (state, estados) => {
     const row = document.createElement('tr')
     let cell = document.createElement('td')
     cell.classList.add("w-4")
-    if (element.STACAR === estados.procesado) {
-      cell.innerHTML = `<div class="align-items-center py-1">
-        <span class="avatar avatar-rounded bg-green-lt">
-          <h6>PROC</h6>
-        </span>
-      </div>`
-    } else {
-      cell.innerHTML = `<div class="align-items-center py-1">
-        <span class="avatar avatar-rounded bg-red-lt">
-          <h6>PEND</h6>
-        </span>
-      </div>`
-    }
+    cell.innerHTML = `<div class="align-items-center py-1">
+      <span class="avatar avatar-rounded bg-green-lt">
+        <h6>${element.IDCARG}</h6>
+      </span>
+    </div>`
     row.appendChild(cell)
     // col2
     cell = document.createElement('td')
@@ -213,5 +202,5 @@ const createPagination = (pages, page) => {
 const onclickPage = (pages, page) => {
   createPagination(pages, page)
   state.page = page
-  buildTable(state, estadosCarga)
+  buildTable(state)
 }
