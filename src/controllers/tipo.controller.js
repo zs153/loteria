@@ -53,7 +53,7 @@ export const tipo = async (req, res) => {
   }
 };
 export const tipos = async (req, res) => {
-  const bind = req.body
+  const bind = req.body.tipo
 
   try {
     const result = await DAL.find(bind);

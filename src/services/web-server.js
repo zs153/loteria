@@ -9,8 +9,6 @@ import apiOficinaRouter from '../routes/oficina.router'
 import apiUsuarioRouter from '../routes/usuario.router'
 import apiFormularioRouter from '../routes/formulario.router'
 import apiTipoRouter from '../routes/tipo.router'
-import apiReferenciaRouter from '../routes/referencia.router'
-import apiSmsRouter from '../routes/sms.router'
 import apiGenteRouter from '../routes/gente.router'
 import apiCargaRouter from '../routes/carga.router'
 import apiEstadisticaRouter from '../routes/estadistica.router'
@@ -34,8 +32,6 @@ function initialize() {
     app.use('/api', apiUsuarioRouter)
     app.use('/api', apiFormularioRouter)
     app.use('/api', apiTipoRouter)
-    app.use('/api', apiReferenciaRouter)
-    app.use('/api', apiSmsRouter)
     app.use('/api', apiGenteRouter)
     app.use('/api', apiCargaRouter)
     app.use('/api', apiEstadisticaRouter)

@@ -76,9 +76,7 @@ const referenciasQuery = `SELECT
   tt.destip,
   TO_CHAR(rr.fecref, 'DD/MM/YYYY') AS STRFEC
 FROM referencias rr
-INNER JOIN referenciasdocumento rd ON rd.idrefe = rr.idrefe
 INNER JOIN tipos tt ON tt.idtipo = rr.tipref
-WHERE rd.iddocu = :iddocu
 `
 const insertReferenciaSql = `BEGIN FORMULARIOS_PKG.INSERTREFERENCIA(
   :iddocu,
@@ -110,8 +108,6 @@ const smssQuery = `SELECT
   ss.*,
   TO_CHAR(ss.fecsms, 'DD/MM/YYYY') "STRFEC"
 FROM smss ss
-INNER JOIN smssdocumento sd ON sd.idsmss = ss.idsmss
-WHERE sd.iddocu = :iddocu
 `
 const insertSmsSql = `BEGIN FORMULARIOS_PKG.INSERTSMS(
   :iddocu,
@@ -254,13 +250,21 @@ export const resolver = async (bind) => {
 }
 
 // referencia
-export const findReferencia = async (context) => {
+export const findReferencias = async (context) => {
   let query = referenciasQuery
   let binds = {}
 
-  binds.iddocu = context.IDDOCU
-  const result = await simpleExecute(query, binds)
+  if (context.IDDOCU) {
+    binds.iddocu = context.IDDOCU
+    query += `INNER JOIN referenciasdocumento rd ON rd.idrefe = rr.idrefe
+      WHERE rd.iddocu = :iddocu`
+  } else if (context.IDREFE) {
+    binds.idrefe = context.IDREFE
+    query += `WHERE rr.idrefe = :idrefe`
+  }
 
+  console.log(query, binds)
+  const result = await simpleExecute(query, binds)
   return result.rows
 }
 export const insertReferencia = async (bind) => {
@@ -307,13 +311,20 @@ export const removeReferencia = async (bind) => {
 }
 
 // sms
-export const findSms = async (context) => {
+export const findSmss = async (context) => {
   let query = smssQuery
   let binds = {}
 
-  binds.iddocu = context.IDDOCU
-  const result = await simpleExecute(query, binds)
+  if (context.IDDOCU) {
+    binds.iddocu = context.IDDOCU
+    query += `INNER JOIN smssdocumento sd ON sd.idsmss = ss.idsmss
+      WHERE sd.iddocu = :iddocu`
+  } else if (context.IDSMSS) {
+    binds.idsmss = context.IDSMSS
+    query += `WHERE ss.idsmss = :idsmss`
+  }
 
+  const result = await simpleExecute(query, binds)
   return result.rows
 }
 export const insertSms = async (bind) => {

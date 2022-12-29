@@ -38,12 +38,11 @@ export const find = async (context) => {
     binds.idtipo = context.IDTIPO;
     query += `WHERE idtipo = :idtipo`;
   }
-  
+
   const result = await simpleExecute(query, binds);
 
   return result.rows;
 };
-
 export const insert = async (bind) => {
   bind.idtipo = {
     dir: oracledb.BIND_OUT,

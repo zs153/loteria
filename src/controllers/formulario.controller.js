@@ -1,5 +1,6 @@
 import * as DAL from '../models/formulario.model'
 
+// req formularios
 const insertFromRec = (req) => {
   const formulario = {
     fecdoc: req.body.formulario.FECDOC,
@@ -100,6 +101,8 @@ const resolverFromRec = (req) => {
 
   return Object.assign(formulario, req.body.sms.CHKENV ? sms : '', movimiento)
 }
+
+// req referencias
 const insertReferenciaFromRec = (req) => {
   const formulario = {
     iddocu: req.body.formulario.IDDOCU,
@@ -142,6 +145,8 @@ const deleteReferenciaFromRec = (req) => {
 
   return Object.assign(referencia, movimiento)
 }
+
+// req sms
 const insertSmsFromRec = (req) => {
   const formulario = {
     iddocu: req.body.formulario.IDDOCU,
@@ -185,7 +190,7 @@ const deleteSmsFromRec = (req) => {
   return Object.assign(sms, movimiento)
 }
 
-// formulario
+// proc formulario
 export const formulario = async (req, res) => {
   const context = req.body.formulario
 
@@ -295,12 +300,27 @@ export const resolver = async (req, res) => {
   }
 }
 
-// referencia
+// proc referencia
+export const referencia = async (req, res) => {
+  const context = req.body.referencia
+
+  try {
+    const result = await DAL.findReferencias(context)
+
+    if (result.length === 1) {
+      return res.status(200).json(result[0])
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
 export const referencias = async (req, res) => {
   const context = req.body.formulario
 
   try {
-    const result = await DAL.findReferencia(context)
+    const result = await DAL.findReferencias(context)
 
     if (result !== null) {
       res.status(200).json(result)
@@ -351,12 +371,27 @@ export const borrarReferencia = async (req, res) => {
   }
 }
 
-// sms
+// proc sms
+export const sms = async (req, res) => {
+  const context = req.body.sms
+
+  try {
+    const result = await DAL.findSmss(context)
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
 export const smss = async (req, res) => {
   const context = req.body.formulario
 
   try {
-    const result = await DAL.findSms(context)
+    const result = await DAL.findSmss(context)
 
     if (result !== null) {
       res.status(200).json(result)

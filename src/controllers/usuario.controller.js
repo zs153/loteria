@@ -93,10 +93,10 @@ export const usuario = async (req, res) => {
   const context = req.body.usuario
 
   try {
-    const rows = await DAL.find(context)
+    const result = await DAL.find(context)
 
-    if (rows.length === 1) {
-      return res.status(200).json(rows[0])
+    if (result.length === 1) {
+      return res.status(200).json(result[0])
     } else {
       res.status(404).end()
     }
@@ -108,11 +108,15 @@ export const usuarios = async (req, res) => {
   const context = req.body.usuario
 
   try {
-    const rows = await DAL.find(context)
+    const result = await DAL.find(context)
 
-    res.status(200).json(rows)
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
   } catch (err) {
-    res.status(400).end()
+    res.status(500).end()
   }
 }
 
@@ -178,7 +182,7 @@ export const olvido = async (req, res) => {
       res.status(404).end()
     }
   } catch (err) {
-    res.status(403).end()
+    res.status(500).end()
   }
 }
 export const perfil = async (req, res) => {
