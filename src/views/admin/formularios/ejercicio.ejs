@@ -23,6 +23,7 @@
               <div class="card">
                 <form id="form" action="/admin/formularios/ejercicio" method="POST" onsubmit="return validate();">
                   <input type="hidden" name="iddocu" id="iddocu" value="<%- datos.formulario.IDDOCU %>">
+                  <input type="hidden" name="refdoc" id="refdoc" value="<%- datos.formulario.REFDOC %>">
                   <div class="card-header">
                     <h3 class="card-title">Nuevo ejercicio</h3>
                   </div>

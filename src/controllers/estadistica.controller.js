@@ -8,12 +8,15 @@ export const mainPage = async (req, res) => {
   const currentYear = fecha.getFullYear()
   const currentMonth = fecha.getMonth() + 1
   const lastDayMonth = new Date(currentYear, currentMonth, 0).getDate()
+  const carga = {}
 
   let desde = new Date(yearMonthDayToUTCString(currentYear, currentMonth, 1)).toISOString().slice(0, 10)
   let hasta = new Date(yearMonthDayToUTCString(currentYear, currentMonth, lastDayMonth)).toISOString().slice(0, 10)
 
   try {
-    const cargas = await axios.post('http://localhost:8000/api/cargas', {})
+    const cargas = await axios.post('http://localhost:8000/api/cargas', {
+      carga,
+    })
     const datos = {
       desde,
       hasta,
@@ -40,9 +43,12 @@ export const generarEstadistica = async (req, res) => {
   const formulario = {
     REFDOC: req.body.refdoc,
   }
+  const carga = {}
 
   try {
-    const cargas = await axios.post('http://localhost:8000/api/cargas', {})
+    const cargas = await axios.post('http://localhost:8000/api/cargas', {
+      carga,
+    })
     const usuarios = await axios.post('http://localhost:8000/api/estadisticas/usuarios', {
       formulario,
       tipos: {

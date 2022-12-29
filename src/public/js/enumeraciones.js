@@ -22,24 +22,11 @@ export const tiposMovimiento = {
   modificarSms: 20,
   borrarSms: 21,
   actualizarPerfil: 22,
-  crearFraude: 23,
-  modificarFraude: 24,
-  borrarFraude: 25,
   nuevoEjercicioFormularios: 26,
   nuevoRelacionadoFormularios: 27,
   modificarRelacionadoFormularios: 28,
   borrarRelacionadoFormularios: 29,
-  crearHito: 30,
-  modificarHito: 31,
-  borrarHito: 32,
-  crearSubtipo: 33,
-  modificarSubtipo: 34,
-  borrarSubtipo: 35,
   modificarPerfil: 36,
-  asignarCita: 37,
-  crearCita: 38,
-  modificarCita: 39,
-  borrarCita: 40,
   crearCarga: 41,
   modificarCarga: 42,
   borrarCarga: 43,
@@ -76,18 +63,9 @@ export const estadosCarga = {
   pendiente: 0,
   procesado: 1,
 };
-export const estadosCita = {
-  disponible: 0,
-  asignado: 1,
-};
 export const estadosSms = {
   pendiente: 0,
   enviado: 1,
-};
-export const origenTipo = {
-  formulario: 0,
-  fraude: 1,
-  hito: 2,
 };
 
 /* arrays */
@@ -114,9 +92,4 @@ export const arrEstadosFormulario = [
   { ID: 1, DES: "ASIGNADO", LIT: "ASI" },
   { ID: 2, DES: "RESUELTO", LIT: "RES" },
   { ID: 3, DES: "REMITIDO", LIT: "REM" },
-];
-export const arrOrigenTipo = [
-  { id: 0, des: "FORMULARIO" },
-  { id: 1, des: "FRAUDE" },
-  { id: 2, des: "HITO" },
 ];

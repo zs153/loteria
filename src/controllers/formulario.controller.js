@@ -6,6 +6,7 @@ import {
   tiposRol,
 } from "../public/js/enumeraciones";
 
+// pages formulario
 export const mainPage = async (req, res) => {
   const user = req.user;
   const formulario = {
@@ -42,9 +43,12 @@ export const addPage = async (req, res) => {
     FUNDOC: user.userID,
   };
   const oficina = user.rol === tiposRol.admin ? {} : { IDOFIC: user.oficina }
+  const tipo = {}
 
   try {
-    const tipos = await axios.post("http://localhost:8000/api/tipos", {})
+    const tipos = await axios.post("http://localhost:8000/api/tipos", {
+      tipo,
+    })
     const oficinas = await axios.post("http://localhost:8000/api/oficinas", {
       oficina,
     })
@@ -68,10 +72,13 @@ export const editPage = async (req, res) => {
   let formulario = {
     IDDOCU: req.params.id,
   };
+  const tipo = {}
   const oficina = user.rol === tiposRol.admin ? {} : { IDOFIC: user.oficina }
 
   try {
-    const tipos = await axios.post("http://localhost:8000/api/tipos", {})
+    const tipos = await axios.post("http://localhost:8000/api/tipos", {
+      tipo,
+    })
     const oficinas = await axios.post("http://localhost:8000/api/oficinas", {
       oficina,
     })
@@ -98,7 +105,7 @@ export const editPage = async (req, res) => {
   }
 }
 
-// pages referencias
+// pages referencia
 export const referenciasPage = async (req, res) => {
   const user = req.user;
   const formulario = {
@@ -138,9 +145,12 @@ export const referenciasAddPage = async (req, res) => {
   let formulario = {
     IDDOCU: req.params.iddoc,
   };
+  const tipo = {}
 
   try {
-    const tipos = await axios.post("http://localhost:8000/api/tipos", {})
+    const tipos = await axios.post("http://localhost:8000/api/tipos", {
+      tipo,
+    })
     const result = await axios.post("http://localhost:8000/api/formulario", {
       formulario,
     });
@@ -169,13 +179,16 @@ export const referenciasEditPage = async (req, res) => {
   const formulario = {
     IDDOCU: req.params.iddoc
   }
+  const tipo = {}
   let referencia = {
     IDREFE: req.params.idref,
   };
 
   try {
-    const tipos = await axios.post("http://localhost:8000/api/tipos", {})
-    const result = await axios.post("http://localhost:8000/api/referencia", {
+    const tipos = await axios.post("http://localhost:8000/api/tipos", {
+      tipo,
+    })
+    const result = await axios.post("http://localhost:8000/api/formularios/referencia", {
       referencia,
     });
     const datos = {
@@ -195,7 +208,7 @@ export const referenciasEditPage = async (req, res) => {
   }
 }
 
-// pages smss
+// pages sms
 export const smssPage = async (req, res) => {
   const user = req.user;
   const formulario = {
@@ -269,7 +282,7 @@ export const smssEditPage = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8000/api/sms", {
+    const result = await axios.post("http://localhost:8000/api/formularios/sms", {
       sms,
     });
     const datos = {
@@ -327,12 +340,15 @@ export const smssReadonlyPage = async (req, res) => {
 export const ejercicioPage = async (req, res) => {
   const user = req.user;
   const fecha = new Date();
+  const tipo = {}
   let formulario = {
     IDDOCU: req.params.id,
   };
 
   try {
-    const tipos = await axios.post("http://localhost:8000/api/tipos", {})
+    const tipos = await axios.post("http://localhost:8000/api/tipos", {
+      tipo,
+    })
     const result = await axios.post("http://localhost:8000/api/formulario", {
       formulario,
     })
@@ -588,7 +604,7 @@ export const desasignar = async (req, res) => {
 }
 export const ejercicio = async (req, res) => {
   const user = req.user;
-  const referencia = "R" + randomString(10, "1234567890YMGS");
+  //const referencia = "R" + randomString(10, "1234567890YMGS");
   const fecha = new Date()
   const formulario = {
     FECDOC: fecha.toISOString().slice(0, 10),
@@ -597,7 +613,7 @@ export const ejercicio = async (req, res) => {
     EMACON: req.body.emacon,
     TELCON: req.body.telcon,
     MOVCON: req.body.movcon,
-    REFDOC: referencia,
+    REFDOC: req.body.refdoc,
     TIPDOC: req.body.tipdoc,
     EJEDOC: req.body.ejedoc,
     OFIDOC: user.oficina,

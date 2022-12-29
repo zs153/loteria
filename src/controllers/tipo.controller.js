@@ -3,9 +3,12 @@ import { tiposMovimiento } from "../public/js/enumeraciones";
 
 export const mainPage = async (req, res) => {
   const user = req.user;
+  const tipo = {}
 
   try {
-    const result = await axios.post("http://localhost:8000/api/tipos", {});
+    const result = await axios.post("http://localhost:8000/api/tipos", {
+      tipo,
+    });
     const datos = {
       tipos: JSON.stringify(result.data),
     }
