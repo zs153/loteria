@@ -1,24 +1,29 @@
-import jwt from 'jsonwebtoken'
+import { createPublicKey } from 'crypto'
+import { V4 } from 'paseto'
 import { tiposRol } from '../public/js/enumeraciones'
-import { secret } from '../config/settings'
+import { publicKey } from '../config/settings'
 
-const authRoutes = (req, res, next) => {
+const authRoutes = async (req, res, next) => {
   const tokenHeader = req.cookies.auth
 
   if (typeof tokenHeader !== 'undefined') {
     try {
-      jwt.verify(
-        tokenHeader,
-        `${secret}`,
-        (err, user) => {
-          if (err) {
-            throw new Error('Token expirado')
-          }
+      const key = createPublicKey(publicKey)
+      const payload = await V4.verify(tokenHeader, key, {
+        audience: 'urn:localhost:client',
+        issuer: 'http://localhost:4000',
+      })
 
-          req.user = user
-          next()
+      if (payload) {
+        req.user = {
+          id: payload.id,
+          userID: payload.userid,
+          rol: payload.rol,
+          oficina: payload.oficina,
         }
-      )
+
+        next()
+      }
     } catch (error) {
       res.render('log/sign-in', {
         datos: req.body,

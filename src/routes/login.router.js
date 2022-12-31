@@ -1,9 +1,9 @@
 import express from "express";
 import {
   loginPage,
-  verifyLogin,
-  verifyLogout,
   forgotPage,
+  auth,
+  verifyLogout,
   forgotPassword,
   okPage,
 } from "../controllers/login.controller";
@@ -16,7 +16,7 @@ loginRouter.get("/forgot", forgotPage);
 loginRouter.get("/ok", okPage);
 
 // proc
-loginRouter.post("/login", verifyLogin);
+loginRouter.post("/pass", auth);
 loginRouter.get("/logout", verifyLogout);
 loginRouter.post("/forgot", forgotPassword);
 
