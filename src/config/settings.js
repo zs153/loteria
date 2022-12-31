@@ -16,6 +16,6 @@ export const connectionString = {
   password: process.env.NODE_ORACLEDB_PASSWORD,
   connectString: process.env.NODE_ORACLEDB_CONNECTIONSTRING,
 };
-
+export const privateKey = process.env.PRIVATE_KEY
 export const maxRows = 50000
 export const batchSize = 1000

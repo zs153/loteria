@@ -12,6 +12,7 @@ import apiTipoRouter from '../routes/tipo.router'
 import apiGenteRouter from '../routes/gente.router'
 import apiCargaRouter from '../routes/carga.router'
 import apiEstadisticaRouter from '../routes/estadistica.router'
+import apiAuthRouter from '../routes/autorizacion.router'
 
 let httpServer
 
@@ -35,6 +36,7 @@ function initialize() {
     app.use('/api', apiGenteRouter)
     app.use('/api', apiCargaRouter)
     app.use('/api', apiEstadisticaRouter)
+    app.use('/api', apiAuthRouter)
 
     // server
     httpServer
