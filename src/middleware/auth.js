@@ -1,37 +1,40 @@
-import { createPublicKey } from 'crypto'
-import { V4 } from 'paseto'
+import { createPublicKey, createSecretKey } from 'crypto'
+import { V4, V3 } from 'paseto'
 import { tiposRol } from '../public/js/enumeraciones'
-import { publicKey } from '../config/settings'
+import { publicKey, secreto } from '../config/settings'
 
 const authRoutes = async (req, res, next) => {
   const tokenHeader = req.cookies.auth
 
   if (typeof tokenHeader !== 'undefined') {
     try {
-      const key = createPublicKey(publicKey)
-      const payload = await V4.verify(tokenHeader, key, {
-        audience: 'urn:localhost:client',
-        issuer: 'http://localhost:4000',
+      // paseto public
+      const key = createPublicKey({
+        'key': publicKey,
+        'format': 'pem',
+        'type': 'spki',
       })
-
-      if (payload) {
+      await V4.verify(tokenHeader, key, {
+        audience: 'urn:client:claim',
+        issuer: 'http://localhost:4000',
+        clockTolerance: '1 min',
+      }).then(r => {
         req.user = {
-          id: payload.id,
-          userID: payload.userid,
-          rol: payload.rol,
-          oficina: payload.oficina,
+          id: r.id,
+          userID: r.userid,
+          rol: r.rol,
+          oficina: r.oficina,
         }
 
         next()
-      }
-    } catch (error) {
-      res.render('log/sign-in', {
-        datos: req.body,
-        alerts: [{ msg: 'La contraseña no es correcta' }],
+      }).catch(err => {
+        res.redirect('http://localhost:9000/auth')
       })
+    } catch {
+      res.redirect('http://localhost:9000/auth')
     }
   } else {
-    res.render('log/sign-in', { datos: req.body, alerts: undefined })
+    res.redirect('http://localhost:9000/auth')
   }
 }
 
