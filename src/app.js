@@ -5,7 +5,6 @@ import path from "path";
 // import rutas
 import mainRouter from "./routes/main.router";
 import adminRouter from "./routes/admin.router";
-import loginRouter from "./routes/login.router";
 import usuarioRouter from "./routes/usuario.router";
 import formularioRouter from "./routes/formulario.router";
 import oficinaRouter from "./routes/oficina.router";
@@ -34,6 +33,5 @@ app.use("/admin", oficinaRouter)
 app.use("/admin", tipoRouter)
 app.use("/admin", cargaRouter)
 app.use("/admin", estadisticaRouter)
-app.use("/log", loginRouter)
 
 export default app;

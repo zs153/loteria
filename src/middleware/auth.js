@@ -1,7 +1,7 @@
 import { createPublicKey, createSecretKey } from 'crypto'
-import { V4, V3 } from 'paseto'
+import { V4 } from 'paseto'
 import { tiposRol } from '../public/js/enumeraciones'
-import { publicKey, secreto } from '../config/settings'
+import { publicKey } from '../config/settings'
 
 const authRoutes = async (req, res, next) => {
   const tokenHeader = req.cookies.auth
@@ -28,13 +28,16 @@ const authRoutes = async (req, res, next) => {
 
         next()
       }).catch(err => {
-        res.redirect('http://localhost:9000/auth')
+        console.log('Error de clave pública. No se puede verificar la clave pública')
+        res.redirect('/')
       })
     } catch {
-      res.redirect('http://localhost:9000/auth')
+      console.log('Error de clave pública. No se puede crear la clave pública')
+      res.redirect('/')
     }
   } else {
-    res.redirect('http://localhost:9000/auth')
+    console.log('Error de clave pública: No se ha generado el token de clave pública')
+    res.redirect('/')
   }
 }
 
