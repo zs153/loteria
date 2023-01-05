@@ -18,7 +18,4 @@ adminRouter.get('/perfil/:userid', authRoutes, perfilPage)
 adminRouter.post('/cambio', authRoutes, changePassword)
 adminRouter.post('/perfil', authRoutes, updatePerfil)
 
-// error
-adminRouter.post('/error400', errorPage)
-
 export default adminRouter;

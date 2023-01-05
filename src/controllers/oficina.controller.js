@@ -58,7 +58,7 @@ export const editPage = async (req, res) => {
     });
   }
 };
-export const insertOficina = async (req, res) => {
+export const insert = async (req, res) => {
   const user = req.user;
   const oficina = {
     DESOFI: req.body.desofi.toUpperCase(),
@@ -88,11 +88,11 @@ export const insertOficina = async (req, res) => {
     });
   }
 };
-export const updateOficina = async (req, res) => {
+export const update = async (req, res) => {
   const user = req.user;
   const oficina = {
     IDOFIC: req.body.idofic,
-    DESOFI: req.body.desofi,
+    DESOFI: req.body.desofi.ToUpperCase(),
     CODOFI: req.body.codofi,
   };
   const movimiento = {
@@ -120,7 +120,7 @@ export const updateOficina = async (req, res) => {
     });
   }
 };
-export const deleteOficina = async (req, res) => {
+export const remove = async (req, res) => {
   const user = req.user;
   const oficina = {
     IDOFIC: req.body.idofic,

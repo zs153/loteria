@@ -624,7 +624,7 @@ export const ejercicio = async (req, res) => {
   };
   const movimiento = {
     USUMOV: user.id,
-    TIPMOV: tiposMovimiento.nuevoEjercicioFormularios,
+    TIPMOV: tiposMovimiento.crearEjercicio,
   };
 
   try {
@@ -658,7 +658,7 @@ export const insertReferencia = async (req, res) => {
   };
   const movimiento = {
     USUMOV: user.id,
-    TIPMOV: tiposMovimiento.nuevoRelacionadoFormularios,
+    TIPMOV: tiposMovimiento.crearRelacionado,
   };
 
   try {
@@ -692,7 +692,7 @@ export const updateReferencia = async (req, res) => {
   };
   const movimiento = {
     USUMOV: user.id,
-    TIPMOV: tiposMovimiento.modificarRelacionadoFormularios,
+    TIPMOV: tiposMovimiento.modificarRelacionado,
   };
 
   try {
@@ -720,11 +720,12 @@ export const removeReferencia = async (req, res) => {
   };
   const movimiento = {
     USUMOV: user.id,
-    TIPMOV: tiposMovimiento.borrarRelacionadoFormularios,
+    TIPMOV: tiposMovimiento.borrarRelacionado,
   };
 
   try {
     await axios.post("http://localhost:8000/api/formularios/referencias/delete", {
+      formulario,
       referencia,
       movimiento,
     });
@@ -820,6 +821,7 @@ export const removeSms = async (req, res) => {
 
   try {
     await axios.post("http://localhost:8000/api/formularios/smss/delete", {
+      formulario,
       sms,
       movimiento,
     });
@@ -848,7 +850,7 @@ export const verTodo = async (req, res) => {
     });
     const datos = {
       formularios: result.data,
-      estadosDocumento: estadosDocumento,
+      estadosDocumento,
       verTodo: true,
     };
 

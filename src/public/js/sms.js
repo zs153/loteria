@@ -82,7 +82,7 @@ const buildTable = (state) => {
     const row = document.createElement('tr')
     let cell = document.createElement('td')
     cell.classList.add("w-4")
-    if (element.STASMS === estadosDocumento.pendiente) {
+    if (element.STASMS === estadosSms.pendiente) {
       cell.innerHTML = `<div class="align-items-center py-1">
         <span class="avatar avatar-rounded bg-red-lt">
           <h6>PEND</h6>

@@ -4,9 +4,9 @@ import {
   mainPage,
   addPage,
   editPage,
-  insertOficina,
-  updateOficina,
-  deleteOficina,
+  insert,
+  update,
+  remove,
 } from "../controllers/oficina.controller";
 
 const oficinaRouter = express.Router();
@@ -17,8 +17,8 @@ oficinaRouter.get("/oficinas/add", verifyTokenAndAdmin, addPage);
 oficinaRouter.get("/oficinas/edit/:id", verifyTokenAndAdmin, editPage);
 
 // procedures
-oficinaRouter.post("/oficinas/insert", verifyTokenAndAdmin, insertOficina);
-oficinaRouter.post("/oficinas/update", verifyTokenAndAdmin, updateOficina);
-oficinaRouter.post("/oficinas/delete", verifyTokenAndAdmin, deleteOficina);
+oficinaRouter.post("/oficinas/insert", verifyTokenAndAdmin, insert);
+oficinaRouter.post("/oficinas/update", verifyTokenAndAdmin, update);
+oficinaRouter.post("/oficinas/delete", verifyTokenAndAdmin, remove);
 
 export default oficinaRouter;
