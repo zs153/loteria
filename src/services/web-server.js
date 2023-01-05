@@ -1,8 +1,5 @@
 import http from 'http'
-import logger from 'morgan'
 import express from 'express'
-import cookieParser from 'cookie-parser'
-import cors from 'cors'
 import { puerto } from '../config/settings'
 // rutas
 import apiOficinaRouter from '../routes/oficina.router'
@@ -12,7 +9,6 @@ import apiTipoRouter from '../routes/tipo.router'
 import apiGenteRouter from '../routes/gente.router'
 import apiCargaRouter from '../routes/carga.router'
 import apiEstadisticaRouter from '../routes/estadistica.router'
-import apiAuthRouter from '../routes/autorizacion.router'
 
 let httpServer
 
@@ -22,11 +18,7 @@ function initialize() {
     httpServer = http.createServer(app)
 
     // middleware
-    app.use(logger('dev'))
     app.use(express.json())
-    app.use(express.urlencoded({ extended: true }))
-    app.use(cookieParser())
-    app.use(cors())
 
     // routes
     app.use('/api', apiOficinaRouter)
@@ -36,7 +28,6 @@ function initialize() {
     app.use('/api', apiGenteRouter)
     app.use('/api', apiCargaRouter)
     app.use('/api', apiEstadisticaRouter)
-    app.use('/api', apiAuthRouter)
 
     // server
     httpServer
