@@ -78,7 +78,7 @@ const referenciasQuery = `SELECT
 FROM referencias rr
 INNER JOIN tipos tt ON tt.idtipo = rr.tipref
 `
-const insertReferenciaSql = `BEGIN FORMULARIOS_PKG.INSERTREFERENCIA(
+const insertReferenciaSql = `BEGIN FORMULARIOS_PKG.INSERTREFERENCIAFORMULARIO(
   :iddocu,
   TO_DATE(:fecref,'YYYY-MM-DD'),
   :nifref,
@@ -98,7 +98,8 @@ const updateReferenciaSql = `BEGIN FORMULARIOS_PKG.UPDATEREFERENCIA(
   :tipmov
 ); END;
 `
-const deleteReferenciaSql = `BEGIN FORMULARIOS_PKG.DELETEREFERENCIA(
+const deleteReferenciaSql = `BEGIN FORMULARIOS_PKG.DELETEREFERENCIAFORMULARIO(
+  :iddocu,
   :idrefe,
   :usumov,
   :tipmov 
@@ -109,7 +110,7 @@ const smssQuery = `SELECT
   TO_CHAR(ss.fecsms, 'DD/MM/YYYY') "STRFEC"
 FROM smss ss
 `
-const insertSmsSql = `BEGIN FORMULARIOS_PKG.INSERTSMS(
+const insertSmsSql = `BEGIN FORMULARIOS_PKG.INSERTSMSFORMULARIO(
   :iddocu,
   TO_DATE(:fecsms, 'YYYY-MM-DD'),
   :texsms,
@@ -129,7 +130,8 @@ const updateSmsSql = `BEGIN FORMULARIOS_PKG.UPDATESMS(
   :tipmov
 ); END;
 `
-const deleteSmsSql = `BEGIN FORMULARIOS_PKG.DELETESMS(
+const deleteSmsSql = `BEGIN FORMULARIOS_PKG.DELETESMSFORMULARIO(
+  :iddocu,
   :idsmss,
   :usumov,
   :tipmov 
@@ -263,7 +265,6 @@ export const findReferencias = async (context) => {
     query += `WHERE rr.idrefe = :idrefe`
   }
 
-  console.log(query, binds)
   const result = await simpleExecute(query, binds)
   return result.rows
 }

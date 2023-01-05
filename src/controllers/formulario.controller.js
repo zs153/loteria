@@ -135,6 +135,9 @@ const updateReferenciaFromRec = (req) => {
   return Object.assign(referencia, movimiento)
 }
 const deleteReferenciaFromRec = (req) => {
+  const formulario = {
+    iddocu: req.body.formulario.IDDOCU,
+  }
   const referencia = {
     idrefe: req.body.referencia.IDREFE,
   }
@@ -143,7 +146,7 @@ const deleteReferenciaFromRec = (req) => {
     tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(referencia, movimiento)
+  return Object.assign(formulario, referencia, movimiento)
 }
 
 // req sms
@@ -179,6 +182,9 @@ const updateSmsFromRec = (req) => {
   return Object.assign(sms, movimiento)
 }
 const deleteSmsFromRec = (req) => {
+  const formulario = {
+    iddocu: req.body.formulario.IDDOCU,
+  }
   const sms = {
     idsmss: req.body.sms.IDSMSS,
   }
@@ -187,7 +193,7 @@ const deleteSmsFromRec = (req) => {
     tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(sms, movimiento)
+  return Object.assign(formulario, sms, movimiento)
 }
 
 // proc formulario
@@ -378,8 +384,8 @@ export const sms = async (req, res) => {
   try {
     const result = await DAL.findSmss(context)
 
-    if (result !== null) {
-      res.status(200).json(result)
+    if (result.length === 1) {
+      res.status(200).json(result[0])
     } else {
       res.status(404).end()
     }
