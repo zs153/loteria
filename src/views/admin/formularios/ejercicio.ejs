@@ -60,7 +60,7 @@
                       <div class="col-6">
                         <div class="mb-1">
                           <div class="form-label">Tipo</div>
-                          <select class="form-select" id="cbotip" name="tipdoc" value="<%- datos.formulario.TIPDOC %>" readonly>
+                          <select class="form-select form-control" id="cbotip" name="tipdoc" value="<%- datos.formulario.TIPDOC %>" readonly>
                             <% datos.tipos.map(element=> { %>
                               <option value="<%- element.IDTIPO %>" <%- element.IDTIPO === datos.formulario.TIPDOC ? " selected" :" disabled" %>>
                                 <%- element.DESTIP %>

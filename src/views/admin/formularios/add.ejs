@@ -106,7 +106,7 @@
                       <div class="col-5">
                         <div class="mb-1">
                           <div class="form-label">Oficina</div>
-                            <select class="form-select" id="cboofi" name="ofidoc" value="<%- datos.formulario.OFIDOC %>">
+                            <select class="form-select form-control" id="cboofi" name="ofidoc" value="<%- datos.formulario.OFIDOC %>">
                               <% datos.oficinas.map(element=> { %>
                               <option value="<%- element.IDOFIC %>" <%- element.IDOFIC === datos.formulario.OFIDOC ? " selected" :"" %>>
                                 <%- element.DESOFI %>
