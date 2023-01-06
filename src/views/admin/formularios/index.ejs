@@ -246,7 +246,7 @@
                   <form action="/admin/formularios/desasignar" method="POST">
                     <input type="hidden" id="iddesa" name="iddocu" value="">
                     <input type="hidden" name="verall" id="verall" value="">
-                    <button type="submit" class="btn btn-danger w-100" onclick="checkVer()">Desasignar formulario</button>
+                    <button type="submit" class="btn btn-danger w-100">Desasignar formulario</button>
                   </form>
                 </div>
               </div>
@@ -354,11 +354,6 @@
 
     <script src="/js/ayuda.min.js"></script>
     <script src="/js/formulario.js"></script>
-    <script>
-      const checkVer = () => {
-        document.getElementById('verall').value = localStorage.getItem('vertodo')
-      }
-    </script>
     <script>
       const orgList = <%- JSON.stringify(datos.formularios) %>
       const estadosDocumento = <%- JSON.stringify(datos.estadosDocumento) %>
