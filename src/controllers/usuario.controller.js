@@ -8,13 +8,14 @@ import {
   tiposMovimiento,
   tiposRol,
 } from '../public/js/enumeraciones'
+import { serverAPI } from '../config/settings'
 
 export const mainPage = async (req, res) => {
   const user = req.user
   const usuario = user.rol === tiposRol.admin ? {} : { OFIUSU: user.oficina }
 
   try {
-    const result = await axios.post('http://localhost:8000/api/usuarios', {
+    const result = await axios.post(`http://${serverAPI}:8000/api/usuarios`, {
       usuario,
     })
     const datos = {
@@ -37,7 +38,7 @@ export const addPage = async (req, res) => {
   const oficina = user.rol === tiposRol.admin ? {} : { IDOFIC: user.oficina }
 
   try {
-    const oficinas = await axios.post('http://localhost:8000/api/oficinas', {
+    const oficinas = await axios.post(`http://${serverAPI}:8000/api/oficinas`, {
       oficina,
     })
     const datos = {
@@ -65,10 +66,10 @@ export const editPage = async (req, res) => {
   }
 
   try {
-    const oficinas = await axios.post('http://localhost:8000/api/oficinas', {
+    const oficinas = await axios.post(`http://${serverAPI}:8000/api/oficinas`, {
       oficina,
     })
-    const result = await axios.post('http://localhost:8000/api/usuario', {
+    const result = await axios.post(`http://${serverAPI}:8000/api/usuario`, {
       usuario,
     })
     const datos = {
@@ -110,7 +111,7 @@ export const insert = async (req, res) => {
   }
 
   try {
-    await axios.post("http://localhost:8000/api/usuarios/insert", {
+    await axios.post(`http://${serverAPI}:8000/api/usuarios/insert`, {
       usuario,
       movimiento,
     })
@@ -143,7 +144,7 @@ export const update = async (req, res) => {
   }
 
   try {
-    await axios.post('http://localhost:8000/api/usuarios/update', {
+    await axios.post(`http://${serverAPI}:8000/api/usuarios/update`, {
       usuario,
       movimiento,
     })
@@ -169,7 +170,7 @@ export const remove = async (req, res) => {
   }
 
   try {
-    await axios.post('http://localhost:8000/api/usuarios/delete', {
+    await axios.post(`http://${serverAPI}:8000/api/usuarios/delete`, {
       usuario,
       movimiento,
     })

@@ -1,12 +1,13 @@
 import axios from "axios";
 import { tiposMovimiento } from "../public/js/enumeraciones";
+import { serverAPI } from "../config/settings";
 
 export const mainPage = async (req, res) => {
   const user = req.user;
   const tipo = {}
 
   try {
-    const result = await axios.post("http://localhost:8000/api/tipos", {
+    const result = await axios.post(`http://${serverAPI}:8000/api/tipos`, {
       tipo,
     });
     const datos = {
@@ -42,7 +43,7 @@ export const editPage = async (req, res) => {
   }
 
   try {
-    const result = await axios.post("http://localhost:8000/api/tipo", {
+    const result = await axios.post(`http://${serverAPI}:8000/api/tipo`, {
       tipo,
     });
 
@@ -71,7 +72,7 @@ export const insert = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8000/api/tipos/insert", {
+    await axios.post(`http://${serverAPI}:8000/api/tipos/insert`, {
       tipo,
       movimiento,
     });
@@ -98,7 +99,7 @@ export const update = async (req, res) => {
   };
 
   try {
-    axios.post("http://localhost:8000/api/tipos/update", {
+    axios.post(`http://${serverAPI}:8000/api/tipos/update`, {
       tipo,
       movimiento,
     });
@@ -124,7 +125,7 @@ export const remove = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8000/api/tipos/delete", {
+    await axios.post(`http://${serverAPI}:8000/api/tipos/delete`, {
       tipo,
       movimiento,
     });

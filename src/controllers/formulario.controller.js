@@ -5,6 +5,7 @@ import {
   tiposMovimiento,
   tiposRol,
 } from "../public/js/enumeraciones";
+import { serverAPI } from "../config/settings";
 
 // pages formulario
 export const mainPage = async (req, res) => {
@@ -15,7 +16,7 @@ export const mainPage = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8000/api/formularios", {
+    const result = await axios.post(`http://${serverAPI}:8000/api/formularios`, {
       formulario,
     })
     const datos = {
@@ -46,10 +47,10 @@ export const addPage = async (req, res) => {
   const tipo = {}
 
   try {
-    const tipos = await axios.post("http://localhost:8000/api/tipos", {
+    const tipos = await axios.post(`http://${serverAPI}:8000/api/tipos`, {
       tipo,
     })
-    const oficinas = await axios.post("http://localhost:8000/api/oficinas", {
+    const oficinas = await axios.post(`http://${serverAPI}:8000/api/oficinas`, {
       oficina,
     })
     const datos = {
@@ -76,13 +77,13 @@ export const editPage = async (req, res) => {
   const oficina = user.rol === tiposRol.admin ? {} : { IDOFIC: user.oficina }
 
   try {
-    const tipos = await axios.post("http://localhost:8000/api/tipos", {
+    const tipos = await axios.post(`http://${serverAPI}:8000/api/tipos`, {
       tipo,
     })
-    const oficinas = await axios.post("http://localhost:8000/api/oficinas", {
+    const oficinas = await axios.post(`http://${serverAPI}:8000/api/oficinas`, {
       oficina,
     })
-    const result = await axios.post("http://localhost:8000/api/formulario", {
+    const result = await axios.post(`http://${serverAPI}:8000/api/formulario`, {
       formulario,
     });
 
@@ -113,10 +114,10 @@ export const referenciasPage = async (req, res) => {
   };
 
   try {
-    const ret = await axios.post("http://localhost:8000/api/formulario", {
+    const ret = await axios.post(`http://${serverAPI}:8000/api/formulario`, {
       formulario,
     })
-    const referencias = await axios.post("http://localhost:8000/api/formularios/referencias", {
+    const referencias = await axios.post(`http://${serverAPI}:8000/api/formularios/referencias`, {
       formulario,
     })
 
@@ -148,10 +149,10 @@ export const referenciasAddPage = async (req, res) => {
   const tipo = {}
 
   try {
-    const tipos = await axios.post("http://localhost:8000/api/tipos", {
+    const tipos = await axios.post(`http://${serverAPI}:8000/api/tipos`, {
       tipo,
     })
-    const result = await axios.post("http://localhost:8000/api/formulario", {
+    const result = await axios.post(`http://${serverAPI}:8000/api/formulario`, {
       formulario,
     });
     const referencia = {
@@ -185,10 +186,10 @@ export const referenciasEditPage = async (req, res) => {
   };
 
   try {
-    const tipos = await axios.post("http://localhost:8000/api/tipos", {
+    const tipos = await axios.post(`http://${serverAPI}:8000/api/tipos`, {
       tipo,
     })
-    const result = await axios.post("http://localhost:8000/api/formularios/referencia", {
+    const result = await axios.post(`http://${serverAPI}:8000/api/formularios/referencia`, {
       referencia,
     });
     const datos = {
@@ -216,10 +217,10 @@ export const smssPage = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8000/api/formulario", {
+    const result = await axios.post(`http://${serverAPI}:8000/api/formulario`, {
       formulario,
     })
-    const smss = await axios.post("http://localhost:8000/api/formularios/smss", {
+    const smss = await axios.post(`http://${serverAPI}:8000/api/formularios/smss`, {
       formulario,
     })
 
@@ -251,7 +252,7 @@ export const smssAddPage = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8000/api/formulario", {
+    const result = await axios.post(`http://${serverAPI}:8000/api/formulario`, {
       formulario,
     });
     const sms = {
@@ -282,7 +283,7 @@ export const smssEditPage = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8000/api/formularios/sms", {
+    const result = await axios.post(`http://${serverAPI}:8000/api/formularios/sms`, {
       sms,
     });
     const datos = {
@@ -307,10 +308,10 @@ export const smssReadonlyPage = async (req, res) => {
   };
 
   try {
-    const ret = await axios.post("http://localhost:8000/api/formulario", {
+    const ret = await axios.post(`http://${serverAPI}:8000/api/formulario`, {
       formulario,
     })
-    const smss = await axios.post("http://localhost:8000/api/formularios/smss", {
+    const smss = await axios.post(`http://${serverAPI}:8000/api/formularios/smss`, {
       formulario,
     })
 
@@ -346,10 +347,10 @@ export const ejercicioPage = async (req, res) => {
   };
 
   try {
-    const tipos = await axios.post("http://localhost:8000/api/tipos", {
+    const tipos = await axios.post(`http://${serverAPI}:8000/api/tipos`, {
       tipo,
     })
-    const result = await axios.post("http://localhost:8000/api/formulario", {
+    const result = await axios.post(`http://${serverAPI}:8000/api/formulario`, {
       formulario,
     })
 
@@ -398,7 +399,7 @@ export const insert = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8000/api/formularios/insert", {
+    await axios.post(`http://${serverAPI}:8000/api/formularios/insert`, {
       formulario,
       movimiento,
     });
@@ -437,7 +438,7 @@ export const update = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8000/api/formularios/update", {
+    await axios.post(`http://${serverAPI}:8000/api/formularios/update`, {
       formulario,
       movimiento,
     });
@@ -466,7 +467,7 @@ export const remove = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8000/api/formularios/delete", {
+    await axios.post(`http://${serverAPI}:8000/api/formularios/delete`, {
       formulario,
       movimiento,
     });
@@ -487,7 +488,7 @@ export const asignar = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8000/api/formulario", {
+    const result = await axios.post(`http://${serverAPI}:8000/api/formulario`, {
       formulario,
     });
 
@@ -502,7 +503,7 @@ export const asignar = async (req, res) => {
     };
 
     if (result.data.STADOC === estadosDocumento.pendiente) {
-      await axios.post("http://localhost:8000/api/formularios/cambio", {
+      await axios.post(`http://${serverAPI}:8000/api/formularios/cambio`, {
         formulario,
         movimiento,
       });
@@ -530,7 +531,7 @@ export const resolver = async (req, res) => {
   }
 
   try {
-    const result = await axios.post("http://localhost:8000/api/formulario", {
+    const result = await axios.post(`http://${serverAPI}:8000/api/formulario`, {
       formulario,
     });
 
@@ -545,7 +546,7 @@ export const resolver = async (req, res) => {
         TIPMOV: tiposMovimiento.resolverFormulario,
       };
 
-      await axios.post("http://localhost:8000/api/formularios/resolver", {
+      await axios.post(`http://${serverAPI}:8000/api/formularios/resolver`, {
         formulario,
         sms,
         movimiento,
@@ -568,7 +569,7 @@ export const desasignar = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8000/api/formulario", {
+    const result = await axios.post(`http://${serverAPI}:8000/api/formulario`, {
       formulario,
     });
 
@@ -583,7 +584,7 @@ export const desasignar = async (req, res) => {
         TIPMOV: tiposMovimiento.desasignarFormulario,
       };
 
-      await axios.post("http://localhost:8000/api/formularios/unasign", {
+      await axios.post(`http://${serverAPI}:8000/api/formularios/unasign`, {
         formulario,
         movimiento,
       });
@@ -628,7 +629,7 @@ export const ejercicio = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8000/api/formularios/insert", {
+    await axios.post(`http://${serverAPI}:8000/api/formularios/insert`, {
       formulario,
       movimiento,
     });
@@ -662,7 +663,7 @@ export const insertReferencia = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8000/api/formularios/referencias/insert", {
+    await axios.post(`http://${serverAPI}:8000/api/formularios/referencias/insert`, {
       formulario,
       referencia,
       movimiento,
@@ -696,7 +697,7 @@ export const updateReferencia = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8000/api/formularios/referencias/update", {
+    await axios.post(`http://${serverAPI}:8000/api/formularios/referencias/update`, {
       referencia,
       movimiento,
     });
@@ -724,7 +725,7 @@ export const removeReferencia = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8000/api/formularios/referencias/delete", {
+    await axios.post(`http://${serverAPI}:8000/api/formularios/referencias/delete`, {
       formulario,
       referencia,
       movimiento,
@@ -759,7 +760,7 @@ export const insertSms = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8000/api/formularios/smss/insert", {
+    await axios.post(`http://${serverAPI}:8000/api/formularios/smss/insert`, {
       formulario,
       sms,
       movimiento,
@@ -792,7 +793,7 @@ export const updateSms = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8000/api/formularios/smss/update", {
+    await axios.post(`http://${serverAPI}:8000/api/formularios/smss/update`, {
       sms,
       movimiento,
     });
@@ -820,7 +821,7 @@ export const removeSms = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8000/api/formularios/smss/delete", {
+    await axios.post(`http://${serverAPI}:8000/api/formularios/smss/delete`, {
       formulario,
       sms,
       movimiento,
@@ -845,7 +846,7 @@ export const verTodo = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8000/api/formularios", {
+    const result = await axios.post(`http://${serverAPI}:8000/api/formularios`, {
       formulario,
     });
     const datos = {

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { estadosDocumento, tiposMovimiento } from '../public/js/enumeraciones'
+import { serverAPI } from '../config/settings'
 
 // pages
 export const mainPage = async (req, res) => {
@@ -14,7 +15,7 @@ export const mainPage = async (req, res) => {
   let hasta = new Date(yearMonthDayToUTCString(currentYear, currentMonth, lastDayMonth)).toISOString().slice(0, 10)
 
   try {
-    const cargas = await axios.post('http://localhost:8000/api/cargas', {
+    const cargas = await axios.post(`http://${serverAPI}:8000/api/cargas`, {
       carga,
     })
     const datos = {
@@ -46,17 +47,17 @@ export const generarEstadistica = async (req, res) => {
   }
 
   try {
-    const cargas = await axios.post('http://localhost:8000/api/cargas', {
+    const cargas = await axios.post(`http://${serverAPI}:8000/api/cargas`, {
       carga,
     })
-    const usuarios = await axios.post('http://localhost:8000/api/estadisticas/usuarios', {
+    const usuarios = await axios.post(`http://${serverAPI}:8000/api/estadisticas/usuarios`, {
       formulario,
       tipos: {
         ASIDOC: estadosDocumento.asignado,
         RESDOC: estadosDocumento.resuelto,
       },
     })
-    const oficinas = await axios.post('http://localhost:8000/api/estadisticas/oficinas', {
+    const oficinas = await axios.post(`http://${serverAPI}:8000/api/estadisticas/oficinas`, {
       formulario,
       tipos: {
         PENDOC: estadosDocumento.pendiente,
@@ -64,7 +65,7 @@ export const generarEstadistica = async (req, res) => {
         RESDOC: estadosDocumento.resuelto,
       },
     })
-    const actuacion = await axios.post('http://localhost:8000/api/estadisticas/actuacion', {
+    const actuacion = await axios.post(`http://${serverAPI}:8000/api/estadisticas/actuacion`, {
       formulario,
       periodo,
       tipos: {
@@ -120,7 +121,7 @@ const yearMonthDayToUTCString = (year, month, day) => {
   const monthCDM = ('0' + month).slice(-2)
   const dayCDM = ('0' + day).slice(-2)
 
-  const fecha = new Date(`${yearCDM}-${monthCDM}-${dayCDM}T00:00:00`)
+  const fecha = new Date(`${yearCDM} - ${monthCDM} - ${dayCDM}T00:00:00`)
   const userTimezoneOffset = fecha.getTimezoneOffset() * 60000
 
   return new Date(fecha.getTime() - userTimezoneOffset).toISOString().slice(0, 10)

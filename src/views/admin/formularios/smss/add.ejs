@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Mensajes</title>
+  <title>SMS</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
@@ -24,7 +24,7 @@
                 <form id="form" action="/admin/formularios/smss/insert" method="POST" onsubmit="return validate();">
                   <input type="hidden" name="iddocu" id="iddocu" value="<%- datos.formulario.IDDOCU %>">
                   <div class="card-header">
-                    <h3 class="card-title">Nuevo Sms</h3>
+                    <h3 class="card-title">SMS</h3>
                   </div>
                   <div class="card-body">
                     <div class="row">
@@ -50,7 +50,7 @@
                   <div class="card-footer text-end">
                     <div class="d-flex">
                       <a href="/admin/formularios/smss/<%- datos.formulario.IDDOCU %>" class="btn btn-white">Cancelar</a>
-                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear sms</button>
+                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear nuevo sms</button>
                     </div>
                   </div>
                 </form>
