@@ -1,12 +1,16 @@
 import http from 'http'
+import logger from 'morgan'
 import express from 'express'
-import { puerto } from '../config/settings'
-// rutas
+import cookieParser from 'cookie-parser'
+import cors from 'cors'
+import { port } from '../config/settings'
+// routes
 import apiOficinaRouter from '../routes/oficina.router'
 import apiUsuarioRouter from '../routes/usuario.router'
+import apiHistoricoRouter from '../routes/historico.router'
+import apiGenteRouter from '../routes/gente.router'
 import apiFormularioRouter from '../routes/formulario.router'
 import apiTipoRouter from '../routes/tipo.router'
-import apiGenteRouter from '../routes/gente.router'
 import apiCargaRouter from '../routes/carga.router'
 import apiEstadisticaRouter from '../routes/estadistica.router'
 
@@ -18,22 +22,27 @@ function initialize() {
     httpServer = http.createServer(app)
 
     // middleware
+    app.use(logger('dev'))
     app.use(express.json())
+    app.use(express.urlencoded({ extended: true }))
+    app.use(cookieParser())
+    app.use(cors())
 
     // routes
     app.use('/api', apiOficinaRouter)
     app.use('/api', apiUsuarioRouter)
+    app.use('/api', apiHistoricoRouter)
+    app.use('/api', apiGenteRouter)
     app.use('/api', apiFormularioRouter)
     app.use('/api', apiTipoRouter)
-    app.use('/api', apiGenteRouter)
     app.use('/api', apiCargaRouter)
     app.use('/api', apiEstadisticaRouter)
 
     // server
     httpServer
-      .listen(puerto)
+      .listen(port)
       .on('listening', () => {
-        console.log(`Web server listening on port: ${puerto} `)
+        console.log(`Web server listening on conexion: port:${port} `)
 
         resolve()
       })
@@ -42,7 +51,6 @@ function initialize() {
       })
   })
 }
-
 module.exports.initialize = initialize
 
 function close() {
@@ -57,5 +65,4 @@ function close() {
     })
   })
 }
-
 module.exports.close = close

@@ -1,170 +1,120 @@
-import oracledb from "oracledb";
+import { BIND_OUT, NUMBER } from "oracledb";
 import { simpleExecute } from "../services/database.js";
 
-const baseQuery = `SELECT 
-    uu.*,
-    oo.desofi
-  FROM usuarios uu
-  INNER JOIN oficinas oo ON oo.idofic = uu.ofiusu
-`;
-const insertSql = `BEGIN FORMULARIOS_PKG.INSERTUSUARIO(
-    :nomusu,
-    :ofiusu,
-    :rolusu,
-    :userid,
-    :emausu,
-    :perusu,
-    :telusu,
-    :pwdusu,
-    :stausu,
-    :usumov,
-    :tipmov,
-    :idusua
-  ); END;
-`;
-const updateSql = `BEGIN FORMULARIOS_PKG.UPDATEUSUARIO(
-    :idusua,
-    :nomusu, 
-    :ofiusu, 
-    :rolusu, 
-    :userid, 
-    :emausu, 
-    :perusu, 
-    :telusu, 
-    :stausu, 
-    :usumov, 
-    :tipmov
-  ); END;
-`;
-const removeSql = `BEGIN FORMULARIOS_PKG.DELETEUSUARIO(
-  :idusua,
-  :usumov,
-  :tipmov 
-); END;
-`;
-const cambioSql = `BEGIN FORMULARIOS_PKG.CHANGEPASSWORD(
-  :idusua,
-  :pwdusu,
-  :usumov,
-  :tipmov
-); END;
-`;
-const olvidoSql = `BEGIN FORMULARIOS_PKG.FORGOTPASSWORD(
-  :emausu,
-  :pwdusu, 
-  :tipmov,
-  :saltus
-); END;
-`;
-const perfilSql = `BEGIN FORMULARIOS_PKG.UPDATEPERFILUSUARIO(
-  :idusua,
-  :nomusu,
-  :emausu,
-  :telusu, 
-  :usumov,
-  :tipmov
-); END;
-`;
+const baseQuery = "SELECT uu.*,oo.desofi FROM usuarios uu INNER JOIN oficinas oo ON oo.idofic = uu.ofiusu";
+const insertSql = "BEGIN FORMULARIOS_PKG.INSERTUSUARIO(:nomusu,:ofiusu,:rolusu,:userid,:emausu,:perusu,:telusu,:stausu,:usumov,:tipmov,:idusua); END;";
+const updateSql = "BEGIN FORMULARIOS_PKG.UPDATEUSUARIO(:idusua,:nomusu,:ofiusu,:rolusu,:emausu,:perusu,:telusu,:stausu,:usumov,:tipmov); END;";
+const removeSql = "BEGIN FORMULARIOS_PKG.DELETEUSUARIO(:idusua,:usumov,:tipmov); END;";
+const perfilSql = "BEGIN FORMULARIOS_PKG.UPDATEPERFILUSUARIO(:idusua,:nomusu,:emausu,:telusu, :usumov,:tipmov); END;";
 
-export const find = async (context) => {
+export const usuario = async (context) => {
+  // bind
   let query = baseQuery;
-  let binds = {};
+  const bind = context
 
   if (context.IDUSUA) {
-    binds.idusua = context.IDUSUA;
-    query += "WHERE uu.idusua = :idusua";
+    query += " WHERE uu.idusua = :idusua";
   } else if (context.USERID) {
-    binds.userid = context.USERID;
-    query += "WHERE uu.userid = :userid";
+    query += " WHERE uu.userid = :userid";
   } else if (context.EMAUSU) {
-    binds.emausu = context.EMAUSU;
-    query += "WHERE uu.emausu = :emausu";
+    query += " WHERE uu.emausu = :emausu";
   } else if (context.OFIUSU) {
-    binds.ofiusu = context.OFIUSU;
-    query += "WHERE uu.ofiusu = :ofiusu";
-  }
+    query += " WHERE uu.ofiusu = :ofiusu";
+  } 
 
-  const result = await simpleExecute(query, binds);
-  return result.rows;
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
 };
-export const insert = async (bind) => {
-  bind.idusua = {
-    dir: oracledb.BIND_OUT,
-    type: oracledb.NUMBER,
+export const usuarios = async (context) => {
+  // bind
+  let query = '';
+  let bind = {
+    limit: context.limit,
+    part: context.part,
   };
 
-  try {
-    const result = await simpleExecute(insertSql, bind);
-
-    bind.idusua = await result.outBinds.idusua;
-  } catch (error) {
-    bind = null;
+  if (context.oficina) {
+    bind.ofiusu = context.oficina
+    query = "WITH datos AS (SELECT uu.idusua,uu.userid,uu.nomusu,uu.telusu,uu.stausu,oo.desofi FROM usuarios uu INNER JOIN oficinas oo ON oo.idofic = uu.ofiusu WHERE uu.ofiusu = :ofiusu AND (uu.nomusu LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR uu.userid LIKE '%' || LOWER(:part) || '%' OR :part IS NULL))"
+  } else {
+    query = "WITH datos AS (SELECT uu.idusua,uu.userid,uu.nomusu,uu.telusu,uu.stausu,oo.desofi FROM usuarios uu INNER JOIN oficinas oo ON oo.idofic = uu.ofiusu WHERE uu.nomusu LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR uu.userid LIKE '%' || LOWER(:part) || '%' OR :part IS NULL)"
   }
 
-  return bind;
+  if (context.direction === 'next') {
+    bind.nomusu = context.cursor.next === '' ? null : context.cursor.next;
+    query += "SELECT * FROM datos WHERE nomusu > :nomusu OR :nomusu IS NULL ORDER BY nomusu ASC FETCH NEXT :limit ROWS ONLY"
+  } else {
+    bind.nomusu = context.cursor.prev === '' ? null : context.cursor.prev;
+    query += "SELECT * FROM datos WHERE nomusu < :nomusu OR :nomusu IS NULL ORDER BY nomusu DESC FETCH NEXT :limit ROWS ONLY"
+  }
+
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
 };
-export const update = async (bind) => {
-  let result;
 
-  try {
-    await simpleExecute(updateSql, bind);
+export const insert = async (context) => {
+  // bind
+  let bind = context
+  bind.IDUSUA = {
+    dir: BIND_OUT,
+    type: NUMBER,
+  };
 
-    result = bind;
-  } catch (error) {
-    result = null;
+  // proc
+  const ret = await simpleExecute(insertSql, bind)
+
+  if (ret) {
+    bind.IDUSUA = ret.outBinds.IDUSUA
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return result;
 };
-export const remove = async (bind) => {
-  let result;
+export const update = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(updateSql, bind)
 
-  try {
-    await simpleExecute(removeSql, bind);
-
-    result = bind;
-  } catch (error) {
-    result = null;
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return result;
 };
-export const change = async (bind) => {
-  let result;
+export const remove = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(removeSql, bind)
 
-  try {
-    await simpleExecute(cambioSql, bind);
-
-    result = bind;
-  } catch (error) {
-    result = null;
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return result;
 };
-export const forgot = async (bind) => {
-  let result;
+export const profile = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(perfilSql, bind)
 
-  try {
-    await simpleExecute(olvidoSql, bind);
-
-    result = bind;
-  } catch (error) {
-    result = null;
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return result;
-};
-export const profile = async (bind) => {
-  let result;
-
-  try {
-    await simpleExecute(perfilSql, bind);
-
-    result = bind;
-  } catch (error) {
-    result = null;
-  }
-
-  return result;
 }

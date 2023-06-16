@@ -1,34 +1,35 @@
-import * as DAL from '../models/usuario.model'
+import * as DAL from '../models/historico.model'
 
-export const usuario = async (req, res) => {
+export const historico = async (req, res) => {
   // context
   const context = req.body.context
 
   // proc
   try {
-    const result = await DAL.usuario(context)
+    const result = await DAL.historico(context)
 
     res.status(200).json(result)
   } catch (err) {
     res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
-export const usuarios = async (req, res) => {
+export const historicos = async (req, res) => {
   // context
   const context = req.body.context
 
   // proc
   try {
-    const result = await DAL.usuarios(context)
+    const result = await DAL.historicos(context)
 
     res.status(200).json(result)
   } catch (err) {
     res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
-export const crear = async (req, res) => {
+export const modificar = async (req, res) => {
   // context
   const usuario = {
+    IDUSUA: req.body.usuario.IDUSUA,
     NOMUSU: req.body.usuario.NOMUSU,
     OFIUSU: req.body.usuario.OFIUSU,
     ROLUSU: req.body.usuario.ROLUSU,
@@ -36,34 +37,6 @@ export const crear = async (req, res) => {
     EMAUSU: req.body.usuario.EMAUSU,
     PERUSU: req.body.usuario.PERUSU,
     TELUSU: req.body.usuario.TELUSU,
-    STAUSU: req.body.usuario.STAUSU,
-  }
-  const movimiento = {
-    USUMOV: req.body.movimiento.USUMOV,
-    TIPMOV: req.body.movimiento.TIPMOV,
-  }
-  const context = Object.assign(usuario, movimiento)
-
-  // proc
-  try {
-    const result = await DAL.insert(context)
-
-    res.status(200).json(result)
-  } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
-  }
-}
-export const modificiar = async (req, res) => {
-  // context
-  const usuario = {
-    IDUSUA: req.body.usuario.IDUSUA,
-    NOMUSU: req.body.usuario.NOMUSU,
-    OFIUSU: req.body.usuario.OFIUSU,
-    ROLUSU: req.body.usuario.ROLUSU,
-    EMAUSU: req.body.usuario.EMAUSU,
-    PERUSU: req.body.usuario.PERUSU,
-    TELUSU: req.body.usuario.TELUSU,
-    STAUSU: req.body.usuario.STAUSU,
   }
   const movimiento = {
     USUMOV: req.body.movimiento.USUMOV,
@@ -100,13 +73,10 @@ export const borrar = async (req, res) => {
     res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
-export const perfil = async (req, res) => {
+export const activar = async (req, res) => {
   // context
   const usuario = {
     IDUSUA: req.body.usuario.IDUSUA,
-    NOMUSU: req.body.usuario.NOMUSU,
-    EMAUSU: req.body.usuario.EMAUSU,
-    TELUSU: req.body.usuario.TELUSU,
   }
   const movimiento = {
     USUMOV: req.body.movimiento.USUMOV,
@@ -116,7 +86,7 @@ export const perfil = async (req, res) => {
 
   // proc
   try {
-    const result = await DAL.profile(context)
+    const result = await DAL.activar(context)
 
     res.status(200).json(result)
   } catch (err) {

@@ -1,11 +1,5 @@
 import express from "express";
-import {
-  tipo,
-  tipos,
-  crear,
-  modificar,
-  borrar,
-} from "../controllers/tipo.controller";
+import { tipo, tipos, crear, modificar, borrar } from "../controllers/tipo.controller";
 
 const apiTipoRouter = express.Router();
 

@@ -1,9 +1,10 @@
 import * as DAL from "../models/gente.model";
 
-export const gente = async (req, res) => {
+export const getGente = async (req, res) => {
   let context = {
     nifgen: req.body.NIFGEN,
-  }
+
+  };
 
   if (context.nifgen.length > 9) {
     context.disgen = context.nifgen.slice(-1);
@@ -21,4 +22,4 @@ export const gente = async (req, res) => {
   } catch (err) {
     res.status(500).end();
   }
-}
+};

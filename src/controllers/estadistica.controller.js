@@ -40,9 +40,12 @@ const actuacionFromRec = (req) => {
   return Object.assign(formulario, periodo, tipos)
 }
 
-export const estadisticasUsuarios = async (req, res) => {
+export const usuarios = async (req, res) => {
+  // context
+  const context = req.body.context
+
   try {
-    const result = await DAL.statUsuarios(usuariosFromRec(req))
+    const result = await DAL.usuarios(context)
 
     if (result !== null) {
       res.status(200).json(result)
@@ -53,9 +56,12 @@ export const estadisticasUsuarios = async (req, res) => {
     res.status(500).end()
   }
 }
-export const estadisticasOficinas = async (req, res) => {
+export const oficinas = async (req, res) => {
+  // context
+  const context = req.body.context
+
   try {
-    const result = await DAL.statOficinas(oficinasFromRec(req))
+    const result = await DAL.oficinas(context)
 
     if (result !== null) {
       res.status(200).json(result)
@@ -66,9 +72,12 @@ export const estadisticasOficinas = async (req, res) => {
     res.status(500).end()
   }
 }
-export const estadisticasActuacion = async (req, res) => {
+export const actuacion = async (req, res) => {
+  // context
+  const context = req.body.context
+
   try {
-    const result = await DAL.statActuacion(actuacionFromRec(req))
+    const result = await DAL.actuacion(context)
 
     if (result !== null) {
       res.status(200).json(result)

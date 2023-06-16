@@ -1,372 +1,417 @@
-import oracledb from 'oracledb'
-import { simpleExecute } from '../services/database.js'
-
-const baseQuery = `SELECT 
-  oo.desofi,
-  tt.destip,
-  dd.*,
-  TO_CHAR(dd.fecdoc, 'DD/MM/YYYY') STRFEC
-FROM documentos dd
-INNER JOIN tipos tt ON tt.idtipo = dd.tipdoc
-INNER JOIN oficinas oo ON oo.idofic = dd.ofidoc
-`
-const insertSql = `BEGIN FORMULARIOS_PKG.INSERTFORMULARIO(
-  TO_DATE(:fecdoc,'YYYY-MM-DD'),
-  :nifcon,
-  :nomcon,
-  :emacon,
-  :telcon,
-  :movcon,
-  :refdoc,
-  :tipdoc,
-  :ejedoc,
-  :ofidoc,
-  :obsdoc,
-  :fundoc,
-  :liqdoc,
-  :stadoc,
-  :usumov,
-  :tipmov,
-  :iddocu
-); END;
-`
-const updateSql = `BEGIN FORMULARIOS_PKG.UPDATEFORMULARIO(
-  :iddocu,
-  TO_DATE(:fecdoc,'YYYY-MM-DD'),
-  :nifcon,
-  :nomcon,
-  :emacon,
-  :telcon,
-  :movcon,
-  :tipdoc,
-  :ejedoc,
-  :ofidoc,
-  :obsdoc,
-  :usumov,
-  :tipmov
-); END;
-`
-const deleteSql = `BEGIN FORMULARIOS_PKG.DELETEFORMULARIO(
-  :iddocu,
-  :usumov,
-  :tipmov 
-); END;
-`
-const cambioEstadoSql = `BEGIN FORMULARIOS_PKG.CAMBIOESTADOFORMULARIO(
-  :iddocu,
-  :liqdoc,
-  :stadoc,
-  :usumov,
-  :tipmov 
-); END;
-`
-const resolverConSmsSql = `BEGIN FORMULARIOS_PKG.RESOLVERCONSMSFORMULARIO(
-  :iddocu,
-  :liqdoc,
-  :stadoc,
-  :movsms,
-  :texsms,
-  :stasms,
-  :usumov,
-  :tipmov 
-); END;
-`
-const referenciasQuery = `SELECT 
-  rr.*,
-  tt.destip,
-  TO_CHAR(rr.fecref, 'DD/MM/YYYY') AS STRFEC
-FROM referencias rr
-INNER JOIN tipos tt ON tt.idtipo = rr.tipref
-`
-const insertReferenciaSql = `BEGIN FORMULARIOS_PKG.INSERTREFERENCIAFORMULARIO(
-  :iddocu,
-  TO_DATE(:fecref,'YYYY-MM-DD'),
-  :nifref,
-  :desref,
-  :tipref,
-  :usumov,
-  :tipmov,
-  :idrefe
-); END;
-`
-const updateReferenciaSql = `BEGIN FORMULARIOS_PKG.UPDATEREFERENCIA(
-  :idrefe,
-  :nifref,
-  :desref,
-  :tipref,
-  :usumov,
-  :tipmov
-); END;
-`
-const deleteReferenciaSql = `BEGIN FORMULARIOS_PKG.DELETEREFERENCIAFORMULARIO(
-  :iddocu,
-  :idrefe,
-  :usumov,
-  :tipmov 
-); END;
-`
-const smssQuery = `SELECT 
-  ss.*,
-  TO_CHAR(ss.fecsms, 'DD/MM/YYYY') "STRFEC"
-FROM smss ss
-`
-const insertSmsSql = `BEGIN FORMULARIOS_PKG.INSERTSMSFORMULARIO(
-  :iddocu,
-  TO_DATE(:fecsms, 'YYYY-MM-DD'),
-  :texsms,
-  :movsms,
-  :stasms,
-  :usumov,
-  :tipmov,
-  :idsmss
-); END;
-`
-const updateSmsSql = `BEGIN FORMULARIOS_PKG.UPDATESMS(
-  :idsmss,
-  TO_DATE(:fecsms, 'YYYY-MM-DD'),
-  :texsms,
-  :movsms,
-  :usumov,
-  :tipmov
-); END;
-`
-const deleteSmsSql = `BEGIN FORMULARIOS_PKG.DELETESMSFORMULARIO(
-  :iddocu,
-  :idsmss,
-  :usumov,
-  :tipmov 
-); END;
-`
+import { BIND_OUT, NUMBER } from "oracledb";
+import { simpleExecute } from '../services/database.js';
 
 // formulario
-export const find = async (context) => {
-  let query = baseQuery
-  let binds = {}
+const baseQuery = "SELECT ff.*,oo.desofi,tt.destip FROM formularios ff INNER JOIN tipos tt ON tt.idtipo = ff.tipfor INNER JOIN oficinas oo ON oo.idofic = ff.ofifor"
+const insertSql = "BEGIN FORMULARIOS_PKG.INSERTFORMULARIO(TO_DATE(:fecfra, 'YYYY-MM-DD'),:nifcon,:nomcon,:emacon,:telcon,:movcon,:reffor,:tipfra,:ejefor,:ofifor,:obsfra,:funfra,:liqfor,:stafor,:usumov,:tipmov,:idform); END;"
+const updateSql = "BEGIN FORMULARIOS_PKG.UPDATEFORMULARIO(:idform,TO_DATE(:fecfra,'YYYY-MM-DD'),:nifcon,:nomcon,:emacon,:telcon,:movcon,:tipfra,:ejefor,:ofifor,:obsfra,:usumov,:tipmov); END;"
+const removeSql = "BEGIN FORMULARIOS_PKG.DELETEFORMULARIO(:idform,:usumov,:tipmov ); END;"
+const cambioSql = "BEGIN FORMULARIOS_PKG.CAMBIOESTADOFORMULARIO(:idform,:liqfor,:stafor,:usumov,:tipmov ); END;"
+const unasignSql = "BEGIN FORMULARIOS_PKG.UNASIGNFORMULARIO(:idform,:liqfor,:stafor,:usumov,:tipmov ); END;"
+const cierreSql = "BEGIN FORMULARIOS_PKG.CIERREFORMULARIO(:idform,:liqfor,:stafor,:usumov,:tipmov ); END;"
+// sms
+const smssQuery = "SELECT ss.* FROM smss ss"
+const insertSmsSql = "BEGIN FORMULARIOS_PKG.INSERTSMS(:idform,TO_DATE(:fecsms, 'YYYY-MM-DD'),:texsms,:movsms,:stasms,:usumov,:tipmov,:idsmss); END;"
+const updateSmsSql = "BEGIN FORMULARIOS_PKG.UPDATESMS(:idsmss,TO_DATE(:fecsms, 'YYYY-MM-DD'),:texsms,:movsms,:usumov,:tipmov); END;"
+const removeSmsSql = "BEGIN FORMULARIOS_PKG.DELETESMS(:idform,:idsmss,:usumov,:tipmov ); END;"
+// relacion
+const relacionesQuery = "SELECT rr.* FROM relaciones rr"
+const insertRelacionSql = "BEGIN FORMULARIOS_PKG.INSERTRELACION(:idform,TO_DATE(:fecrel, 'YYYY-MM-DD'),:nifcon,:nomcon,:usumov,:tipmov,:idrela); END;"
+const updateRelacionSql = "BEGIN FORMULARIOS_PKG.UPDATERELACION(:idrela,TO_DATE(:fecrel, 'YYYY-MM-DD'),:nifcon,:nomcon,:usumov,:tipmov); END;"
+const removeRelacionSql = "BEGIN FORMULARIOS_PKG.DELETERELACION(:idform,:idrela,:usumov,:tipmov ); END;"
+// ades
+const asignarUsuarioSql = "BEGIN FORMULARIOS_PKG.ASIGNARUSUARIOS(:liqfor,:stafor,:arrfor,:usumov,:tipmov); END;"
+const desAsignarUsuarioSql = "BEGIN FORMULARIOS_PKG.DESASIGNARUSUARIOS(:liqfor,:stafor,:arrfor,:usumov,:tipmov); END;"
 
-  if (context.IDDOCU) {
-    binds.iddocu = context.IDDOCU
-    query += `WHERE dd.iddocu = :iddocu`
-  } else if (context.REFDOC) {
-    binds.refdoc = context.REFDOC
-    query += `WHERE dd.refdoc = :refdoc`
-  } else if (context.LIQDOC) {
-    binds.liqdoc = context.LIQDOC
-    binds.stadoc = context.STADOC
-    if (context.STADOC === 1) {
-      query += `WHERE (dd.liqdoc = :liqdoc AND dd.stadoc = :stadoc) OR dd.stadoc = 0
-      ORDER BY dd.stadoc DESC`
+// proc formulario
+export const formulario = async (context) => {
+  let query = baseQuery
+  let bind = context
+
+  if (context.IDFORM) {
+    query += " WHERE ff.idform = :idform"
+  } else if (context.REFFOR) {
+    query += " WHERE ff.reffor = :reffor"
+  }
+
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const formularios = async (context) => {
+  // bind
+  let query = "WITH datos AS (SELECT ff.*,oo.desofi,tt.destip FROM formularios ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifor INNER JOIN tipos tt ON tt.idtipo = ff.tipfor"
+  let bind = {
+    liqfor: context.liquidador,
+    stafor: context.estado,
+    limit: context.limit,
+  };
+
+  if (context.part) {
+    bind.part = context.part
+    query += " AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefor LIKE '%' || :part || '%' OR ff.reffor LIKE '%' || :part || '%' OR ff.liqfor LIKE '%' || LOWER(:part) || '%' OR tt.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%')"
+  }
+  if (context.rest) {
+    bind.rest = context.rest
+    query += " AND (ff.nifcon LIKE '%' || :rest || '%' OR ff.nomcon LIKE '%' || :rest || '%' OR ff.ejefor LIKE '%' || :rest || '%' OR ff.reffor LIKE '%' || :part || '%' OR ff.liqfor LIKE '%' || LOWER(:rest) || '%' OR tt.destip LIKE '%' || :rest || '%' OR oo.desofi LIKE '%' || :rest || '%')"
+  }
+  query += " WHERE (ff.liqfor = :liqfor AND ff.stafor = :stafor)"
+  if (context.pendientes) {
+    bind.ofifor = context.pendientes.oficina
+    bind.estado = context.pendientes.estado
+    query += " OR (ff.ofifor = :ofifor AND ff.stafor = :estado)"
+  }
+  if (context.direction === 'next') {
+    bind.idform = context.cursor.next;
+    query += ")SELECT * FROM datos WHERE idform > :idform ORDER BY idform ASC FETCH NEXT :limit ROWS ONLY"
+  } else {
+    bind.idform = context.cursor.prev;
+    query += ")SELECT * FROM datos WHERE idform < :idform ORDER BY idform DESC FETCH NEXT :limit ROWS ONLY"
+  }
+
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+};
+export const extended = async (context) => {
+  // bind
+  let query = "WITH datos AS (SELECT ff.*,oo.desofi,tt.destip FROM formularios ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifor INNER JOIN tipos tt ON tt.idtipo = ff.tipfra"
+  let bind = {
+    limit: context.limit,
+  };
+
+  if (context.part) {
+    bind.part = context.part
+    query += " AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefor LIKE '%' || :part || '%' OR ff.reffor LIKE '%' || :part || '%' OR ff.liqfor LIKE '%' || LOWER(:part) || '%' OR tt.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%')"
+  }
+  if (context.rest) {
+    bind.rest = context.rest
+    query += " AND (ff.nifcon LIKE '%' || :rest || '%' OR ff.nomcon LIKE '%' || :rest || '%' OR ff.ejefor LIKE '%' || :rest || '%' OR ff.reffor LIKE '%' || :rest || '%' OR ff.liqfor LIKE '%' || LOWER(:rest) || '%' OR tt.destip LIKE '%' || :rest || '%' OR oo.desofi LIKE '%' || :rest || '%')"
+  }
+  if (context.stafor) {
+    bind.stafor = context.stafor
+    query += " WHERE BITAND(ff.stafor, 2) = :stafor"
+  } 
+  if (context.liqfor) {
+    bind.liqfor = context.liqfor
+    if (context.stafor) {
+      query += " AND ff.liqfor = :liqfor"
     } else {
-      query += `WHERE dd.liqdoc = :liqdoc 
-        AND dd.stadoc = :stadoc`
+      query += " WHERE ff.liqfor = :liqfor"
     }
   }
+  if (context.direction === 'next') {
+    bind.idform = context.cursor.next;
+    query += ")SELECT * FROM datos WHERE idform > :idform ORDER BY idform ASC FETCH NEXT :limit ROWS ONLY"
+  } else {
+    bind.idform = context.cursor.prev;
+    query += ")SELECT * FROM datos WHERE idform < :idform ORDER BY idform DESC FETCH NEXT :limit ROWS ONLY"
+  }
 
-  const result = await simpleExecute(query, binds)
-  return result.rows
+
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
 }
-export const insert = async (bind) => {
-  bind.iddocu = {
-    dir: oracledb.BIND_OUT,
-    type: oracledb.NUMBER,
+export const insert = async (context) => {
+  // bind
+  let bind = context
+  bind.idform = {
+    dir: BIND_OUT,
+    type: NUMBER,
+  };
+
+  // proc
+  const ret = await simpleExecute(insertSql, bind)
+
+  if (ret) {
+    bind.idform = ret.outBinds.idform
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  try {
-    const result = await simpleExecute(insertSql, bind)
-
-    bind.iddocu = await result.outBinds.iddocu
-  } catch (error) {
-    bind = null
-  }
-
-  return bind
 }
-export const update = async (bind) => {
-  let result
+export const update = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(updateSql, bind)
 
-  try {
-    await simpleExecute(updateSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return result
 }
-export const remove = async (bind) => {
-  let result
+export const remove = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(removeSql, bind)
 
-  try {
-    await simpleExecute(deleteSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return result
 }
-export const asignar = async (bind) => {
-  let result
+export const change = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(cambioSql, bind)
 
-  try {
-    await simpleExecute(cambioEstadoSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return result
 }
-export const desasingar = async (bind) => {
-  let result
+export const unasing = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(unasignSql, bind)
 
-  try {
-    await simpleExecute(cambioEstadoSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return result
 }
-export const resolver = async (bind) => {
-  let query = cambioEstadoSql
-  let result
+export const close = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(cierreSql, bind)
 
-  if (bind.movsms) {
-    query = resolverConSmsSql
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  try {
-    await simpleExecute(query, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
-  }
-
-  return result
-}
-
-// referencia
-export const findReferencias = async (context) => {
-  let query = referenciasQuery
-  let binds = {}
-
-  if (context.IDDOCU) {
-    binds.iddocu = context.IDDOCU
-    query += `INNER JOIN referenciasdocumento rd ON rd.idrefe = rr.idrefe
-      WHERE rd.iddocu = :iddocu`
-  } else if (context.IDREFE) {
-    binds.idrefe = context.IDREFE
-    query += `WHERE rr.idrefe = :idrefe`
-  }
-
-  const result = await simpleExecute(query, binds)
-  return result.rows
-}
-export const insertReferencia = async (bind) => {
-  bind.idrefe = {
-    dir: oracledb.BIND_OUT,
-    type: oracledb.NUMBER,
-  }
-
-  try {
-    const result = await simpleExecute(insertReferenciaSql, bind)
-
-    bind.idrefe = await result.outBinds.idrefe
-  } catch (error) {
-    bind = null
-  }
-
-  return bind
-}
-export const updateReferencia = async (bind) => {
-  let result
-
-  try {
-    await simpleExecute(updateReferenciaSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
-  }
-
-  return result
-}
-export const removeReferencia = async (bind) => {
-  let result
-
-  try {
-    await simpleExecute(deleteReferenciaSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
-  }
-
-  return result
 }
 
-// sms
-export const findSmss = async (context) => {
+// proc sms
+export const sms = async (context) => {
+  // bind
   let query = smssQuery
-  let binds = {}
+  const bind = context
 
-  if (context.IDDOCU) {
-    binds.iddocu = context.IDDOCU
-    query += `INNER JOIN smssdocumento sd ON sd.idsmss = ss.idsmss
-      WHERE sd.iddocu = :iddocu`
+  if (context.IDFORM) {
+    query += " INNER JOIN smssformulario sf ON sf.idsmss = ss.idsmss WHERE sf.idform = :idform"
   } else if (context.IDSMSS) {
-    binds.idsmss = context.IDSMSS
-    query += `WHERE ss.idsmss = :idsmss`
+    query += " WHERE ss.idsmss = :idsmss"
   }
 
-  const result = await simpleExecute(query, binds)
-  return result.rows
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
 }
-export const insertSms = async (bind) => {
-  bind.idsmss = {
-    dir: oracledb.BIND_OUT,
-    type: oracledb.NUMBER,
+export const smss = async (context) => {
+  // bind
+  let query = ""
+  let bind = {
+    idform: context.formulario,
+    limit: context.limit,
+    part: context.part,
+  };
+
+  if (context.direction === 'next') {
+    bind.idsmss = context.cursor.next;
+    query = "SELECT ss.*,sf.idform FROM smss ss INNER JOIN smssformulario sf ON sf.idsmss = ss.idsmss AND sf.idform = :idform WHERE ss.idsmss > :idsmss AND (ss.movsms LIKE '%' || :part OR ss.fecsms LIKE '%' || :part || '%' OR :part IS NULL) ORDER BY ss.idsmss ASC FETCH NEXT :limit ROWS ONLY"
+  } else {
+    bind.idsmss = context.cursor.prev;
+    query = "SELECT ss.*,sf.idform FROM smss ss INNER JOIN smssformulario sf ON sf.idsmss = ss.idsmss AND sf.idform = :idform WHERE ss.idsmss < :idsmss AND (ss.movsms LIKE '%' || :part OR ss.fecsms LIKE '%' || :part || '%' OR :part IS NULL) ORDER BY ss.idsmss DESC FETCH NEXT :limit ROWS ONLY"
   }
 
-  try {
-    const result = await simpleExecute(insertSmsSql, bind)
+  // proc
+  const ret = await simpleExecute(query, bind)
 
-    bind.idsmss = await result.outBinds.idsmss
-  } catch (error) {
-    bind = null
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+};
+export const insertSms = async (context) => {
+  // bind
+  let bind = context
+  bind.IDSMSS = {
+    dir: BIND_OUT,
+    type: NUMBER,
   }
 
-  return bind
+  // proc
+  const ret = await simpleExecute(insertSmsSql, bind)
+
+  if (ret) {
+    bind.IDSMSS = ret.outBinds.IDSMSS
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
 }
-export const updateSms = async (bind) => {
-  let result
+export const updateSms = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(updateSmsSql, bind)
 
-  try {
-    await simpleExecute(updateSmsSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return result
 }
-export const removeSms = async (bind) => {
-  let result
+export const removeSms = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(removeSmsSql, bind)
 
-  try {
-    await simpleExecute(deleteSmsSql, bind)
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
 
-    result = bind
-  } catch (error) {
-    result = null
+// proc relacion
+export const relacion = async (context) => {
+  // bind
+  let query = relacionesQuery
+  const bind = context
+
+  if (context.IDFORM) {
+    query += " INNER JOIN relacionesformulario rf ON rf.idrela = rr.idrela WHERE rf.idform = :idform"
+  } 
+  if (context.IDRELA) {
+    query += " WHERE rr.idrela = :idrela"
   }
 
-  return result
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const relaciones = async (context) => {
+  // bind
+  let query = ""
+  let bind = {
+    idform: context.formulario,
+    limit: context.limit,
+    part: context.part,
+  };
+
+  if (context.direction === 'next') {
+    bind.idrela = context.cursor.next;
+    query = "SELECT rr.*,rf.idform FROM relaciones rr INNER JOIN relacionesformulario rf ON rf.idrela = rr.idrela AND rf.idform = :idform WHERE rr.idrela > :idrela AND (rr.nifcon LIKE '%' || :part || '%' OR rr.nomcon LIKE '%' || :part OR rr.fecrel LIKE '%' || :part || '%' OR :part IS NULL) ORDER BY rr.idrela ASC FETCH NEXT :limit ROWS ONLY"
+  } else {
+    bind.idrela = context.cursor.prev;
+    query = "SELECT rr.*,rf.idform FROM relaciones rr INNER JOIN relacionesformulario rf ON rf.idrela = rr.idrela AND rf.idform = :idform WHERE rr.idrela < :idrela AND (rr.nifcon LIKE '%' || :part || '%' OR rr.nomcon LIKE '%' || :part OR rr.fecrel LIKE '%' || :part || '%' OR :part IS NULL) ORDER BY rr.idrela DESC FETCH NEXT :limit ROWS ONLY"
+  }
+
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+};
+export const insertRelacion = async (context) => {
+  // bind
+  let bind = context
+  bind.IDRELA = {
+    dir: BIND_OUT,
+    type: NUMBER,
+  }
+
+  // proc
+  const ret = await simpleExecute(insertRelacionSql, bind)
+  
+  if (ret) {
+    bind.IDRELA = ret.outBinds.IDRELA
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const updateRelacion = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(updateRelacionSql, bind)
+
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const removeRelacion = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(removeRelacionSql, bind)
+
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+
+// ades
+export const asignarFormulariosUsuario = async (context) => {
+  // bind
+  let bind = context
+
+  // proc
+  const ret = await simpleExecute(asignarUsuarioSql, bind)
+
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const desAsignarFormulariosUsuario = async (context) => {
+  // bind
+  let bind = context
+
+  // proc
+  const ret = await simpleExecute(desAsignarUsuarioSql, bind)
+
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
 }
