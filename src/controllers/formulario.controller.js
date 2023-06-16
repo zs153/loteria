@@ -11,7 +11,7 @@ import { serverAPI } from "../config/settings";
 export const mainPage = async (req, res) => {
   const user = req.user;
   const formulario = {
-    LIQDOC: user.userID,
+    LIQDOC: user.userid,
     STADOC: estadosDocumento.pendiente + estadosDocumento.asignado,
   };
 
@@ -41,7 +41,7 @@ export const addPage = async (req, res) => {
     ISOFEC: fecha.toISOString().slice(0, 10),
     EJEDOC: fecha.getFullYear() - 1,
     OFIDOC: user.oficina,
-    FUNDOC: user.userID,
+    FUNDOC: user.userid,
   };
   const oficina = user.rol === tiposRol.admin ? {} : { IDOFIC: user.oficina }
   const tipo = {}
@@ -390,7 +390,7 @@ export const insert = async (req, res) => {
     OFIDOC: req.body.ofidoc,
     OBSDOC: req.body.obsdoc,
     FUNDOC: req.body.fundoc,
-    LIQDOC: user.userID,
+    LIQDOC: user.userid,
     STADOC: estadosDocumento.asignado,
   };
   const movimiento = {
@@ -494,7 +494,7 @@ export const asignar = async (req, res) => {
 
     formulario = {
       IDDOCU: result.data.IDDOCU,
-      LIQDOC: user.userID,
+      LIQDOC: user.userid,
       STADOC: estadosDocumento.asignado,
     };
     const movimiento = {
@@ -538,7 +538,7 @@ export const resolver = async (req, res) => {
     if (result.data.STADOC === estadosDocumento.asignado) {
       formulario = {
         IDDOCU: result.data.IDDOCU,
-        LIQDOC: user.userID,
+        LIQDOC: user.userid,
         STADOC: estadosDocumento.resuelto,
       };
       const movimiento = {
@@ -619,8 +619,8 @@ export const ejercicio = async (req, res) => {
     EJEDOC: req.body.ejedoc,
     OFIDOC: user.oficina,
     OBSDOC: req.body.obsdoc,
-    FUNDOC: user.userID,
-    LIQDOC: user.userID,
+    FUNDOC: user.userid,
+    LIQDOC: user.userid,
     STADOC: estadosDocumento.asignado,
   };
   const movimiento = {
@@ -841,7 +841,7 @@ export const removeSms = async (req, res) => {
 export const verTodo = async (req, res) => {
   const user = req.user;
   const formulario = {
-    LIQDOC: user.userID,
+    LIQDOC: user.userid,
     STADOC: estadosDocumento.resuelto,
   };
 
