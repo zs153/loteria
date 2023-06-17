@@ -127,7 +127,7 @@ export const asignarFormulario = async (req, res) => {
   // context
   const formulario = {
     idform: req.body.formulario.IDFORM,
-    liqfra: req.body.formulario.LIQFOR,
+    liqfor: req.body.formulario.LIQFOR,
     stafor: req.body.formulario.STAFOR,
   }
   const movimiento = {
@@ -149,7 +149,7 @@ export const desasignarFormulario = async (req, res) => {
   // context
   const formulario = {
     idform: req.body.formulario.IDFORM,
-    liqfra: req.body.formulario.LIQFOR,
+    liqfor: req.body.formulario.LIQFOR,
     stafor: req.body.formulario.STAFOR,
   }
   const movimiento = {

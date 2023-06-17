@@ -1,7 +1,6 @@
 import { BIND_OUT, NUMBER } from "oracledb";
 import { simpleExecute } from "../services/database.js";
 
-const baseQuery = "SELECT uu.*,oo.desofi FROM usuarios uu INNER JOIN oficinas oo ON oo.idofic = uu.ofiusu";
 const insertSql = "BEGIN FORMULARIOS_PKG.INSERTUSUARIO(:nomusu,:ofiusu,:rolusu,:userid,:emausu,:perusu,:telusu,:stausu,:usumov,:tipmov,:idusua); END;";
 const updateSql = "BEGIN FORMULARIOS_PKG.UPDATEUSUARIO(:idusua,:nomusu,:ofiusu,:rolusu,:emausu,:perusu,:telusu,:stausu,:usumov,:tipmov); END;";
 const removeSql = "BEGIN FORMULARIOS_PKG.DELETEUSUARIO(:idusua,:usumov,:tipmov); END;";
@@ -9,7 +8,7 @@ const perfilSql = "BEGIN FORMULARIOS_PKG.UPDATEPERFILUSUARIO(:idusua,:nomusu,:em
 
 export const usuario = async (context) => {
   // bind
-  let query = baseQuery;
+  let query = "SELECT uu.*,oo.desofi FROM usuarios uu INNER JOIN oficinas oo ON oo.idofic = uu.ofiusu";
   const bind = context
 
   if (context.IDUSUA) {
@@ -54,6 +53,7 @@ export const usuarios = async (context) => {
     query += "SELECT * FROM datos WHERE nomusu < :nomusu OR :nomusu IS NULL ORDER BY nomusu DESC FETCH NEXT :limit ROWS ONLY"
   }
 
+  console.log(query,bind);
   // proc
   const ret = await simpleExecute(query, bind)
 

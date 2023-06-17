@@ -1,12 +1,11 @@
 import { BIND_OUT, NUMBER } from "oracledb";
 import { simpleExecute } from "../services/database.js";
 
-const baseQuery = "SELECT * FROM cargas"
 const insertSql = "BEGIN FORMULARIOS_PKG.INSERTCARGA(:descar,:ficcar,:refcar,:stacar,:usumov,:tipmov,:idcarg); END;";
 
 export const carga = async (context) => {
   // bind
-  let query = baseQuery
+  let query = "SELECT * FROM cargas"
   const bind = context
 
   if (context.IDCARG) {

@@ -3,7 +3,7 @@ import { borrar, crear, modificar, oficina, oficinas } from "../controllers/ofic
 
 const apiOficinaRouter = express.Router();
 
-// fraudes
+// formularios
 apiOficinaRouter.post("/oficina", oficina);
 apiOficinaRouter.post("/oficinas", oficinas);
 apiOficinaRouter.post("/oficinas/insert", crear);

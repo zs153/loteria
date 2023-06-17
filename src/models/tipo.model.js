@@ -1,15 +1,14 @@
 import { BIND_OUT, NUMBER } from "oracledb";
 import { simpleExecute } from "../services/database.js";
 
-const baseFraudeQuery = "SELECT * FROM tipos";
-const insertFraudeSql = "BEGIN FORMULARIOS_PKG.INSERTTIPO(:destip,:usumov,:tipmov,:idtipo); END;";
-const updateFraudeSql = "BEGIN FORMULARIOS_PKG.UPDATETIPO(:idtipo,:destip,:usumov,:tipmov); END;";
-const removeFraudeSql = "BEGIN FORMULARIOS_PKG.DELETETIPO(:idtipo,:usumov,:tipmov ); END;";
+const insertSql = "BEGIN FORMULARIOS_PKG.INSERTTIPO(:destip,:ayutip,:usumov,:tipmov,:idtipo); END;";
+const updateSql = "BEGIN FORMULARIOS_PKG.UPDATETIPO(:idtipo,:destip,:ayutip,:usumov,:tipmov); END;";
+const removeSql = "BEGIN FORMULARIOS_PKG.DELETETIPO(:idtipo,:usumov,:tipmov ); END;";
 
-export const fraude = async (context) => {
+export const tipo = async (context) => {
   // bind
-  let query = baseFraudeQuery;
   const bind = context;
+  let query = "SELECT * FROM tipos";
 
   if (context.IDTIPO) {
     query += " WHERE idtipo = :idtipo";
@@ -24,13 +23,13 @@ export const fraude = async (context) => {
     return ({ stat: 0, data: [] })
   }
 };
-export const fraudes = async (context) => {
+export const tipos = async (context) => {
   // bind
-  let query = '';
   let bind = {
     limit: context.limit,
     part: context.part,
   };
+  let query = '';
 
   if (context.direction === 'next') {
     bind.idtipo = context.cursor.next;
@@ -58,7 +57,7 @@ export const insert = async (context) => {
   };
 
   // proc
-  const ret = await simpleExecute(insertFraudeSql, bind)
+  const ret = await simpleExecute(insertSql, bind)
 
   if (ret) {
     bind.IDTIPO = ret.outBinds.IDTIPO
@@ -70,9 +69,8 @@ export const insert = async (context) => {
 export const update = async (context) => {
   // bind
   const bind = context
-
   // proc
-  const ret = await simpleExecute(updateFraudeSql, bind)
+  const ret = await simpleExecute(updateSql, bind)
 
   if (ret) {
     return ({ stat: 1, data: bind })
@@ -84,7 +82,7 @@ export const remove = async (context) => {
   // bind
   const bind = context
   // proc
-  const ret = await simpleExecute(removeFraudeSql, bind)
+  const ret = await simpleExecute(removeSql, bind)
 
   if (ret) {
     return ({ stat: 1, data: bind })

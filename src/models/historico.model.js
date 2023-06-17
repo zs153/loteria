@@ -1,13 +1,12 @@
 import { simpleExecute } from "../services/database.js";
 
-const baseQuery = "SELECT * FROM historicos"
-const updateSql = "BEGIN FRAUDE_PKG.UPDATEHISTORICO(:idusua,:nomusu,:ofiusu,:rolusu,:userid,:emausu,:perusu,:telusu,:usumov,:tipmov); END;";
-const removeSql = "BEGIN FRAUDE_PKG.DELETEHISTORICO(:idusua,:usumov,:tipmov); END;";
-const activarSql = "BEGIN FRAUDE_PKG.ACTIVARHISTORICO(:idusua,:usumov,:tipmov); END;"
+const updateSql = "BEGIN FORMULARIOS_PKG.UPDATEHISTORICO(:idusua,:nomusu,:ofiusu,:rolusu,:userid,:emausu,:perusu,:telusu,:usumov,:tipmov); END;";
+const removeSql = "BEGIN FORMULARIOS_PKG.DELETEHISTORICO(:idusua,:usumov,:tipmov); END;";
+const activarSql = "BEGIN FORMULARIOS_PKG.ACTIVARHISTORICO(:idusua,:usumov,:tipmov); END;"
 
 export const historico = async (context) => {
   // bind
-  let query = baseQuery;
+  let query = "SELECT * FROM historicos";
   let bind = context;
 
   if (context.IDUSUA) {

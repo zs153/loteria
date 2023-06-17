@@ -3,8 +3,8 @@ import { simpleExecute } from '../services/database.js';
 
 // formulario
 const baseQuery = "SELECT ff.*,oo.desofi,tt.destip FROM formularios ff INNER JOIN tipos tt ON tt.idtipo = ff.tipfor INNER JOIN oficinas oo ON oo.idofic = ff.ofifor"
-const insertSql = "BEGIN FORMULARIOS_PKG.INSERTFORMULARIO(TO_DATE(:fecfra, 'YYYY-MM-DD'),:nifcon,:nomcon,:emacon,:telcon,:movcon,:reffor,:tipfra,:ejefor,:ofifor,:obsfra,:funfra,:liqfor,:stafor,:usumov,:tipmov,:idform); END;"
-const updateSql = "BEGIN FORMULARIOS_PKG.UPDATEFORMULARIO(:idform,TO_DATE(:fecfra,'YYYY-MM-DD'),:nifcon,:nomcon,:emacon,:telcon,:movcon,:tipfra,:ejefor,:ofifor,:obsfra,:usumov,:tipmov); END;"
+const insertSql = "BEGIN FORMULARIOS_PKG.INSERTFORMULARIO(TO_DATE(:fecfor, 'YYYY-MM-DD'),:nifcon,:nomcon,:emacon,:telcon,:movcon,:reffor,:tipfor,:ejefor,:ofifor,:obsfor,:funfor,:liqfor,:stafor,:usumov,:tipmov,:idform); END;"
+const updateSql = "BEGIN FORMULARIOS_PKG.UPDATEFORMULARIO(:idform,TO_DATE(:fecfor,'YYYY-MM-DD'),:nifcon,:nomcon,:emacon,:telcon,:movcon,:tipfor,:ejefor,:ofifor,:obsfor,:usumov,:tipmov); END;"
 const removeSql = "BEGIN FORMULARIOS_PKG.DELETEFORMULARIO(:idform,:usumov,:tipmov ); END;"
 const cambioSql = "BEGIN FORMULARIOS_PKG.CAMBIOESTADOFORMULARIO(:idform,:liqfor,:stafor,:usumov,:tipmov ); END;"
 const unasignSql = "BEGIN FORMULARIOS_PKG.UNASIGNFORMULARIO(:idform,:liqfor,:stafor,:usumov,:tipmov ); END;"
@@ -85,7 +85,7 @@ export const formularios = async (context) => {
 };
 export const extended = async (context) => {
   // bind
-  let query = "WITH datos AS (SELECT ff.*,oo.desofi,tt.destip FROM formularios ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifor INNER JOIN tipos tt ON tt.idtipo = ff.tipfra"
+  let query = "WITH datos AS (SELECT ff.*,oo.desofi,tt.destip FROM formularios ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifor INNER JOIN tipos tt ON tt.idtipo = ff.tipfor"
   let bind = {
     limit: context.limit,
   };
@@ -117,7 +117,6 @@ export const extended = async (context) => {
     bind.idform = context.cursor.prev;
     query += ")SELECT * FROM datos WHERE idform < :idform ORDER BY idform DESC FETCH NEXT :limit ROWS ONLY"
   }
-
 
   // proc
   const ret = await simpleExecute(query, bind)

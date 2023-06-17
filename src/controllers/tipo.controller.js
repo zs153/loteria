@@ -28,6 +28,7 @@ export const crear = async (req, res) => {
   // context
   const tipo = {
     destip: req.body.tipo.DESTIP,
+    ayutip: req.body.tipo.AYUTIP,
   };
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
@@ -49,6 +50,7 @@ export const modificar = async (req, res) => {
   const tipo = {
     idtipo: req.body.tipo.IDTIPO,
     destip: req.body.tipo.DESTIP,
+    ayutip: req.body.tipo.AYUTIP,
   };
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
