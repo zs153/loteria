@@ -184,10 +184,10 @@ const buildTable = (state) => {
 
     // col8
     cell = document.createElement('td')
-    if (element.OBSDOC !== null) {
+    if (element.OBSFOR !== null) {
       cell.innerHTML = `<div class="d-flex py-1 align-items-center">
         <div class="flex-fill">
-          <div class="font-weight-medium">${element.OBSDOC.length > 30 ? element.OBSDOC.slice(0, 30) + '...' : element.OBSDOC}</div>
+          <div class="font-weight-medium">${element.OBSFOR.length > 30 ? element.OBSFOR.slice(0, 30) + '...' : element.OBSFOR}</div>
         </div>
       </div>`
     }
@@ -253,7 +253,7 @@ const buildTable = (state) => {
                   document.getElementById('ofidoc').value ='${element.DESOFI}',
                   document.getElementById('telcon').value ='${element.TELCON}',
                   document.getElementById('movcon').value ='${element.MOVCON}',
-                  document.getElementById('obsdoc').value ='${element.OBSDOC}'
+                  document.getElementById('OBSFOR').value ='${element.OBSFOR}'
                 }" data-bs-toggle="modal" data-bs-target="#modal-revisar">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" height="24" width="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke-width=".4" fill="none" d="M6.8 17.025 2.125 12.35l.45-.475L6.8 16.1l.9-.9.475.45Zm5.475 0L7.6 12.35l.475-.45 4.2 4.2 9.15-9.125.45.45Zm-.9-4.575-.45-.45 5.025-5.025.45.45Z"/>

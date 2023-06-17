@@ -14,260 +14,150 @@
 <body class="antialiased">
   <div class="wrapper">
     <%- include('../../partials/header') %>
-    <%- include('../../partials/navbar', {opcion: 'FORMULARIO'}) %>
-    <div class="page-wrapper">
-      <div class="page-body">
-        <div class="container-xl">
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <form id="form" action="/admin/formularios/update" method="POST" onsubmit="return validate();">
-                  <input type="hidden" name="iddocu" id="iddocu" value="<%- datos.formulario.IDDOCU %>">
-                  <input type="hidden" name="verall" id="verall" value="">
-                  <div class="card-header">
-                    <h3 class="card-title">Formulario</h3>
+      <%- include('../../partials/navbar', {opcion: 'ADMINISTRACION' }) %>
+        <div class="page-wrapper">
+          <div class="page-body">
+            <div class="container-xl">
+              <div class="row">
+                <div class="col-12">
+                  <div class="card">
+                    <form action="" id="upd" method="POST" onsubmit="return validate();">
+                      <input type="hidden" name="idform" value="<%= datos.formulario.IDFORM %>">
+                      <div class="card-header">
+                        <h3 class="card-title">Formulario</h3>
+                      </div>
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-2">
+                            <div class="mb-1">
+                              <div class="input-control">
+                                <label class="form-label required">NIF/NIE</label>
+                                <input type="text" name="nifcon" id="nifcon" class="form-control"
+                                  style="text-transform: uppercase;" value="<%- datos.formulario.NIFCON %>" autofocus />
+                                <div class="invalid-feedback"></div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="mb-1">
+                              <div class="input-control">
+                                <label class="form-label required">Nombre</label>
+                                <input type="text" name="nomcon" id="nomcon" class="form-control"
+                                  style="text-transform: uppercase;" value="<%- datos.formulario.NOMCON %>" />
+                                <div class="invalid-feedback"></div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-4">
+                            <div class="mb-1">
+                              <label class="form-label">Correo electrónico</label>
+                              <input type="text" name="emacon" id="emacon" class="form-control" value="<%- datos.formulario.EMACON %>" />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-9">
+                            <div class="mb-1">
+                              <div class="input-control">
+                                <div class="form-label required">Tipo</div>
+                                <select class="form-select form-control" id="cbotip" name="tipfor" value="<%- datos.formulario.TIPFOR %>">
+                                  <option value="0">SELECCIONE UN TIPO</option>
+                                  <% datos.tipos.map(element=> { %>
+                                    <option value="<%- element.IDTIPO %>" <%- element.IDTIPO===datos.formulario.TIPFOR ? "selected" :"" %>>
+                                      <%- element.DESTIP %>
+                                    </option>
+                                    <% }) %>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-2">
+                            <div class="mb-1">
+                              <div class="input-control">
+                                <label class="form-label required">Ejercicio</label>
+                                <input type="number" name="ejefor" id="ejefor" class="form-control" value="<%- datos.formulario.EJEFOR %>" />
+                                <div class="invalid-feedback"></div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-1">
+                            <div class="mb-1">
+                              <label class="form-label">Adm</label>
+                              <input type="text" name="funfor" id="funfor" class="form-control" value="<%- datos.formulario.FUNFOR %>" readonly />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-3">
+                            <div class="mb-1">
+                              <div class="input-control">
+                                <label class="form-label required">Fecha</label>
+                                <input type="date" name="fecfor" id="fecfor" class="form-control" value="<%- datos.formulario.FECFOR %>" />
+                                <div class="invalid-feedback"></div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-5">
+                            <div class="mb-1">
+                              <div class="form-label">Oficina</div>
+                              <select class="form-select form-control" id="cboofi" name="ofifor" value="<%- datos.formulario.OFIFOR %>">
+                                <% datos.oficinas.map(element=> { %>
+                                  <option value="<%- element.IDOFIC %>" <%- element.IDOFIC===datos.formulario.OFIFOR ? "selected" :"" %>>
+                                    <%- element.DESOFI %>
+                                  </option>
+                                <% }) %>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-2">
+                            <div class="mb-1">
+                              <label class="form-label">Teléfono</label>
+                              <input type="text" name="telcon" id="telcon" class="form-control" value="<%- datos.formulario.TELCON %>" />
+                            </div>
+                          </div>
+                          <div class="col-2">
+                            <div class="mb-1">
+                              <div class="input-control">
+                                <label class="form-label">Movil</label>
+                                <input type="text" name="movcon" id="movcon" class="form-control" value="<%- datos.formulario.MOVCON %>" />
+                                <div class="invalid-feedback"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <div class="mb-1">
+                              <label class="form-label">Observaciones</label>
+                              <textarea type="text" name="obsfor" id="obsfor" class="form-control" rows="3"
+                                style="resize: vertical"><%- datos.formulario.OBSFOR %></textarea>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-footer text-end">
+                        <div class="d-flex">
+                          <input class="btn btn-white" action="action" onclick="window.history.go(-1); return false;" type="submit" value="Cancelar" />
+                          <button type="submit" class="btn btn-success ms-auto" id="btnUpdate">Actualizar formulario</button>
+                        </div>
+                      </div>
+                    </form>
                   </div>
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col-2">
-                        <div class="mb-1">
-                          <div class="input-control">
-                            <label class="form-label required">NIF/NIE</label>
-                            <input type="text" name="nifcon" id="nifcon" class="form-control"
-                              style="text-transform: uppercase;" value="<%- datos.formulario.NIFCON %>" autofocus />
-                            <div class="invalid-feedback"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="mb-1">
-                          <div class="input-control">
-                            <label class="form-label required">Nombre</label>
-                            <input type="text" name="nomcon" id="nomcon" class="form-control"
-                              style="text-transform: uppercase;" value="<%- datos.formulario.NOMCON %>" />
-                            <div class="invalid-feedback"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-4">
-                        <div class="mb-1">
-                          <label class="form-label">Correo electrónico</label>
-                          <input type="text" name="emacon" id="emacon" class="form-control"
-                            value="<%- datos.formulario.EMACON %>" />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-9">
-                        <div class="mb-1">
-                          <div class="form-label required">Tipo</div>
-                          <select class="form-select form-control" id="cbotip" name="tipdoc" value="<%- datos.formulario.TIPDOC %>">
-                            <% datos.tipos.map(element=> { %>
-                            <option value="<%- element.IDTIPO %>" <%- element.IDTIPO === datos.formulario.TIPDOC ? " selected" :"" %>>
-                              <%- element.DESTIP %>
-                            </option>
-                            <% }) %>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-2">
-                        <div class="mb-1">
-                          <div class="input-control">
-                            <label class="form-label required">Ejercicio</label>
-                            <input type="number" name="ejedoc" id="ejedoc" class="form-control" value="<%- datos.formulario.EJEDOC %>" />
-                            <div class="invalid-feedback"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-1">
-                        <div class="mb-1">
-                          <label class="form-label">Adm</label>
-                          <input type="text" name="fundoc" id="fundoc" class="form-control" value="<%- datos.formulario.FUNDOC %>" readonly />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-3">
-                        <div class="mb-1">
-                          <div class="input-control">
-                            <label class="form-label required">Fecha</label>
-                            <input type="date" name="fecdoc" id="fecdoc" class="form-control" value="<%- datos.formulario.ISOFEC %>"
-                              <%- datos.formulario.FUNDOC === 'SYSTEM' ? 'readonly' : '' %> />
-                            <div class="invalid-feedback"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-5">
-                        <div class="mb-1">
-                          <div class="form-label">Oficina</div>
-                            <select class="form-select form-control" id="cboofi" name="ofidoc" value="<%- datos.formulario.OFIDOC %>">
-                              <% datos.oficinas.map(element=> { %>
-                              <option value="<%- element.IDOFIC %>" <%- element.IDOFIC === datos.formulario.OFIDOC ? " selected" :"" %>>
-                                <%- element.DESOFI %>
-                              </option>
-                              <% }) %>
-                            </select>
-                        </div>
-                      </div>
-                      <div class="col-2">
-                        <div class="mb-3">
-                          <label class="form-label">Teléfono</label>
-                          <input type="text" name="telcon" id="telcon" class="form-control" value="<%- datos.formulario.TELCON %>" />
-                        </div>
-                      </div>
-                      <div class="col-2">
-                        <div class="mb-1">
-                          <div class="input-control">
-                            <label class="form-label">Móvil</label>
-                            <input type="text" name="movcon" id="movcon" class="form-control" value="<%- datos.formulario.MOVCON %>" />
-                            <div class="invalid-feedback"></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-12">
-                        <small></small>
-                        <div class="mb-1">
-                          <label class="form-label">Observaciones</label>
-                          <textarea type="text" name="obsdoc" id="obsdoc" class="form-control" rows="3"
-                            style="resize: vertical"><%- datos.formulario.OBSDOC %></textarea>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <h4>
-                        <small id="tipayu" class="form-hint"></small>
-                      </h4>
-                    </div>
-                  </div>
-                  <div class="card-footer text-end">
-                    <div class="d-flex">
-                      <input type="submit" class="btn btn-white" action="action" onclick="window.history.go(-1); return false;" value="Cancelar" />
-                      <button type="submit" class="btn btn-success ms-auto">Actualizar formulario</button>
-                    </div>
-                  </div>
-                </form>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <%- include('../../partials/footer') %>
+        <%- include('../../partials/footer') %>
   </div>
 
   <script src="/js/ayuda.min.js"></script>
+  <script src="/js/addEditFormulario.min.js"></script>
   <script>
-    const nifcon = document.getElementById('nifcon')
-    const nomcon = document.getElementById('nomcon')
-    const ejedoc = document.getElementById('ejedoc')
-    const fecdoc = document.getElementById('fecdoc')
-    
-    const validate = () => {
-      const nifconValue = nifcon.value.trim().toUpperCase().slice(0, 9)
-      const nomconValue = nomcon.value.trim()
-      const ejedocValue = ejedoc.value.trim()
-      const fecdocValue = fecdoc.value.trim()
-
-      if (nifconValue === '') {
-        setError(nifcon, 'NIF/NIE requerido')
-        setTimeout(function () {
-          setSuccess(nifcon)
-        }, 3000)
-        return false
-      } else {
-        const pattern = /^([X-Y][0-9]{7}[A-Z]{1})|([0-9]{8}[A-Z]{1})$/
-
-        if (!pattern.test(nifconValue)) {
-          setError(nifcon, 'Introduzca NIF/NIE válido')
-          setTimeout(function () {
-            setSuccess(nifcon)
-          }, 3000)
-          return false
-        }
-
-        const strBase = "TRWAGMYFPDXBNJZSQVHLCKET";
-        const primeraPosicion = nifconValue.slice(0, 1);
-        const letraNif = nifconValue.slice(8);
-        let nuevoNif = nifconValue;
-
-        if (isNaN(primeraPosicion)) {
-          nuevoNif = nifconValue.slice(1);
-          if (primeraPosicion === 'X') {
-            nuevoNif = '0' + nuevoNif;
-          } else if (primeraPosicion === "Y") {
-            nuevoNif = "1" + nuevoNif;
-          } else if (primeraPosicion === "Z") {
-            nuevoNif = "2" + nuevoNif;
-          }
-        }
-
-        const dniNumero = nuevoNif.slice(0, 8);
-        const pos = parseInt(dniNumero) % 23;
-        const letra = strBase.slice(pos, pos + 1);
-        const isValid = letraNif === letra
-
-        if (isValid === false) {
-          setError(nifcon, 'Introduzca NIF/NIE válido')
-          setTimeout(function () {
-            setSuccess(nifcon)
-          }, 3000)
-          return false
-        }
-      }
-      if (nomconValue === '') {
-        setError(nomcon, 'Nombre requerido')
-        setTimeout(function () {
-          setSuccess(nomcon)
-        }, 3000)
-        return false
-      }
-      if (ejedocValue === '') {
-        setError(ejedoc, 'Ejercicio requerido')
-        setTimeout(function () {
-          setSuccess(ejedoc)
-        }, 3000)
-        return false
-      } else {
-        const pattern = /^([0-9]{4})$/
-        const isValid = pattern.test(ejedocValue)
-
-        if (isValid === false) {
-          setError(ejedoc, 'Introduzca ejercicio válido')
-          setTimeout(function () {
-            setSuccess(ejedoc)
-          }, 3000)
-          return false
-        }
-      }
-      if (isNaN(Date.parse(fecdocValue))) {
-        setError(fecdoc, 'Fecha requerida')
-        setTimeout(function () {
-          setSuccess(fecdoc)
-        }, 3000)
-        return false
-      }
-
-      return true
-    }
-    const setSuccess = (element) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = '';
-      inputControl.classList.add('is-valid');
-      element.classList.remove('is-invalid');
-    }
-    const setError = (element, message) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = message;
-      element.classList.add('is-invalid');
-      inputControl.classList.remove('is-valid');
-    }
-</script>
+    const elemAdd = document.getElementById('upd');
+    elemAdd.setAttribute('action', `/admin/formularios/update?part=${getCookie('filtro')}`)
+  </script>
 </body>
 
 </html>

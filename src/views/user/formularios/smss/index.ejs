@@ -27,7 +27,7 @@
                   </div>
                   <div class="col-auto ms-auto">
                     <div class="d-flex">
-                      <form action="/user/fraudes/smss" method="GET">
+                      <form action="/user/formularios/smss" method="GET">
                         <div class="input-icon me-3">
                           <span class="input-icon-addon">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
@@ -43,7 +43,7 @@
                             aria-label="Buscar en smss">
                         </div>
                       </form>
-                      <a href="/user/fraudes/smss/add/<%- datos.fraude.IDFRAU %>" class="btn">
+                      <a href="/user/formularios/smss/add/<%- datos.formulario.IDFORM %>" class="btn">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="24" width="24" viewBox="0 0 24 24">
                           <path d="M11.25 18.75v-6h-6v-1.5h6v-6h1.5v6h6v1.5h-6v6Z" />
                         </svg>
@@ -101,13 +101,13 @@
           <div class="w-100">
             <div class="row">
               <div class="col">
-                <a href="/user/fraudes/smss/<%- datos.fraude.IDFRAU %>" class="btn btn-white w-100"
+                <a href="/user/formularios/smss/<%- datos.formulario.IDFORM %>" class="btn btn-white w-100"
                   data-bs-dismiss="modal">Cancelar</a>
               </div>
               <div class="col">
                 <form action="#" id="del" method="POST">
                   <input type="hidden" id="idsmss" name="idsmss" value="">
-                  <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
+                  <input type="hidden" id="idform" name="idform" value="<%- datos.formulario.IDFORM %>">
                   <button type="submit" class="btn btn-danger w-100">Borrar mensaje sms</button>
                 </form>
               </div>
@@ -137,13 +137,13 @@
           <div class="w-100">
             <div class="row">
               <div class="col">
-                <a href="/user/fraudes/smss/<%- datos.fraude.IDFRAU %>" class="btn btn-white w-100"
+                <a href="/user/formularios/smss/<%- datos.formulario.IDFORM %>" class="btn btn-white w-100"
                   data-bs-dismiss="modal">Cancelar</a>
               </div>
               <div class="col">
-                <form action="/user/fraudes/smss/cambio" method="POST">
+                <form action="/user/formularios/smss/cambio" method="POST">
                   <input type="hidden" id="idcamb" name="idsmss" value="">
-                  <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
+                  <input type="hidden" id="idform" name="idform" value="<%- datos.formulario.IDFORM %>">
                   <button type="submit" class="btn btn-danger w-100">Cambiar estado</button>
                 </form>
               </div>

@@ -21,8 +21,8 @@
             <div class="col-12">
               <div class="card">
                 <form action="#" id="new" method="POST" onsubmit="return validate();">
-                  <input type="hidden" name="idfrau" id="idfrau" value="<%- datos.fraude.IDFRAU %>">
-                  <input type="hidden" name="reffra" id="reffra" value="<%- datos.fraude.REFFRA %>">
+                  <input type="hidden" name="idform" id="idform" value="<%- datos.formulario.IDFORM %>">
+                  <input type="hidden" name="reffra" id="reffra" value="<%- datos.formulario.REFFRA %>">
                   <div class="card-header">
                     <h3 class="card-title">Ejercicio</h3>
                   </div>
@@ -32,7 +32,7 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">NIF/NIE</label>
-                            <input type="text" name="nifcon" id="nifcon" class="form-control" style="text-transform: uppercase;" value="<%- datos.fraude.NIFCON %>" readonly/>
+                            <input type="text" name="nifcon" id="nifcon" class="form-control" style="text-transform: uppercase;" value="<%- datos.formulario.NIFCON %>" readonly/>
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -41,7 +41,7 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">Nombre</label>
-                            <input type="text" name="nomcon" id="nomcon" class="form-control" style="text-transform: uppercase;" value="<%- datos.fraude.NOMCON %>" readonly/>
+                            <input type="text" name="nomcon" id="nomcon" class="form-control" style="text-transform: uppercase;" value="<%- datos.formulario.NOMCON %>" readonly/>
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -49,7 +49,7 @@
                       <div class="col-4">
                         <div class="mb-1">
                           <label class="form-label">Correo electrónico</label>
-                          <input type="text" name="emacon" id="emacon" class="form-control" value="<%- datos.fraude.EMACON %>" readonly/>
+                          <input type="text" name="emacon" id="emacon" class="form-control" value="<%- datos.formulario.EMACON %>" readonly/>
                         </div>
                       </div>
                     </div>
@@ -57,15 +57,15 @@
                       <div class="col-6">
                         <div class="mb-1">
                           <div class="form-label">Tipo</div>
-                            <input type="hidden" name="tipfra" id="tipfra" class="form-control" value="<%- datos.fraude.TIPFRA %>" readonly />
-                            <input type="text" name="destip" id="destip" class="form-control" value="<%- datos.fraude.DESTIP %>" readonly />
+                            <input type="hidden" name="tipfor" id="tipfor" class="form-control" value="<%- datos.formulario.TIPFOR %>" readonly />
+                            <input type="text" name="destip" id="destip" class="form-control" value="<%- datos.formulario.DESTIP %>" readonly />
                           </div>
                       </div>
                       <div class="col-2">
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">Ejercicio</label>
-                            <input type="number" name="ejefra" id="ejefra" class="form-control" value="<%- datos.fraude.EJEFRA %>" autofocus />
+                            <input type="number" name="ejefor" id="ejefor" class="form-control" value="<%- datos.formulario.EJEFOR %>" autofocus />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -73,13 +73,13 @@
                       <div class="col-2">
                         <div class="mb-1">
                           <label class="form-label">Teléfono</label>
-                          <input type="text" name="telcon" id="telcon" class="form-control" value="<%- datos.fraude.TELCON %>" readonly/>
+                          <input type="text" name="telcon" id="telcon" class="form-control" value="<%- datos.formulario.TELCON %>" readonly/>
                         </div>
                       </div>
                       <div class="col-2">
                         <div class="mb-1">
                           <label class="form-label">Movil</label>
-                          <input type="text" name="movcon" id="movcon" class="form-control" value="<%- datos.fraude.MOVCON %>" readonly/>
+                          <input type="text" name="movcon" id="movcon" class="form-control" value="<%- datos.formulario.MOVCON %>" readonly/>
                         </div>
                       </div>
                     </div>
@@ -87,7 +87,7 @@
                       <div class="col-12">
                         <div class="mb-1">
                           <label class="form-label">Observaciones</label>
-                            <textarea type="text" name="obsfra" id="obsfra" class="form-control" rows="3" style="resize: vertical"><%- datos.fraude.OBSFRA %></textarea>
+                            <textarea type="text" name="obsfor" id="obsfor" class="form-control" rows="3" style="resize: vertical"><%- datos.formulario.OBSFOR %></textarea>
                         </div>
                       </div>
                     </div>

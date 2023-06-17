@@ -519,7 +519,7 @@ export const insert = async (req, res) => {
     TELCON: req.body.telcon,
     MOVCON: req.body.movcon,
     REFFOR: referencia,
-    TIPFRA: req.body.tipfor,
+    TIPFOR: req.body.tipfor,
     EJEFOR: req.body.ejefor,
     OFIFOR: req.body.ofifor,
     OBSFOR: req.body.obsfor,
@@ -561,7 +561,7 @@ export const update = async (req, res) => {
     EMACON: req.body.emacon,
     TELCON: req.body.telcon,
     MOVCON: req.body.movcon,
-    TIPFRA: req.body.tipfor,
+    TIPFOR: req.body.tipfor,
     EJEFOR: req.body.ejefor,
     OFIFOR: req.body.ofifor,
     OBSFOR: req.body.obsfor,
@@ -689,7 +689,7 @@ export const resolver = async (req, res) => {
       }
       const movimiento = {
         USUMOV: user.id,
-        TIPMOV: tiposMovimiento.resolverFraude,
+        TIPMOV: tiposMovimiento.resolverFormulario,
       };
     
       await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/cierre`, {
@@ -728,7 +728,7 @@ export const desasignar = async (req, res) => {
 
       const movimiento = {
         USUMOV: user.id,
-        TIPMOV: tiposMovimiento.desasignarFraude,
+        TIPMOV: tiposMovimiento.desasignarFormulario,
       };
 
       await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/unasign`, {

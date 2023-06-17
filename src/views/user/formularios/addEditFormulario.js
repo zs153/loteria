@@ -1,9 +1,9 @@
 // vars
 const nifcon = document.getElementById('nifcon')
 const nomcon = document.getElementById('nomcon')
-const ejefra = document.getElementById('ejefra')
-const fecfra = document.getElementById('fecfra')
-const tipfra = document.getElementById('cbotip')
+const ejefor = document.getElementById('ejefor')
+const fecfor = document.getElementById('fecfor')
+const tipfor = document.getElementById('cbotip')
 
 // func
 const getCookie = (key) => {
@@ -44,9 +44,9 @@ const setError = (element, message) => {
 const validate = () => {
   const nifconValue = nifcon.value.trim().toUpperCase().slice(0, 9)
   const nomconValue = nomcon.value.trim()
-  const ejefraValue = ejefra.value.trim()
-  const fecfraValue = fecfra.value.trim()
-  const tipfraValue = tipfra.value
+  const ejeforValue = ejefor.value.trim()
+  const fecforValue = fecfor.value.trim()
+  const tipforValue = tipfor.value
 
   if (nifconValue === '') {
     setError(nifcon, 'NIF/NIE requerido')
@@ -101,7 +101,7 @@ const validate = () => {
     }, 3000)
     return false
   }
-  if (tipfraValue === '0') {
+  if (tipforValue === '0') {
     setError(cbotip, 'Seleccione un tipo')
     setTimeout(function () {
       setSuccess(cbotip)
@@ -109,9 +109,9 @@ const validate = () => {
     return false
   }
   if (ejefraValue === '') {
-    setError(ejefra, 'Ejercicio requerido')
+    setError(ejefor, 'Ejercicio requerido')
     setTimeout(function () {
-      setSuccess(ejefra)
+      setSuccess(ejefor)
     }, 3000)
     return false
   } else {
@@ -119,17 +119,17 @@ const validate = () => {
     const isValid = pattern.test(ejefraValue)
 
     if (isValid === false) {
-      setError(ejefra, 'Introduzca ejercicio válido')
+      setError(ejefor, 'Introduzca ejercicio válido')
       setTimeout(function () {
-        setSuccess(ejefra)
+        setSuccess(ejefor)
       }, 3000)
       return false
     }
   }
   if (isNaN(Date.parse(fecfraValue))) {
-    setError(fecfra, 'Fecha requerida')
+    setError(fecfor, 'Fecha requerida')
     setTimeout(function () {
-      setSuccess(fecfra)
+      setSuccess(fecfor)
     }, 3000)
     return false
   }

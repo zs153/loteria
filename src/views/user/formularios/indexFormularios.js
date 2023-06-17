@@ -67,19 +67,19 @@ const buildTable = (state) => {
     if (element.STAFOR === estados.pendiente) {
       cell.innerHTML = `<div class="align-items-center py-1">
         <span class="avatar avatar-rounded bg-red-lt">
-          <h6>${element.LIQFRA}</h6>
+          <h6>${element.LIQFOR}</h6>
         </span>
       </div>`
     } else if (element.STAFOR === estados.asignado) {
       cell.innerHTML = `<div class="align-items-center py-1">
         <span class="avatar avatar-rounded bg-blue-lt">
-          <h6>${element.LIQFRA}</h6>
+          <h6>${element.LIQFOR}</h6>
         </span>
       </div>`
     } else if (element.STAFOR === estados.resuelto) {
       cell.innerHTML = `<div class="align-items-center py-1">
         <span class="avatar avatar-rounded bg-green-lt">
-          <h6>${element.LIQFRA}</h6>
+          <h6>${element.LIQFOR}</h6>
         </span>
       </div>`
     }

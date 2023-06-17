@@ -1,5 +1,5 @@
 // vars
-const ejefra = document.getElementById('ejefra')
+const ejefor = document.getElementById('ejefor')
 
 // func
 const getCookie = (key) => {
@@ -38,12 +38,12 @@ const setError = (element, message) => {
   inputControl.classList.remove('is-valid');
 }
 const validate = () => {
-  const ejefraValue = ejefra.value.trim()
+  const ejefraValue = ejefor.value.trim()
 
   if (ejefraValue === '') {
-    setError(ejefra, 'Ejercicio requerido')
+    setError(ejefor, 'Ejercicio requerido')
     setTimeout(function () {
-      setSuccess(ejefra)
+      setSuccess(ejefor)
     }, 3000)
     return false
   } else {
@@ -52,9 +52,9 @@ const validate = () => {
 
     if(isValid === false) {
       setTimeout(function () {
-        setSuccess(ejefra)
+        setSuccess(ejefor)
       }, 3000)
-      setError(ejefra, 'Introduzca ejercicio válido')
+      setError(ejefor, 'Introduzca ejercicio válido')
       return false
     }
   }
@@ -64,6 +64,6 @@ const validate = () => {
 
 // inicializar
 const elemNew = document.getElementById('new');
-elemNew.setAttribute('action', `/user/fraudes/ejercicios/insert?part=${getCookie('filtro')}`)
+elemNew.setAttribute('action', `/user/formularios/ejercicios/insert?part=${getCookie('filtro')}`)
 const elemVol = document.getElementById('vol');
-elemVol.setAttribute('href', `/user/fraudes/?part=${getCookie('filtro')}`)
+elemVol.setAttribute('href', `/user/formularios/?part=${getCookie('filtro')}`)

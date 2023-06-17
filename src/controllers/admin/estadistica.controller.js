@@ -40,7 +40,7 @@ export const generarEstadistica = async (req, res) => {
     DESDE: req.body.desde,
     HASTA: req.body.hasta,
   }
-  const fraude = {
+  const formulario = {
     REFFRA: req.body.refcar,
   }
 
@@ -136,7 +136,7 @@ export const generarEstadistica = async (req, res) => {
     }
 
     const datos = {
-      fraude,
+      formulario,
       cargas: cargas.data.data,
       oficinas: oficinas.data.data,
       periodo,

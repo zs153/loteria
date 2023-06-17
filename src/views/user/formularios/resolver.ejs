@@ -21,7 +21,7 @@
             <div class="col-12">
               <div class="card">
                 <form action="" id="rslver" method="POST">
-                  <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
+                  <input type="hidden" id="idform" name="idform" value="<%- datos.formulario.IDFORM %>">
                   <div class="card-header">
                     <h4 class="card-title">Resolver</h4>
                   </div>
@@ -30,13 +30,13 @@
                       <div class="col-4">
                         <div class="mb-1">
                           <label class="form-label">NIF/NIE</label>
-                          <input type="text" class="form-control" name="nifcon" value="<%- datos.fraude.NIFCON %>" readonly/>
+                          <input type="text" class="form-control" name="nifcon" value="<%- datos.formulario.NIFCON %>" readonly/>
                         </div>
                       </div>
                       <div class="col-8">
                         <div class="mb-1">
                           <label class="form-label">Nombre</label>
-                          <input type="text" class="form-control" name="nomcon" value="<%- datos.fraude.NOMCON %>" readonly/>
+                          <input type="text" class="form-control" name="nomcon" value="<%- datos.formulario.NOMCON %>" readonly/>
                         </div>
                       </div>
                     </div>
@@ -44,19 +44,19 @@
                       <div class="col-2">
                         <div class="mb-1">
                           <label class="form-label">Referencia</label>
-                          <input type="text" class="form-control" name="reffra" value="<%- datos.fraude.REFFRA %>" readonly/>
+                          <input type="text" class="form-control" name="reffra" value="<%- datos.formulario.REFFRA %>" readonly/>
                         </div>
                       </div>
                       <div class="col-8">
                         <div class="mb-1">
                           <label class="form-label">Tipo</label>
-                          <input type="text" class="form-control" name="destip" value="<%- datos.fraude.DESTIP %>" readonly/>
+                          <input type="text" class="form-control" name="destip" value="<%- datos.formulario.DESTIP %>" readonly/>
                         </div>
                       </div>
                       <div class="col-2">
                         <div class="mb-1">
                           <label class="form-label">Ejercicio</label>
-                          <input type="number" class="form-control" name="ejefra" value="<%- datos.fraude.EJEFRA %>" readonly/>
+                          <input type="number" class="form-control" name="ejefor" value="<%- datos.formulario.EJEFOR %>" readonly/>
                         </div>
                       </div>
                     </div>
@@ -82,7 +82,7 @@
                   <div class="card-footer text-end">
                     <div class="d-flex">
                       <a href="#" id="vol" class="btn btn-white">Cancelar</a>
-                      <button type="submit" class="btn btn-success ms-auto">Resolver fraude</button>
+                      <button type="submit" class="btn btn-success ms-auto">Resolver formulario</button>
                     </div>
                   </div>
                 </form>
@@ -108,10 +108,10 @@
     
     // inicializar
     const elemVol = document.getElementById('vol');
-    elemVol.setAttribute('href', `/user/fraudes?part=${getCookie('filtro')}`)
+    elemVol.setAttribute('href', `/user/formularios?part=${getCookie('filtro')}`)
 
     const elemRslver = document.getElementById('rslver');
-    elemRslver.setAttribute('action', `/user/fraudes/resolver?part=${getCookie('filtro')}`)    
+    elemRslver.setAttribute('action', `/user/formularios/resolver?part=${getCookie('filtro')}`)    
   </script>
 </body>
 </html>

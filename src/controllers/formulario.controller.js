@@ -376,22 +376,22 @@ export const ejercicioPage = async (req, res) => {
 // procs formulario
 export const insert = async (req, res) => {
   const user = req.user;
-  const referencia = "F" + randomString(10, "1234567890YMGS");
+  const referencia = "W" + randomString(10, "1234567890YMGS");
   const formulario = {
-    FECDOC: req.body.fecdoc,
+    FECFOR: req.body.fecfor,
     NIFCON: req.body.nifcon.toUpperCase(),
     NOMCON: req.body.nomcon.toUpperCase(),
     EMACON: req.body.emacon,
     TELCON: req.body.telcon,
     MOVCON: req.body.movcon,
-    REFDOC: referencia,
-    TIPDOC: req.body.tipdoc,
-    EJEDOC: req.body.ejedoc,
-    OFIDOC: req.body.ofidoc,
-    OBSDOC: req.body.obsdoc,
-    FUNDOC: req.body.fundoc,
-    LIQDOC: user.userid,
-    STADOC: estadosDocumento.asignado,
+    REFFOR: referencia,
+    TIPFOR: req.body.tipfor,
+    EJEFOR: req.body.ejefor,
+    OFIFOR: req.body.ofifor,
+    OBSFOR: req.body.obsfor,
+    FUNFOR: req.body.funfor,
+    LIQFOR: user.userid,
+    STAFOR: estadosDocumento.asignado,
   };
   const movimiento = {
     USUMOV: user.id,
@@ -420,17 +420,17 @@ export const insert = async (req, res) => {
 export const update = async (req, res) => {
   const user = req.user;
   const formulario = {
-    IDDOCU: req.body.iddocu,
-    FECDOC: req.body.fecdoc,
+    IDFORM: req.body.idform,
+    FECFOR: req.body.fecfor,
     NIFCON: req.body.nifcon.toUpperCase(),
     NOMCON: req.body.nomcon.toUpperCase(),
     EMACON: req.body.emacon,
     TELCON: req.body.telcon,
     MOVCON: req.body.movcon,
-    TIPDOC: req.body.tipdoc,
-    EJEDOC: req.body.ejedoc,
-    OFIDOC: req.body.ofidoc,
-    OBSDOC: req.body.obsdoc,
+    TIPFOR: req.body.tipfor,
+    EJEFOR: req.body.ejefor,
+    OFIFOR: req.body.ofifor,
+    OBSFOR: req.body.obsfor,
   };
   const movimiento = {
     USUMOV: user.id,
@@ -597,46 +597,6 @@ export const desasignar = async (req, res) => {
     }
   } catch (error) {
     const msg = "No se ha podido desasignar el documento.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
-  }
-}
-export const ejercicio = async (req, res) => {
-  const user = req.user;
-  //const referencia = "R" + randomString(10, "1234567890YMGS");
-  const fecha = new Date()
-  const formulario = {
-    FECDOC: fecha.toISOString().slice(0, 10),
-    NIFCON: req.body.nifcon,
-    NOMCON: req.body.nomcon,
-    EMACON: req.body.emacon,
-    TELCON: req.body.telcon,
-    MOVCON: req.body.movcon,
-    REFDOC: req.body.refdoc,
-    TIPDOC: req.body.tipdoc,
-    EJEDOC: req.body.ejedoc,
-    OFIDOC: user.oficina,
-    OBSDOC: req.body.obsdoc,
-    FUNDOC: user.userid,
-    LIQDOC: user.userid,
-    STADOC: estadosDocumento.asignado,
-  };
-  const movimiento = {
-    USUMOV: user.id,
-    TIPMOV: tiposMovimiento.crearEjercicio,
-  };
-
-  try {
-    await axios.post(`http://${serverAPI}:8000/api/formularios/insert`, {
-      formulario,
-      movimiento,
-    });
-
-    res.redirect("/admin/formularios");
-  } catch (error) {
-    const msg = "No se ha podido insertar el nuevo ejercicio.";
 
     res.render("admin/error400", {
       alerts: [{ msg }],

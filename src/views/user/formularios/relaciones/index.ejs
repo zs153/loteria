@@ -27,7 +27,7 @@
                   </div>
                   <div class="col-auto ms-auto">
                     <div class="d-flex">
-                      <form action="/user/fraudes/relaciones" method="GET">
+                      <form action="/user/formularios/relaciones" method="GET">
                         <div class="input-icon me-3">
                           <span class="input-icon-addon">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
@@ -41,7 +41,7 @@
                             aria-label="Buscar en relacionados">
                         </div>
                       </form>
-                      <a href="/user/fraudes/relaciones/add/<%= datos.fraude.IDFRAU %>" class="btn">
+                      <a href="/user/formularios/relaciones/add/<%= datos.formulario.IDFORM %>" class="btn">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="24" width="24" viewBox="0 0 24 24">
                           <path d="M11.25 18.75v-6h-6v-1.5h6v-6h1.5v6h6v1.5h-6v6Z" />
                         </svg>
@@ -104,7 +104,7 @@
               <div class="col">
                 <form action="#" id="del" method="POST">
                   <input type="hidden" id="idrela" name="idrela" value="">
-                  <input type="hidden" id="idfrau" name="idfrau" value="<%= datos.fraude.IDFRAU %>">
+                  <input type="hidden" id="idform" name="idform" value="<%= datos.formulario.IDFORM %>">
                   <button type="submit" class="btn btn-danger w-100">Borrar relación</button>
                 </form>
               </div>

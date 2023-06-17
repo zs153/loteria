@@ -25,7 +25,7 @@
                       <h3 class="card-title">Resueltos</h3>
                       <div class="col-auto ms-auto">
                         <div class="d-flex">
-                          <form action="/user/fraudes/resueltos" method="GET">
+                          <form action="/user/formularios/resueltos" method="GET">
                             <div class="input-icon me-3">
                               <span class="input-icon-addon">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
@@ -36,8 +36,8 @@
                                   <line x1="21" y1="21" x2="15" y2="15"></line>
                                 </svg>
                               </span>
-                              <input type="text" class="form-control d-inline-block me-3" id="buscarFraudeBox"
-                                name="part" placeholder="Buscar..." aria-label="Buscar en fraudes">
+                              <input type="text" class="form-control d-inline-block me-3" id="buscarFormularioBox"
+                                name="part" placeholder="Buscar..." aria-label="Buscar en formularios">
                             </div>
                           </form>
                           <a href="#" id="pen" class="btn">
@@ -47,7 +47,7 @@
                       </div>
                     </div>
                     <div class="card-body">
-                      <table class="table table-vcenter table-striped sortable" id="tblFraudes">
+                      <table class="table table-vcenter table-striped sortable" id="tblFormularios">
                         <thead>
                           <tr class="header">
                             <th class="w-4"></th>
@@ -89,7 +89,7 @@
             <path d="M12 9v2m0 4v.01"></path>
             <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
           </svg>
-          <h3>Desasignar fraude resuelto</h3>
+          <h3>Desasignar formulario resuelto</h3>
           <div id="msgdes"></div>
         </div>
         <div class="modal-footer">
@@ -99,9 +99,9 @@
                 <a href="" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
               </div>
               <div class="col">
-                <form action="/admin/fraudes/desasignar" method="POST">
-                  <input type="hidden" id="iddesa" name="idfrau" value="">
-                  <button type="submit" class="btn btn-danger w-100">Desasignar fraude</button>
+                <form action="/admin/formularios/desasignar" method="POST">
+                  <input type="hidden" id="iddesa" name="idform" value="">
+                  <button type="submit" class="btn btn-danger w-100">Desasignar formulario</button>
                 </form>
               </div>
             </div>
@@ -112,8 +112,8 @@
   </div>
 
   <script>
-    const orgList = <%- JSON.stringify(datos.fraudes) %>
-    const estadosFraude = <%- JSON.stringify(datos.estadosFraude) %>
+    const orgList = <%- JSON.stringify(datos.formularios) %>
+    const estadosFormulario = <%- JSON.stringify(datos.estadosFormulario) %>
     const cursor = <%- JSON.stringify(datos.cursor) %>
     const hasNextFras = <%- datos.hasNextFras %>
     const hasPrevFras = <%- datos.hasPrevFras %>
