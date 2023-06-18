@@ -8,19 +8,19 @@ import {
   modificarFormulario,
   borrarFormulario,
   desasignarFormulario,
+  cierreFormulario,
   sms,
   smss,
   crearSms,
   modificarSms,
   borrarSms,
-  relacion,
-  relaciones,
-  crearRelacion,
-  modificarRelacion,
-  borrarRelacion,
+  referencia,
+  referencias,
+  crearReferencia,
+  modificarReferencia,
+  borrarReferencia,
   asignarUsuarios,
   desAsignarUsuarios,
-  cierreFormulario,
 } from '../controllers/formulario.controller'
 
 const apiFormularioRouter = express.Router()
@@ -43,12 +43,12 @@ apiFormularioRouter.post('/formularios/smss/insert', crearSms)
 apiFormularioRouter.post('/formularios/smss/update', modificarSms)
 apiFormularioRouter.post('/formularios/smss/delete', borrarSms)
 
-// relacionados
-apiFormularioRouter.post('/formularios/relacion', relacion)
-apiFormularioRouter.post('/formularios/relaciones', relaciones)
-apiFormularioRouter.post('/formularios/relaciones/insert', crearRelacion)
-apiFormularioRouter.post('/formularios/relaciones/update', modificarRelacion)
-apiFormularioRouter.post('/formularios/relaciones/delete', borrarRelacion)
+// referencias
+apiFormularioRouter.post('/formularios/referencia', referencia)
+apiFormularioRouter.post('/formularios/referencias', referencias)
+apiFormularioRouter.post('/formularios/referencias/insert', crearReferencia)
+apiFormularioRouter.post('/formularios/referencias/update', modificarReferencia)
+apiFormularioRouter.post('/formularios/referencias/delete', borrarReferencia)
 
 // ades
 apiFormularioRouter.post('/formularios/ades/asignar', asignarUsuarios)

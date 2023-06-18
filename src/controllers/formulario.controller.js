@@ -291,97 +291,94 @@ export const borrarSms = async (req, res) => {
 }
 
 // referencia
-export const relacion = async (req, res) => {
+export const referencia = async (req, res) => {
   // context
   const context = req.body.context
 
   // proc
   try {
-    const result = await DAL.relacion(context)
+    const result = await DAL.referencia(context)
 
     res.status(200).json(result)
   } catch (err) {
     res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
-export const relaciones = async (req, res) => {
+export const referencias = async (req, res) => {
   // context
   const context = req.body.context
 
   // proc
   try {
-    const result = await DAL.relaciones(context)
+    const result = await DAL.referencias(context)
 
     res.status(200).json(result)
   } catch (err) {
     res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
-export const crearRelacion = async (req, res) => {
+export const crearReferencia = async (req, res) => {
   // context
   const formulario = {
     idform: req.body.formulario.IDFORM,
   }
-  const relacion = {
-    fecrel: req.body.relacion.FECREL,
-    nifcon: req.body.relacion.NIFCON,
-    nomcon: req.body.relacion.NOMCON,
+  const referencia = {
+    nifref: req.body.referencia.NIFREF,
+    desref: req.body.referencia.DESREF,
+    tipref: req.body.referencia.TIPREF,
   }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
-  const context = Object.assign(formulario, relacion, movimiento)
+  const context = Object.assign(formulario, referencia, movimiento)
 
   // proc
   try {
-    const result = await DAL.insertRelacion(context)
+    const result = await DAL.insertReferencia(context)
 
     res.status(200).json(result)
   } catch (err) {
     res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
-export const modificarRelacion = async (req, res) => {
+export const modificarReferencia = async (req, res) => {
   // context
-  const relacion = {
-    idrela: req.body.relacion.IDRELA,
-    fecrel: req.body.relacion.FECREL,
-    nifcon: req.body.relacion.NIFCON,
-    nomcon: req.body.relacion.NOMCON,
+  const referencia = {
+    idrefe: req.body.referencia.IDREFE,
+    nifref: req.body.referencia.NIFREF,
+    desref: req.body.referencia.DESREF,
+    tipref: req.body.referencia.TIPREF,
   }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
-  const context = Object.assign(relacion, movimiento)
+  const context = Object.assign(referencia, movimiento)
 
   // proc
   try {
-    const result = await DAL.updateRelacion(context)
+    const result = await DAL.updateReferencia(context)
 
     res.status(200).json(result)
   } catch (err) {
     res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
-export const borrarRelacion = async (req, res) => {
+export const borrarReferencia = async (req, res) => {
   // context
-  const formulario = {
-    idform: req.body.formulario.IDFORM,
-  }
-  const relacion = {
-    idrela: req.body.relacion.IDRELA,
+  const referencia = {
+    idrefe: req.body.referencia.IDREFE,
   }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
-  const context = Object.assign(formulario, relacion, movimiento)
+  const context = Object.assign(referencia, movimiento)
 
   // proc
   try {
-    const result = await DAL.removeRelacion(context)
+    const result = await DAL.removeReferencia(context)
 
     res.status(200).json(result)
   } catch (err) {

@@ -2,7 +2,6 @@ import { BIND_OUT, NUMBER } from "oracledb";
 import { simpleExecute } from '../services/database.js';
 
 // formulario
-const baseQuery = "SELECT ff.*,oo.desofi,tt.destip FROM formularios ff INNER JOIN tipos tt ON tt.idtipo = ff.tipfor INNER JOIN oficinas oo ON oo.idofic = ff.ofifor"
 const insertSql = "BEGIN FORMULARIOS_PKG.INSERTFORMULARIO(TO_DATE(:fecfor, 'YYYY-MM-DD'),:nifcon,:nomcon,:emacon,:telcon,:movcon,:reffor,:tipfor,:ejefor,:ofifor,:obsfor,:funfor,:liqfor,:stafor,:usumov,:tipmov,:idform); END;"
 const updateSql = "BEGIN FORMULARIOS_PKG.UPDATEFORMULARIO(:idform,TO_DATE(:fecfor,'YYYY-MM-DD'),:nifcon,:nomcon,:emacon,:telcon,:movcon,:tipfor,:ejefor,:ofifor,:obsfor,:usumov,:tipmov); END;"
 const removeSql = "BEGIN FORMULARIOS_PKG.DELETEFORMULARIO(:idform,:usumov,:tipmov ); END;"
@@ -14,18 +13,17 @@ const smssQuery = "SELECT ss.* FROM smss ss"
 const insertSmsSql = "BEGIN FORMULARIOS_PKG.INSERTSMS(:idform,TO_DATE(:fecsms, 'YYYY-MM-DD'),:texsms,:movsms,:stasms,:usumov,:tipmov,:idsmss); END;"
 const updateSmsSql = "BEGIN FORMULARIOS_PKG.UPDATESMS(:idsmss,TO_DATE(:fecsms, 'YYYY-MM-DD'),:texsms,:movsms,:usumov,:tipmov); END;"
 const removeSmsSql = "BEGIN FORMULARIOS_PKG.DELETESMS(:idform,:idsmss,:usumov,:tipmov ); END;"
-// relacion
-const relacionesQuery = "SELECT rr.* FROM relaciones rr"
-const insertRelacionSql = "BEGIN FORMULARIOS_PKG.INSERTRELACION(:idform,TO_DATE(:fecrel, 'YYYY-MM-DD'),:nifcon,:nomcon,:usumov,:tipmov,:idrela); END;"
-const updateRelacionSql = "BEGIN FORMULARIOS_PKG.UPDATERELACION(:idrela,TO_DATE(:fecrel, 'YYYY-MM-DD'),:nifcon,:nomcon,:usumov,:tipmov); END;"
-const removeRelacionSql = "BEGIN FORMULARIOS_PKG.DELETERELACION(:idform,:idrela,:usumov,:tipmov ); END;"
+// referencias
+const insertReferenciaSql = "BEGIN FORMULARIOS_PKG.INSERTREFERENCIA(:idform,:nifref,:desref,:tipref,:usumov,:tipmov,:idrefe); END;"
+const updateReferenciaSql = "BEGIN FORMULARIOS_PKG.UPDATEREFERENCIA(:idrefe,:nifref,:desref,:tipref,:usumov,:tipmov); END;"
+const removeReferenciaSql = "BEGIN FORMULARIOS_PKG.DELETEREFERENCIA(:idrefe,:usumov,:tipmov ); END;"
 // ades
 const asignarUsuarioSql = "BEGIN FORMULARIOS_PKG.ASIGNARUSUARIOS(:liqfor,:stafor,:arrfor,:usumov,:tipmov); END;"
 const desAsignarUsuarioSql = "BEGIN FORMULARIOS_PKG.DESASIGNARUSUARIOS(:liqfor,:stafor,:arrfor,:usumov,:tipmov); END;"
 
 // proc formulario
 export const formulario = async (context) => {
-  let query = baseQuery
+  let query = "SELECT ff.*,oo.desofi,tt.destip FROM formularios ff INNER JOIN tipos tt ON tt.idtipo = ff.tipfor INNER JOIN oficinas oo ON oo.idofic = ff.ofifor"
   let bind = context
 
   if (context.IDFORM) {
@@ -296,17 +294,17 @@ export const removeSms = async (context) => {
   }
 }
 
-// proc relacion
-export const relacion = async (context) => {
+// proc referencia
+export const referencia = async (context) => {
   // bind
-  let query = relacionesQuery
+  let query = "SELECT rr.* FROM referencias rr"
   const bind = context
 
   if (context.IDFORM) {
-    query += " INNER JOIN relacionesformulario rf ON rf.idrela = rr.idrela WHERE rf.idform = :idform"
+    query += " INNER JOIN referenciasformulario rf ON rf.idrefe = rr.idrefe WHERE rf.idform = :idform"
   } 
-  if (context.IDRELA) {
-    query += " WHERE rr.idrela = :idrela"
+  if (context.IDREFE) {
+    query += " WHERE rr.idrefe = :idrefe"
   }
 
   // proc
@@ -318,7 +316,7 @@ export const relacion = async (context) => {
     return ({ stat: 0, data: [] })
   }
 }
-export const relaciones = async (context) => {
+export const referencias = async (context) => {
   // bind
   let query = ""
   let bind = {
@@ -328,13 +326,14 @@ export const relaciones = async (context) => {
   };
 
   if (context.direction === 'next') {
-    bind.idrela = context.cursor.next;
-    query = "SELECT rr.*,rf.idform FROM relaciones rr INNER JOIN relacionesformulario rf ON rf.idrela = rr.idrela AND rf.idform = :idform WHERE rr.idrela > :idrela AND (rr.nifcon LIKE '%' || :part || '%' OR rr.nomcon LIKE '%' || :part OR rr.fecrel LIKE '%' || :part || '%' OR :part IS NULL) ORDER BY rr.idrela ASC FETCH NEXT :limit ROWS ONLY"
+    bind.idrefe = context.cursor.next;
+    query = "SELECT rr.*,rf.idform,tt.destip FROM referencias rr INNER JOIN referenciasformulario rf ON rf.idrefe = rr.idrefe AND rf.idform = :idform INNER JOIN tipos tt ON tt.idtipo = rr.tipref WHERE rr.idrefe > :idrefe AND (rr.nifref LIKE '%' || :part || '%' OR rr.desref LIKE '%' || :part || '%' OR :part IS NULL) ORDER BY rr.idrefe ASC FETCH NEXT :limit ROWS ONLY"
   } else {
-    bind.idrela = context.cursor.prev;
-    query = "SELECT rr.*,rf.idform FROM relaciones rr INNER JOIN relacionesformulario rf ON rf.idrela = rr.idrela AND rf.idform = :idform WHERE rr.idrela < :idrela AND (rr.nifcon LIKE '%' || :part || '%' OR rr.nomcon LIKE '%' || :part OR rr.fecrel LIKE '%' || :part || '%' OR :part IS NULL) ORDER BY rr.idrela DESC FETCH NEXT :limit ROWS ONLY"
+    bind.idrefe = context.cursor.prev;
+    query = "SELECT rr.*,rf.idform,tt.destip FROM referencias rr INNER JOIN referenciasformulario rf ON rf.idrefe = rr.idrefe AND rf.idform = :idform INNER JOIN tipos tt ON tt.idtipo = rr.tipref WHERE rr.idrefe < :idrefe AND (rr.nifref LIKE '%' || :part || '%' OR rr.desref LIKE '%' || :part || '%' OR :part IS NULL) ORDER BY rr.idrefe DESC FETCH NEXT :limit ROWS ONLY"
   }
 
+  console.log(query,bind);
   // proc
   const ret = await simpleExecute(query, bind)
 
@@ -344,29 +343,29 @@ export const relaciones = async (context) => {
     return ({ stat: 0, data: [] })
   }
 };
-export const insertRelacion = async (context) => {
+export const insertReferencia = async (context) => {
   // bind
   let bind = context
-  bind.IDRELA = {
+  bind.idrefe = {
     dir: BIND_OUT,
     type: NUMBER,
   }
 
   // proc
-  const ret = await simpleExecute(insertRelacionSql, bind)
+  const ret = await simpleExecute(insertReferenciaSql, bind)
   
   if (ret) {
-    bind.IDRELA = ret.outBinds.IDRELA
+    bind.idrefe = ret.outBinds.idrefe
     return ({ stat: 1, data: bind })
   } else {
     return ({ stat: 0, data: [] })
   }
 }
-export const updateRelacion = async (context) => {
+export const updateReferencia = async (context) => {
   // bind
   const bind = context
   // proc
-  const ret = await simpleExecute(updateRelacionSql, bind)
+  const ret = await simpleExecute(updateReferenciaSql, bind)
 
   if (ret) {
     return ({ stat: 1, data: bind })
@@ -374,11 +373,11 @@ export const updateRelacion = async (context) => {
     return ({ stat: 0, data: [] })
   }
 }
-export const removeRelacion = async (context) => {
+export const removeReferencia = async (context) => {
   // bind
   const bind = context
   // proc
-  const ret = await simpleExecute(removeRelacionSql, bind)
+  const ret = await simpleExecute(removeReferenciaSql, bind)
 
   if (ret) {
     return ({ stat: 1, data: bind })
