@@ -241,13 +241,13 @@ const buildTable = (state) => {
               </a>
             </li>
             <li class="nav-item">
-            <a href="/admin/formularios/resolver/${element.IDFORM}" class="nav-link">
+              <a href="#" class="nav-link" onclick="{document.getElementById('idcerr').value ='${element.IDFORM}', document.getElementById('msgcer').innerHTML ='<p>Ejercicio ${element.EJEFOR}</p><p>${element.NIFCON} ${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-resolver">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke-width=".4" fill="none" d="M9.575 17.025 4.9 12.35l.475-.45 4.2 4.2 9.075-9.075.45.45Z"/>
                 </svg>
                 Resolver
               </a>
-            </li>
+            </li>            
             <li class="nav-item">
               <a href="#" class="nav-link" onclick="{document.getElementById('iddesa').value ='${element.IDFORM}', document.getElementById('msgdes').innerHTML ='<p>Ejercicio ${element.EJEFOR}</p><p>${element.NIFCON} ${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-desasignar">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -256,7 +256,7 @@ const buildTable = (state) => {
               </a>
             </li>
             <li class="nav-item">
-              <a href="/admin/formularios/referencias/add/${element.IDFORM}" class="nav-link">
+              <a href="/admin/formularios/referencias/${element.IDFORM}" class="nav-link">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke-width=".4" fill="none" d="M11.025 19.575q-1.575 0-2.963-.6-1.387-.6-2.412-1.625t-1.625-2.412q-.6-1.388-.6-2.938 0-1.6.6-2.975t1.625-2.4Q6.675 5.6 8.062 5q1.388-.6 2.963-.6.525 0 1.025.062.5.063 1 .188v.675q-.5-.15-1-.225-.5-.075-1.05-.075-2.85 0-4.887 2.037Q4.075 9.1 4.075 11.975q0 2.875 2.038 4.912 2.037 2.038 4.912 2.038t4.913-2.038q2.037-2.037 2.037-4.912 0-.275-.025-.6-.025-.325-.1-.6h.625q.05.225.087.575.038.35.038.65 0 1.55-.6 2.938-.6 1.387-1.625 2.412t-2.4 1.625q-1.375.6-2.95.6Zm3.25-3.9-3.575-3.55v-5.1h.625v4.825l3.4 3.375Zm3.7-6.825V5.875H15v-.65h2.975V2.25h.625v2.975h2.975v.65H18.6V8.85Z"/>
                 </svg>
@@ -310,9 +310,6 @@ elemBuscar.onchange = (event) => {
 elemBuscar.value = getCookie('filtro')
 
 // incializacion
-const elemNew = document.getElementById('new');
-elemNew.setAttribute('href', `/admin/formularios/add?part=${getCookie('filtro')}`)
-
 const elemDel = document.getElementById('del');
 elemDel.setAttribute('action', `/admin/formularios/delete?part=${getCookie('filtro')}`)
 
@@ -321,6 +318,9 @@ elemDesag.setAttribute('action', `/admin/formularios/desasignar?part=${getCookie
 
 const elemAsig = document.getElementById('asig');
 elemAsig.setAttribute('action', `/admin/formularios/asignar?part=${getCookie('filtro')}`)
+
+const elemCerr = document.getElementById('cerr');
+elemCerr.setAttribute('action', `/admin/formularios/resolver?part=${getCookie('filtro')}`)
 
 const elemRes = document.getElementById('rsltos');
 elemRes.setAttribute('href', `/admin/formularios/resueltos?part=${getCookie('filtro')}`)

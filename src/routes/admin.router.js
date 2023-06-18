@@ -35,11 +35,12 @@ adminRouter.get('/tipos/edit/:id', verifyTokenAndAdmin, tipo.editPage)
 adminRouter.get("/formularios", verifyTokenAndResp, formulario.mainPage);
 adminRouter.get("/formularios/edit/:id", verifyTokenAndResp, formulario.editPage);
 adminRouter.get("/formularios/resueltos", verifyTokenAndResp, formulario.resueltosPage);
+adminRouter.get("/formularios/readonly/:id", verifyTokenAndResp, formulario.readonlyPage);
 
 // referencia
 adminRouter.get("/formularios/referencias/:id", verifyTokenAndResp, formulario.referenciasPage);
 adminRouter.get("/formularios/referencias/add/:id", verifyTokenAndResp, formulario.referenciasAddPage);
-adminRouter.get("/formularios/referencias/edit/:idfra/:idrel", verifyTokenAndResp, formulario.referenciasEditPage);
+adminRouter.get("/formularios/referencias/edit/:idfor/:idref", verifyTokenAndResp, formulario.referenciasEditPage);
 adminRouter.get("/formularios/referencias/readonly/:id", verifyTokenAndResp, formulario.referenciasReadonlyPage);
 
 // smss

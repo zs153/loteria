@@ -90,8 +90,8 @@ module.exports = function (grunt) {
         //   // app
         //   'dist/app.js': ['./dist/app.js'],
         // }
-        src: ['./src/views/admin/formularios/addEditFormulario.js'],
-        dest: './src/public/js/addEditFormulario.min.js'
+        src: ['./src/views/admin/formularios/referencias/addEditReferencia.js'],
+        dest: './src/public/js/addEditReferencia.min.js'
       },
     },
   });

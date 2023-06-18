@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Referencias</title>
+  <title>Formularios</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
@@ -14,15 +14,15 @@
 <body class="antialiased">
   <div class="wrapper">
     <%- include('../../../partials/header') %>
-    <%- include('../../../partials/navbar', {opcion: 'FORMULARIO'}) %>
+    <%- include('../../../partials/navbar', {opcion: 'ADMINISTRACION'}) %>
     <div class="page-wrapper">
       <div class="page-body">
         <div class="container-xl">
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <form id="form" action="/admin/formularios/referencias/update" method="POST" onsubmit="return validate();">
-                  <input type="hidden" name="iddocu" id="iddocu" value="<%- datos.formulario.IDDOCU %>">
+                <form action="" id="upd" method="POST" onsubmit="return validate();">
+                  <input type="hidden" name="idform" id="idform" value="<%- datos.formulario.IDFORM %>">
                   <input type="hidden" name="idrefe" id="idrefe" value="<%- datos.referencia.IDREFE %>">
                   <div class="card-header">
                     <h3 class="card-title">Referencia</h3>
@@ -33,8 +33,7 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">NIF/NIE</label>
-                            <input type="text" name="nifref" id="nifref" class="form-control"
-                              style="text-transform: uppercase;" value="<%- datos.referencia.NIFREF %>" autofocus/>
+                            <input type="text" name="nifref" id="nifref" class="form-control" style="text-transform: uppercase;" value="<%- datos.referencia.NIFREF %>" autofocus/>
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -66,8 +65,8 @@
                   </div>
                   <div class="card-footer text-end">
                     <div class="d-flex">
-                      <a href="/admin/formularios/referencias/<%- datos.formulario.IDDOCU %>" class="btn btn-white">Cancelar</a>
-                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Actualizar referencia</button>
+                      <input class="btn btn-white" action="action" onclick="window.history.go(-1); return false;" type="submit" value="Cancelar" />
+                      <button type="submit" class="btn btn-success ms-auto" id="btnUpdate">Actualizar referencia</button>
                     </div>
                   </div>
                 </form>
@@ -79,97 +78,12 @@
     </div>
     <%- include('../../../partials/footer') %>
   </div>
+
   <script src="/js/ayuda.min.js"></script>
-
+  <script src="/js/addEditReferencia.min.js"></script>
   <script>
-    const nifref = document.getElementById('nifref')
-    const desref = document.getElementById('desref')
-    const cbotip = document.getElementById('cbotip')
-    
-    const validate = () => {
-      const nifrefValue = nifref.value.trim().toUpperCase()
-      const desrefValue = desref.value.trim()
-      const cbotipValue = cbotip.value
-
-      if (nifrefValue === '') {
-        setError(nifref, 'NIF/NIE requerido')
-        setTimeout(function () {
-          setSuccess(nifref)
-        }, 3000)
-        return false
-      } else {
-        const pattern = /^([X-Y][0-9]{7}[A-Z]{1})|([0-9]{8}[A-Z]{1})$/
-
-        if (!pattern.test(nifrefValue)) {
-          setError(nifref, 'Introduzca NIF/NIE válido')
-          setTimeout(function () {
-            setSuccess(nifref)
-          }, 3000)
-          return false
-        }
-
-        const strBase = "TRWAGMYFPDXBNJZSQVHLCKET";
-        const primeraPosicion = nifrefValue.slice(0, 1);
-        const letraNif = nifrefValue.slice(8);
-        let nuevoNif = nifrefValue;
-
-        if (isNaN(primeraPosicion)) {
-          nuevoNif = nifrefValue.slice(1);
-          if (primeraPosicion === 'X') {
-            nuevoNif = '0' + nuevoNif;
-          } else if (primeraPosicion === "Y") {
-            nuevoNif = "1" + nuevoNif;
-          } else if (primeraPosicion === "Z") {
-            nuevoNif = "2" + nuevoNif;
-          }
-        }
-
-        const dniNumero = nuevoNif.slice(0, 8);
-        const pos = parseInt(dniNumero) % 23;
-        const letra = strBase.slice(pos, pos + 1);
-        const isValid = letraNif === letra
-
-        if (isValid === false) {
-          setError(nifref, 'Introduzca NIF/NIE válido')
-          setTimeout(function () {
-            setSuccess(nifref)
-          }, 3000)
-          return false
-        }
-      }
-      if (cbotipValue === '0') {
-        setError(cbotip, 'Tipo requerido')
-        setTimeout(function () {
-          setSuccess(cbotip)
-        }, 3000)
-        return false
-      }
-      if (desrefValue === '' || desrefValue.length > 11) {
-        setError(desref, 'Descripción requerida (máx 11 caracteres)')
-        setTimeout(function () {
-          setSuccess(desref)
-        }, 3000)
-        return false
-      }
-      
-      return true
-    }
-    const setSuccess = (element) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = '';
-      inputControl.classList.add('is-valid');
-      element.classList.remove('is-invalid');
-    }
-    const setError = (element, message) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = message;
-      element.classList.add('is-invalid');
-      inputControl.classList.remove('is-valid');
-    }
+    const elemAdd = document.getElementById('upd');
+    elemAdd.setAttribute('action', `/admin/formularios/referencias/update?part=${getCookie('filtro')}`)
   </script>
 </body>
 

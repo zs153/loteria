@@ -88,35 +88,6 @@ export const mainPage = async (req, res) => {
     }
   }
 };
-export const addPage = async (req, res) => {
-  const user = req.user;
-
-  try {
-    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipo`, {
-      context: {},
-    })
-    const oficinas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/oficina`, {
-      context: user.rol === tiposRol.admin ? {} : { IDOFIC: user.oficina },
-    })
-
-    const datos = {
-      tipos: tipos.data.data,
-      oficinas: oficinas.data.data,
-    };
-
-    res.render("admin/formularios/add", { user, datos });
-  } catch (error) {
-    if (error.response?.status === 400) {
-      res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
-      });
-    } else {
-      res.render("admin/error500", {
-        alerts: [{ msg: error }],
-      });
-    }
-  }
-};
 export const editPage = async (req, res) => {
   const user = req.user;
 
@@ -240,6 +211,35 @@ export const resueltosPage = async (req, res) => {
     }
   }
 };
+export const readonlyPage = async (req, res) => {
+  const user = req.user;
+
+  try {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formulario`, {
+      context: {
+        IDFORM: req.params.id,
+      },
+    })
+
+    let formulario = result.data.data[0]
+    formulario.FECFOR = formulario.FECFOR.slice(0,10).split('-').reverse().join('/')
+    const datos = {
+      formulario: result.data.data[0],
+    }
+
+    res.render("admin/formularios/readonly", { user, datos });
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("admin/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("admin/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+}
 
 // pages sms
 export const smssPage = async (req, res) => {
@@ -429,7 +429,7 @@ export const referenciasPage = async (req, res) => {
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/referencias`, {
       context: {
-        formulario: req.params.id,          
+        formulario: req.params.id,
         limit: limit + 1,
         direction: dir,
         cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
@@ -437,19 +437,19 @@ export const referenciasPage = async (req, res) => {
       },
     })
 
-    let relaciones = result.data.data
-    let hasNexts = relaciones.length === limit + 1
+    let referencias = result.data.data
+    let hasNexts = referencias.length === limit + 1
     let nextCursor = 0
     let prevCursor = 0
 
     if (hasNexts) {
-      nextCursor = dir === 'next' ? relaciones[limit - 1].IDRELA : relaciones[0].IDRELA
-      prevCursor = dir === 'next' ? relaciones[0].IDRELA : relaciones[limit - 1].IDRELA
+      nextCursor = dir === 'next' ? referencias[limit - 1].IDREFE : referencias[0].IDREFE
+      prevCursor = dir === 'next' ? referencias[0].IDREFE : referencias[limit - 1].IDREFE
 
-      relaciones.pop()
+      referencias.pop()
     } else {
-      nextCursor = dir === 'next' ? 0 : relaciones[0]?.IDRELA
-      prevCursor = dir === 'next' ? relaciones[0]?.IDRELA : 0
+      nextCursor = dir === 'next' ? 0 : referencias[0]?.IDREFE
+      prevCursor = dir === 'next' ? referencias[0]?.IDREFE : 0
 
       if (cursor) {
         hasNexts = nextCursor === 0 ? false : true
@@ -461,7 +461,7 @@ export const referenciasPage = async (req, res) => {
     }
 
     if (dir === 'prev') {
-      relaciones = relaciones.reverse()
+      referencias = referencias.reverse()
     }
 
     cursor = {
@@ -474,13 +474,13 @@ export const referenciasPage = async (req, res) => {
     };
     const datos = {
       formulario,
-      relaciones,
+      referencias,
       hasNexts,
       hasPrevs,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
     }
 
-    res.render("admin/formularios/relaciones", { user, datos });
+    res.render("admin/formularios/referencias", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
@@ -500,7 +500,12 @@ export const referenciasAddPage = async (req, res) => {
   };
 
   try {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipo`, {
+      context: {},
+    });
+
     const datos = {
+      tipos: result.data.data,
       formulario,
     };
 
@@ -520,19 +525,24 @@ export const referenciasAddPage = async (req, res) => {
 export const referenciasEditPage = async (req, res) => {
   const user = req.user;
   const formulario = {
-    IDFORM: req.params.idforn,
+    IDFORM: req.params.idfor,
   }
 
   try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/referencia`, {
+    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipo`, {
+      context: {},
+    });
+
+    const referencia = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/referencia`, {
       context: {
-        IDREFE: req.params.idrefe,
+        IDREFE: req.params.idref,
       },
     });
 
     const datos = {
       formulario,
-      relacion: result.data.data[0],
+      tipos: tipos.data.data,
+      referencia: referencia.data.data[0],
     };
 
     res.render("admin/formularios/referencias/edit", { user, datos });
@@ -1195,8 +1205,9 @@ export const insertReferencia = async (req, res) => {
     IDFORM: req.body.idform,
   }
   const referencia = {
-    NIFCON: req.body.nifcon.toUpperCase(),
-    NOMCON: req.body.nomcon.toUpperCase(),
+    NIFREF: req.body.nifref.toUpperCase(),
+    DESREF: req.body.desref,
+    TIPREF: req.body.tipref,
   };
   const movimiento = {
     USUMOV: user.id,
@@ -1230,12 +1241,13 @@ export const updateReferencia = async (req, res) => {
   };
   const referencia = {
     IDREFE: req.body.idrefe,
-    NIFCON: req.body.nifcon.toUpperCase(),
-    NOMCON: req.body.nomcon.toUpperCase(),
+    NIFREF: req.body.nifref.toUpperCase(),
+    DESREF: req.body.desref,
+    TIPREF: req.body.tipref,
   };
   const movimiento = {
     USUMOV: user.id,
-    TIPMOV: tiposMovimiento.modificarRelacion,
+    TIPMOV: tiposMovimiento.modificarReferencia,
   };
 
   try {
