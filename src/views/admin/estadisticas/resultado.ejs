@@ -70,7 +70,7 @@
       <div class="page-body">
         <div class="container-xl">
           <div class="d-flex">
-            <span>Referencia: <%- datos.formulario.REFDOC %></span>
+            <span>Referencia: <%- datos.formulario.REFFOR %></span>
             <span class="ms-3">Periodo: <%- datos.periodo.DESDE.split('-').reverse().join('/') %> al <%- datos.periodo.HASTA.split('-').reverse().join('/') %></span>
             <a href="#" class="ms-auto" data-bs-toggle="modal" data-bs-target="#modal-config">
               <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -89,7 +89,7 @@
                   <div class="d-flex">
                     <div class="page-title-lg"><%- Intl.NumberFormat('de-DE').format(datos.contadores.PEN) %></div>
                     <div class="ms-auto">
-                      <div id="chart-pendientes" class="chart" data-percent="<%- datos.ratios.pendientes %>">
+                      <div id="chart-pendientes" class="chart" data-percent="<%- datos.ratios.PEN %>">
                         <span class="percent"></span>
                       </div>
                     </div>
@@ -104,7 +104,7 @@
                   <div class="d-flex">
                     <div class="page-title-lg"><%- Intl.NumberFormat('de-DE').format(datos.contadores.ADJ) %></div>
                     <div class="ms-auto">
-                      <div id="chart-asignadas" class="chart" data-percent="<%- datos.ratios.asignadas %>">
+                      <div id="chart-asignadas" class="chart" data-percent="<%- datos.ratios.ADJ %>">
                         <span class="percent"></span>
                       </div>
                     </div>
@@ -119,7 +119,7 @@
                   <div class="d-flex ">
                     <div class="page-title-lg"><%- Intl.NumberFormat('de-DE').format(datos.contadores.RES) %></div>
                     <div class="ms-auto">
-                      <div id="chart-resueltas" class="chart" data-percent="<%- datos.ratios.resueltas %>">
+                      <div id="chart-resueltas" class="chart" data-percent="<%- datos.ratios.RES %>">
                         <span class="percent"></span>
                       </div>
                     </div>
@@ -360,13 +360,11 @@
   </div>
 
   <script src="/js/ayuda.min.js"></script>
+  <script src="/js/indexStats.min.js"></script>
   <script>
     const element = document.querySelector('#chart-pendientes');
     const element1 = document.querySelector('#chart-asignadas');
     const element2 = document.querySelector('#chart-resueltas');
-    const desde = document.getElementById('desde')
-    const hasta = document.getElementById('hasta')
-    const cboC = document.getElementById('cbocar');
     const options = {
       colors: ['#8F00FF', '#F76707', '#74B816'],
       chart: {
@@ -438,23 +436,15 @@
       },
       series: [
         {
-          name: 'Desasignado',
-          data: <%- datos.serieD %>
-        },        {
-          name: 'Adjudicado',
-          data: <%- datos.serieA %>
-        },
-        {
           name: 'Resuelto',
           data: <%- datos.serieR %>
-        }
+        },
       ],
       xaxis: {
         type: 'datetime',
       }
     }
     const chart = new ApexCharts(document.querySelector("#chart-actuac"), options);
-
     const chartPendientes = new EasyPieChart(element, {
       size: '75',
       easing: 'easeOutElastic',
@@ -503,54 +493,7 @@
     })
 
     // inicializa chart
-    chart.render();   
-    
-    //proc
-    const validate = () => {
-      const desdeValue = desde.value
-      const hastaValue = hasta.value
-      const cbocarValue = cboC.value
-      
-      if (isNaN(Date.parse(desdeValue))) {
-        setError(desde, 'Fecha requerida')
-        setTimeout(function () {
-          setSuccess(desde)
-        }, 3000)
-        return false
-      }
-      if (isNaN(Date.parse(hastaValue))) {
-        setError(hasta, 'Fecha requerida')
-        setTimeout(function () {
-          setSuccess(hasta)
-        }, 3000)
-        return false
-      }
-      if (cbocarValue === '0') {
-        setError(cboC, 'Carga requerida')
-        setTimeout(function () {
-          setSuccess(cboC)
-        }, 3000)
-        return false
-      }
-
-      return true
-    }
-    const setSuccess = (element) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = '';
-      inputControl.classList.add('is-valid');
-      element.classList.remove('is-invalid');
-    }
-    const setError = (element, message) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = message;
-      element.classList.add('is-invalid');
-      inputControl.classList.remove('is-valid');
-    }
+    chart.render();       
   </script>
 </body>
 

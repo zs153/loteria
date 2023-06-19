@@ -354,7 +354,7 @@ export const smssAddPage = async (req, res) => {
 export const smssEditPage = async (req, res) => {
   const user = req.user;
   const formulario = {
-    IDFORM: req.params.idform,
+    IDFORM: req.params.idfor,
   }
 
   try {
@@ -1095,7 +1095,6 @@ export const desasignar = async (req, res) => {
 // proc sms
 export const insertSms = async (req, res) => {
   const user = req.user;
-  const fecha = new Date()
   const formulario = {
     IDFORM: req.body.idform,
   }
@@ -1178,7 +1177,6 @@ export const removeSms = async (req, res) => {
 
   try {
     await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/smss/delete`, {
-      formulario,
       sms,
       movimiento,
     });

@@ -25,11 +25,15 @@ export const mainPage = async (req, res) => {
 
     res.render('admin/estadisticas', { user, datos })
   } catch (error) {
-    const msg = 'No se ha podido acceder a los datos de la aplicación.'
-
-    res.render('admin/error400', {
-      alerts: [{ msg }],
-    })
+    if (error.response?.status === 400) {
+      res.render("admin/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("admin/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 
@@ -41,112 +45,51 @@ export const generarEstadistica = async (req, res) => {
     HASTA: req.body.hasta,
   }
   const formulario = {
-    REFFRA: req.body.refcar,
+    REFFOR: req.body.refcar,
   }
+  const serieR = []
 
   try {
-    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/cierre`, {
+    const cargas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/carga`, {
       context: {},
     })
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/estadisticas/contadores`, {
+    const actuacion = await axios.post(`http://${serverAPI}:${puertoAPI}/api/estadisticas/actuacion`, {
       context: {
-        REFFRA: req.body.refcar,
+        REFFOR: req.body.refcar,
         DESDE: periodo.DESDE,
         HASTA: periodo.HASTA,
-        CRUERR: tipos.data.data[0].IDTIPO,
-        SINEFE: tipos.data.data[1].IDTIPO,
-        TRICOR: tipos.data.data[2].IDTIPO,
-        PRESCR: tipos.data.data[3].IDTIPO,
       }
     })
     const oficinas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/estadisticas/oficinas`, {
       context: {
-        REFFRA: req.body.refcar
+        REFFOR: req.body.refcar,
       },
     })
-    // const actividad = await axios.post(`http://${serverAPI}:${puertoAPI}/api/estadisticas/actividad`, {
-    //   context: {
-    //     REFFRA: req.body.refcar,
-    //     DESDE: periodo.DESDE,
-    //     HASTA: periodo.HASTA,
-    //   }
-    // })
-    const cargas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/carga`, {
-      context: {},
-    })
-
-    const serieC = []
-    const serieL = []
-    const serieS = []
-    let contadores
-    let importes
-    let causas
-
-    result.data.data.map(itm => {
-      if (itm.FECHA) {
-        serieC.push([new Date(itm.FECHA).getTime(), itm.CORREC])
-        serieL.push([new Date(itm.FECHA).getTime(), itm.LIQUID])
-        serieS.push([new Date(itm.FECHA).getTime(), itm.SANCIO])
-      } else {
-        const cruceError = itm.CRUERR
-        const sinEfecto = itm.SINEFE
-        const tributacionCorrecta = itm.TRICOR
-        const prescrito = itm.PRESCR
-        const otrosCasos = itm.OTRCAS
-        const correctas = itm.CORREC
-        const liquidadas = itm.LIQUID
-        const sancionadas = itm.SANCIO
-        const anuladas = itm.ANULAD
-        const liquidado = itm.IMPLIQ
-        const sancionado = itm.IMPSAN
-        const anulado = itm.IMPANU
-
-        contadores = {
-          correctas,
-          liquidadas,
-          sancionadas,
-          anuladas,
-        }
-        importes = {
-          liquidado,
-          sancionado,
-          anulado,
-        }
-        causas = {
-          cruceError,
-          sinEfecto,
-          tributacionCorrecta,
-          prescrito,
-          otrosCasos,
-        }
+    const usuarios = await axios.post(`http://${serverAPI}:${puertoAPI}/api/estadisticas/usuarios`, {
+      context: {
+        REFFOR: req.body.refcar,
       }
     })
 
-    const totalActuacion = contadores.correctas + contadores.liquidadas + contadores.sancionadas
-    const totalCausas = causas.cruceError + causas.sinEfecto + causas.tributacionCorrecta + causas.prescrito + causas.otrosCasos
+    actuacion.data.data.map(itm => {
+      serieR.push([fechaToUTCString(itm.FECHA), itm.RES])
+    })
+    
+    const contadores = oficinas.data.data.pop()
     const ratios = {
-      correctas: Math.round((contadores.correctas * 100 / totalActuacion) * 100) / 100.0,
-      liquidacion: Math.round((contadores.liquidadas * 100 / totalActuacion) * 100) / 100.0,
-      sancion: Math.round((contadores.sancionadas * 100 / totalActuacion) * 100) / 100.0,
-      cruceError: Math.round((causas.cruceError * 100 / totalCausas) * 100) / 100.0,
-      sinEfecto: Math.round((causas.sinEfecto * 100 / totalCausas) * 100) / 100.0,
-      tributacionCorrecta: Math.round((causas.tributacionCorrecta * 100 / totalCausas) * 100) / 100.0,
-      prescrito: Math.round((causas.prescrito * 100 / totalCausas) * 100) / 100.0,
-      otrosCasos: Math.round((causas.otrosCasos * 100 / totalCausas) * 100) / 100.0,
+      PEN: Math.round((contadores.PEN * 100 / contadores.TOT) * 100) / 100.0,
+      ADJ: Math.round((contadores.ADJ * 100 / contadores.TOT) * 100) / 100.0,
+      RES: Math.round((contadores.RES * 100 / contadores.TOT) * 100) / 100.0,      
     }
-
     const datos = {
+      periodo,
       formulario,
       cargas: cargas.data.data,
       oficinas: oficinas.data.data,
-      periodo,
+      usuarios: usuarios.data.data,
       contadores,
-      importes,
-      causas,
       ratios,
-      serieC: JSON.stringify(serieC),
-      serieL: JSON.stringify(serieL),
-      serieS: JSON.stringify(serieS),
+      serieR: JSON.stringify(serieR),
     }
 
     res.render('admin/estadisticas/resultado', { user, datos })
@@ -170,6 +113,12 @@ const yearMonthDayToUTCString = (year, month, day) => {
   const dayCDM = ('0' + day).slice(-2)
 
   const fecha = new Date(`${yearCDM}-${monthCDM}-${dayCDM}T00:00:00`)
+  const userTimezoneOffset = fecha.getTimezoneOffset() * 60000
+
+  return new Date(fecha.getTime() - userTimezoneOffset).toISOString().slice(0, 10)
+}
+const fechaToUTCString = (date) => {
+  const fecha = new Date(date)
   const userTimezoneOffset = fecha.getTimezoneOffset() * 60000
 
   return new Date(fecha.getTime() - userTimezoneOffset).toISOString().slice(0, 10)

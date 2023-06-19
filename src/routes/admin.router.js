@@ -46,7 +46,7 @@ adminRouter.get("/formularios/referencias/readonly/:id", verifyTokenAndResp, for
 // smss
 adminRouter.get("/formularios/smss/:id", verifyTokenAndResp, formulario.smssPage);
 adminRouter.get("/formularios/smss/add/:id", verifyTokenAndResp, formulario.smssAddPage);
-adminRouter.get("/formularios/smss/edit/:idfra/:idsms", verifyTokenAndResp, formulario.smssEditPage);
+adminRouter.get("/formularios/smss/edit/:idfor/:idsms", verifyTokenAndResp, formulario.smssEditPage);
 adminRouter.get("/formularios/smss/readonly/:id", verifyTokenAndResp, formulario.smssReadonlyPage);
 
 // ades
