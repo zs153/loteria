@@ -220,10 +220,9 @@ export const smss = async (req, res) => {
 export const crearSms = async (req, res) => {
   // context
   const formulario = {
-    IDFORM: req.body.formulario.IDFORM,
+    idform: req.body.formulario.IDFORM,
   }
   const sms = {
-    fecsms: req.body.sms.FECSMS,
     texsms: req.body.sms.TEXSMS,
     movsms: req.body.sms.MOVSMS,
     stasms: req.body.sms.STASMS,
@@ -247,7 +246,6 @@ export const modificarSms = async (req, res) => {
   // context
   const sms = {
     idsmss: req.body.sms.IDSMSS,
-    fecsms: req.body.sms.FECSMS,
     texsms: req.body.sms.TEXSMS,
     movsms: req.body.sms.MOVSMS,
   }
@@ -268,9 +266,6 @@ export const modificarSms = async (req, res) => {
 }
 export const borrarSms = async (req, res) => {
   // context
-  const formulario = {
-    IDFORM: req.body.formulario.IDFORM,
-  }
   const sms = {
     idsmss: req.body.sms.IDSMSS,
   }
@@ -278,7 +273,7 @@ export const borrarSms = async (req, res) => {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
-  const context = Object.assign(formulario, sms, movimiento)
+  const context = Object.assign(sms, movimiento)
 
   // proc
   try {

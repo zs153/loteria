@@ -9,10 +9,9 @@ const cambioSql = "BEGIN FORMULARIOS_PKG.CAMBIOESTADOFORMULARIO(:idform,:liqfor,
 const unasignSql = "BEGIN FORMULARIOS_PKG.UNASIGNFORMULARIO(:idform,:liqfor,:stafor,:usumov,:tipmov ); END;"
 const cierreSql = "BEGIN FORMULARIOS_PKG.CIERREFORMULARIO(:idform,:liqfor,:stafor,:usumov,:tipmov ); END;"
 // sms
-const smssQuery = "SELECT ss.* FROM smss ss"
-const insertSmsSql = "BEGIN FORMULARIOS_PKG.INSERTSMS(:idform,TO_DATE(:fecsms, 'YYYY-MM-DD'),:texsms,:movsms,:stasms,:usumov,:tipmov,:idsmss); END;"
-const updateSmsSql = "BEGIN FORMULARIOS_PKG.UPDATESMS(:idsmss,TO_DATE(:fecsms, 'YYYY-MM-DD'),:texsms,:movsms,:usumov,:tipmov); END;"
-const removeSmsSql = "BEGIN FORMULARIOS_PKG.DELETESMS(:idform,:idsmss,:usumov,:tipmov ); END;"
+const insertSmsSql = "BEGIN FORMULARIOS_PKG.INSERTSMSFORMULARIO(:idform,:texsms,:movsms,:stasms,:usumov,:tipmov,:idsmss); END;"
+const updateSmsSql = "BEGIN FORMULARIOS_PKG.UPDATESMS(:idsmss,:texsms,:movsms,:usumov,:tipmov); END;"
+const removeSmsSql = "BEGIN FORMULARIOS_PKG.DELETESMSFORMULARIO(:idsmss,:usumov,:tipmov ); END;"
 // referencias
 const insertReferenciaSql = "BEGIN FORMULARIOS_PKG.INSERTREFERENCIA(:idform,:nifref,:desref,:tipref,:usumov,:tipmov,:idrefe); END;"
 const updateReferenciaSql = "BEGIN FORMULARIOS_PKG.UPDATEREFERENCIA(:idrefe,:nifref,:desref,:tipref,:usumov,:tipmov); END;"
@@ -207,7 +206,7 @@ export const close = async (context) => {
 // proc sms
 export const sms = async (context) => {
   // bind
-  let query = smssQuery
+  let query = "SELECT ss.* FROM smss ss"
   const bind = context
 
   if (context.IDFORM) {
@@ -254,16 +253,17 @@ export const smss = async (context) => {
 export const insertSms = async (context) => {
   // bind
   let bind = context
-  bind.IDSMSS = {
+  bind.idsmss = {
     dir: BIND_OUT,
     type: NUMBER,
   }
+
 
   // proc
   const ret = await simpleExecute(insertSmsSql, bind)
 
   if (ret) {
-    bind.IDSMSS = ret.outBinds.IDSMSS
+    bind.idsmss = ret.outBinds.idsmss
     return ({ stat: 1, data: bind })
   } else {
     return ({ stat: 0, data: [] })
@@ -297,7 +297,7 @@ export const removeSms = async (context) => {
 // proc referencia
 export const referencia = async (context) => {
   // bind
-  let query = "SELECT rr.* FROM referencias rr"
+  let query = "SELECT rr.*,tt.destip FROM referencias rr INNER JOIN tipos tt ON tt.idtipo = rr.tipref"
   const bind = context
 
   if (context.IDFORM) {
