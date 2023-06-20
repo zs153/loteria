@@ -2,8 +2,8 @@
 const nifcon = document.getElementById('nifcon')
 const nomcon = document.getElementById('nomcon')
 const ejefor = document.getElementById('ejefor')
-const fecfor = document.getElementById('fecfor')
 const tipfor = document.getElementById('cbotip')
+const reffor = document.getElementById('cboref')
 
 // func
 const getCookie = (key) => {
@@ -45,8 +45,8 @@ const validate = () => {
   const nifconValue = nifcon.value.trim().toUpperCase().slice(0, 9)
   const nomconValue = nomcon.value.trim()
   const ejeforValue = ejefor.value.trim()
-  const fecforValue = fecfor.value.trim()
   const tipforValue = tipfor.value
+  const refforValue = reffor.value
 
   if (nifconValue === '') {
     setError(nifcon, 'NIF/NIE requerido')
@@ -108,7 +108,14 @@ const validate = () => {
     }, 3000)
     return false
   }
-  if (ejefraValue === '') {
+  if (refforValue === '0') {
+    setError(cboref, 'Seleccione una referencia')
+    setTimeout(function () {
+      setSuccess(cboref)
+    }, 3000)
+    return false
+  }
+  if (ejeforValue === '') {
     setError(ejefor, 'Ejercicio requerido')
     setTimeout(function () {
       setSuccess(ejefor)
@@ -116,7 +123,7 @@ const validate = () => {
     return false
   } else {
     const pattern = /^([0-9]{4})$/
-    const isValid = pattern.test(ejefraValue)
+    const isValid = pattern.test(ejeforValue)
 
     if (isValid === false) {
       setError(ejefor, 'Introduzca ejercicio válido')
@@ -125,13 +132,6 @@ const validate = () => {
       }, 3000)
       return false
     }
-  }
-  if (isNaN(Date.parse(fecfraValue))) {
-    setError(fecfor, 'Fecha requerida')
-    setTimeout(function () {
-      setSuccess(fecfor)
-    }, 3000)
-    return false
   }
 
   return true

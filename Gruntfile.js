@@ -90,8 +90,8 @@ module.exports = function (grunt) {
         //   // app
         //   'dist/app.js': ['./dist/app.js'],
         // }
-        src: ['./src/views/admin/estadisticas/indexStats.js'],
-        dest: './src/public/js/indexStats.min.js'
+        src: ['./src/views/user/formularios/smss/indexSmss.js'],
+        dest: './src/public/js/indexSmss.min.js'
       },
     },
   });

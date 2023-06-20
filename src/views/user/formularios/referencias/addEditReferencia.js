@@ -1,6 +1,7 @@
-// const
-const nifcon = document.getElementById('nifcon')
-const nomcon = document.getElementById('nomcon')
+// vars
+const nifref = document.getElementById('nifref')
+const desref = document.getElementById('desref')
+const tipref = document.getElementById('cbotip')
 
 // func
 const getCookie = (key) => {
@@ -39,33 +40,34 @@ const setError = (element, message) => {
   inputControl.classList.remove('is-valid');
 }
 const validate = () => {
-  const nifconValue = nifcon.value.trim().toUpperCase().slice(0, 9)
-  const nomconValue = nomcon.value.trim()
+  const nifrefValue = nifref.value.trim().toUpperCase().slice(0, 9)
+  const tiprefValue = tipref.value
+  const desrefValue = desref.value.trim()
 
-  if (nifconValue === '') {
-    setError(nifcon, 'NIF/NIE requerido')
+  if (nifrefValue === '') {
+    setError(nifref, 'NIF/NIE requerido')
     setTimeout(function () {
-      setSuccess(nifcon)
+      setSuccess(nifref)
     }, 3000)
     return false
   } else {
     const pattern = /^([X-Y][0-9]{7}[A-Z]{1})|([0-9]{8}[A-Z]{1})$/
 
-    if (!pattern.test(nifconValue)) {
-      setError(nifcon, 'Introduzca NIF/NIE válido')
+    if (!pattern.test(nifrefValue)) {
+      setError(nifref, 'Introduzca NIF/NIE válido')
       setTimeout(function () {
-        setSuccess(nifcon)
+        setSuccess(nifref)
       }, 3000)
       return false
     }
 
     const strBase = "TRWAGMYFPDXBNJZSQVHLCKET";
-    const primeraPosicion = nifconValue.slice(0, 1);
-    const letraNif = nifconValue.slice(8);
-    let nuevoNif = nifconValue;
+    const primeraPosicion = nifrefValue.slice(0, 1);
+    const letraNif = nifrefValue.slice(8);
+    let nuevoNif = nifrefValue;
 
     if (isNaN(primeraPosicion)) {
-      nuevoNif = nifconValue.slice(1);
+      nuevoNif = nifrefValue.slice(1);
       if (primeraPosicion === 'X') {
         nuevoNif = '0' + nuevoNif;
       } else if (primeraPosicion === "Y") {
@@ -81,17 +83,24 @@ const validate = () => {
     const isValid = letraNif === letra
 
     if (isValid === false) {
-      setError(nifcon, 'Introduzca NIF/NIE válido')
+      setError(nifref, 'Introduzca NIF/NIE válido')
       setTimeout(function () {
-        setSuccess(nifcon)
+        setSuccess(nifref)
       }, 3000)
       return false
     }
   }
-  if (nomconValue === '') {
-    setError(nomcon, 'Nombre requerido')
+  if (tiprefValue === '0') {
+    setError(cbotip, 'Seleccione un tipo')
     setTimeout(function () {
-      setSuccess(nomcon)
+      setSuccess(cbotip)
+    }, 3000)
+    return false
+  }
+  if (desrefValue === '' || desrefValue.length > 11) {
+    setError(desref, 'Referencia requerida (longitud máxima 11 caracteres)')
+    setTimeout(function () {
+      setSuccess(desref)
     }, 3000)
     return false
   }

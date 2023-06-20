@@ -23,24 +23,29 @@
               <div class="card">
                 <div class="card-header">
                   <div>
-                    <h3 class="card-title">Relacionados</h3>
+                    <h3 class="card-title">Referencias</h3>
                   </div>
                 </div>
                 <div class="card-body">
                   <div class="list-group list-group-flush overflow-auto" style="max-height: 50vh">
-                    <% datos.relaciones.map(itm=> { %>
+                    <% datos.referencias.map(itm=> { %>
                       <div class="list-group-item py-1">
                         <div class="row">
+                          <div class="col-auto">
+                            <span class="avatar avatar-rounded bg-green-lt">
+                              <h6>OK</h6>
+                            </span>
+                          </div>
                           <div class="col text-truncate">
                             <span style="font-size: .7rem;">
-                              Contribuyente: <%- itm.NIFCON %> <%- itm.NOMCON %>
+                              NIF: <%- itm.NIFREF %>
                             </span>
                             <div class="text-muted text-truncate">
                               <span style="font-size: .7rem;">
-                                Fecha: <%- itm.FECREL.slice(0,10).split("-").reverse().join("/") %>
-                              </span>
+                                Fecha: <%- itm.FECREF.slice(0,10).split("-").reverse().join("/") %> - Referencia: <%- itm.DESREF %> - Tipo: <%- itm.DESTIP %>
+                              </span>                            
                             </div>
-                          </div>                            
+                          </div>
                         </div>
                       </div>
                     <% }) %>

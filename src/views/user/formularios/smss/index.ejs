@@ -14,7 +14,7 @@
 <body class="antialiased">
   <div class="wrapper">
     <%- include('../../../partials/header') %>
-    <%- include('../../../partials/navbar', {opcion: 'FRAUDE' }) %>
+    <%- include('../../../partials/navbar', {opcion: 'FORMULARIO' }) %>
     <div class="page-wrapper">
       <div class="page-body">
         <div class="container-xl">
@@ -23,7 +23,7 @@
               <div class="card">
                 <div class="card-header">
                   <div>
-                    <h3 class="card-title">Gestión Sms</h3>
+                    <h3 class="card-title">Gestión de Mensajes</h3>
                   </div>
                   <div class="col-auto ms-auto">
                     <div class="d-flex">
@@ -43,11 +43,11 @@
                             aria-label="Buscar en smss">
                         </div>
                       </form>
-                      <a href="/user/formularios/smss/add/<%- datos.formulario.IDFORM %>" class="btn">
+                      <a href="" id="new" class="btn">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="24" width="24" viewBox="0 0 24 24">
                           <path d="M11.25 18.75v-6h-6v-1.5h6v-6h1.5v6h6v1.5h-6v6Z" />
                         </svg>
-                        Nuevo SMS
+                        Nuevo Mensaje
                       </a>
                     </div>
                   </div>
@@ -68,7 +68,7 @@
                   </table>
                   <div id="pagination-wrapper" class="py-1"></div>
                   <div class="ms-auto d-flex py-1">
-                    <a href="#" id="vol" class="btn btn-white">Volver</a>
+                    <a href="" id="vol" class="btn btn-white">Volver</a>
                   </div>
                 </div>
               </div>
