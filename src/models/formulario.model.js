@@ -2,8 +2,8 @@ import { BIND_OUT, NUMBER } from "oracledb";
 import { simpleExecute } from '../services/database.js';
 
 // formulario
-const insertSql = "BEGIN FORMULARIOS_PKG.INSERTFORMULARIO(TO_DATE(:fecfor, 'YYYY-MM-DD'),:nifcon,:nomcon,:emacon,:telcon,:movcon,:reffor,:tipfor,:ejefor,:ofifor,:obsfor,:funfor,:liqfor,:stafor,:usumov,:tipmov,:idform); END;"
-const updateSql = "BEGIN FORMULARIOS_PKG.UPDATEFORMULARIO(:idform,TO_DATE(:fecfor,'YYYY-MM-DD'),:nifcon,:nomcon,:emacon,:telcon,:movcon,:tipfor,:ejefor,:ofifor,:obsfor,:usumov,:tipmov); END;"
+const insertSql = "BEGIN FORMULARIOS_PKG.INSERTFORMULARIO(:nifcon,:nomcon,:emacon,:telcon,:movcon,:reffor,:tipfor,:ejefor,:ofifor,:obsfor,:funfor,:liqfor,:stafor,:usumov,:tipmov,:idform); END;"
+const updateSql = "BEGIN FORMULARIOS_PKG.UPDATEFORMULARIO(:idform,:nifcon,:nomcon,:emacon,:telcon,:movcon,:reffor,:tipfor,:ejefor,:ofifor,:obsfor,:usumov,:tipmov); END;"
 const removeSql = "BEGIN FORMULARIOS_PKG.DELETEFORMULARIO(:idform,:usumov,:tipmov ); END;"
 const cambioSql = "BEGIN FORMULARIOS_PKG.CAMBIOESTADOFORMULARIO(:idform,:liqfor,:stafor,:usumov,:tipmov ); END;"
 const unasignSql = "BEGIN FORMULARIOS_PKG.UNASIGNFORMULARIO(:idform,:liqfor,:stafor,:usumov,:tipmov ); END;"
@@ -333,7 +333,6 @@ export const referencias = async (context) => {
     query = "SELECT rr.*,rf.idform,tt.destip FROM referencias rr INNER JOIN referenciasformulario rf ON rf.idrefe = rr.idrefe AND rf.idform = :idform INNER JOIN tipos tt ON tt.idtipo = rr.tipref WHERE rr.idrefe < :idrefe AND (rr.nifref LIKE '%' || :part || '%' OR rr.desref LIKE '%' || :part || '%' OR :part IS NULL) ORDER BY rr.idrefe DESC FETCH NEXT :limit ROWS ONLY"
   }
 
-  console.log(query,bind);
   // proc
   const ret = await simpleExecute(query, bind)
 

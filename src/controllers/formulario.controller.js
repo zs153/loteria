@@ -43,7 +43,6 @@ export const extended = async (req, res) => {
 export const crearFormulario = async (req, res) => {
   // context
   const formulario = {
-    fecfor: req.body.formulario.FECFOR,
     nifcon: req.body.formulario.NIFCON,
     nomcon: req.body.formulario.NOMCON,
     emacon: req.body.formulario.EMACON,
@@ -77,12 +76,12 @@ export const modificarFormulario = async (req, res) => {
   // context
   const formulario = {
     idform: req.body.formulario.IDFORM,
-    fecfor: req.body.formulario.FECFOR,
     nifcon: req.body.formulario.NIFCON,
     nomcon: req.body.formulario.NOMCON,
     emacon: req.body.formulario.EMACON,
     telcon: req.body.formulario.TELCON,
     movcon: req.body.formulario.MOVCON,
+    reffor: req.body.formulario.REFFOR,
     tipfor: req.body.formulario.TIPFOR,
     ejefor: req.body.formulario.EJEFOR,
     ofifor: req.body.formulario.OFIFOR,
