@@ -53,7 +53,6 @@ export const usuarios = async (context) => {
     query += "SELECT * FROM datos WHERE nomusu < :nomusu OR :nomusu IS NULL ORDER BY nomusu DESC FETCH NEXT :limit ROWS ONLY"
   }
 
-  console.log(query,bind);
   // proc
   const ret = await simpleExecute(query, bind)
 

@@ -56,11 +56,11 @@ export const insert = async (context) => {
 
   // proc
   const ret = await simpleExecute(insertSql, bind)
-
+  
   if (ret) {
-    bind.IDOFIC = ret.outBinds.IDOFIC
+    bind.idcarg = ret.outBinds.idcarg
     return ({ stat: 1, data: bind })
   } else {
     return ({ stat: 0, data: [] })
-  }
+  }    
 };

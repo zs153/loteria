@@ -10,7 +10,7 @@ export const historico = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const historicos = async (req, res) => {
@@ -23,7 +23,7 @@ export const historicos = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const modificar = async (req, res) => {
@@ -50,7 +50,7 @@ export const modificar = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const borrar = async (req, res) => {
@@ -70,7 +70,7 @@ export const borrar = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const activar = async (req, res) => {
@@ -90,6 +90,6 @@ export const activar = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }

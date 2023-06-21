@@ -49,7 +49,6 @@ export const crear = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }

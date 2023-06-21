@@ -11,7 +11,7 @@ export const formulario = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const formularios = async (req, res) => {
@@ -24,7 +24,7 @@ export const formularios = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const extended = async (req, res) => {
@@ -37,7 +37,7 @@ export const extended = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const crearFormulario = async (req, res) => {
@@ -69,7 +69,7 @@ export const crearFormulario = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const modificarFormulario = async (req, res) => {
@@ -99,7 +99,7 @@ export const modificarFormulario = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }  
 }
 export const borrarFormulario = async (req, res) => {
@@ -119,7 +119,7 @@ export const borrarFormulario = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const asignarFormulario = async (req, res) => {
@@ -141,7 +141,7 @@ export const asignarFormulario = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const desasignarFormulario = async (req, res) => {
@@ -163,7 +163,7 @@ export const desasignarFormulario = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const cierreFormulario = async (req, res) => {
@@ -185,7 +185,7 @@ export const cierreFormulario = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 
@@ -200,7 +200,7 @@ export const sms = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const smss = async (req, res) => {
@@ -213,7 +213,7 @@ export const smss = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const crearSms = async (req, res) => {
@@ -238,7 +238,7 @@ export const crearSms = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const modificarSms = async (req, res) => {
@@ -260,7 +260,7 @@ export const modificarSms = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const borrarSms = async (req, res) => {
@@ -280,7 +280,7 @@ export const borrarSms = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 
@@ -295,7 +295,7 @@ export const referencia = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const referencias = async (req, res) => {
@@ -308,7 +308,7 @@ export const referencias = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const crearReferencia = async (req, res) => {
@@ -333,7 +333,7 @@ export const crearReferencia = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const modificarReferencia = async (req, res) => {
@@ -356,7 +356,7 @@ export const modificarReferencia = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const borrarReferencia = async (req, res) => {
@@ -376,7 +376,7 @@ export const borrarReferencia = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 
@@ -404,7 +404,7 @@ export const asignarUsuarios = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
 export const desAsignarUsuarios = async (req, res) => {
@@ -430,6 +430,6 @@ export const desAsignarUsuarios = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(400).json({ stat: null, data: err })
   }
 }
