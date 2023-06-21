@@ -79,7 +79,7 @@ export const mainPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -117,7 +117,7 @@ export const editPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -202,7 +202,7 @@ export const resueltosPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -231,7 +231,7 @@ export const readonlyPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -311,7 +311,7 @@ export const smssPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -342,7 +342,7 @@ export const smssAddPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -373,7 +373,7 @@ export const smssEditPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -405,7 +405,7 @@ export const smssReadonlyPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -484,7 +484,7 @@ export const referenciasPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -513,7 +513,7 @@ export const referenciasAddPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -549,7 +549,7 @@ export const referenciasEditPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -580,7 +580,7 @@ export const referenciasReadonlyPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -607,7 +607,7 @@ export const adesPage = async (req, res) => {
         oficina: user.rol === tiposRol.admin ? 0 : user.oficina,          
         limit: limit + 1,
         direction: dir,
-        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
+        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: '' , prev: ''},
         part,
       },
     })
@@ -655,7 +655,7 @@ export const adesPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -747,7 +747,7 @@ export const adesAsignarPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -840,7 +840,7 @@ export const adesDesasignarPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -885,7 +885,7 @@ export const insert = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -924,7 +924,7 @@ export const update = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -967,7 +967,7 @@ export const remove = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1005,7 +1005,7 @@ export const asignar = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1043,7 +1043,7 @@ export const resolver = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1082,7 +1082,7 @@ export const desasignar = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1119,7 +1119,7 @@ export const insertSms = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1153,7 +1153,7 @@ export const updateSms = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1185,7 +1185,7 @@ export const removeSms = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1223,7 +1223,7 @@ export const insertReferencia = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1258,7 +1258,7 @@ export const updateReferencia = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1291,7 +1291,7 @@ export const removeReferencia = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1331,7 +1331,7 @@ export const asignarFormularios = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1369,7 +1369,7 @@ export const desAsignarFormularios = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {

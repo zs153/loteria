@@ -168,6 +168,9 @@ const createPages = () => {
 const elemNew = document.getElementById('new');
 elemNew.setAttribute('href', `/user/formularios/smss/add/${formulario.IDFORM}?part=${getCookie('filtro')}`)
 
+const elemChange = document.getElementById('chng');
+elemChange.setAttribute('href', `/user/formularios/smss/cambio?part=${getCookie('filtro')}`)
+
 const elemDel = document.getElementById('del');
 elemDel.setAttribute('action', `/user/formularios/smss/delete?part=${getCookie('filtro')}`)
 
