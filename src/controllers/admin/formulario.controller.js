@@ -691,14 +691,14 @@ export const adesAsignarPage = async (req, res) => {
         IDUSUA: req.params.id,
       },
     });
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/extended`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios`, {
       context: {
-        stafor: JSON.stringify(estadosDocumento.pendiente),
+        estado: JSON.stringify(estadosDocumento.pendiente),
         limit: limit + 1,
         direction: dir,
         cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
         part,
-        rest,        
+        rest,
       },
     });
 
@@ -760,7 +760,7 @@ export const adesDesasignarPage = async (req, res) => {
   const user = req.user
 
   const dir = req.query.dir ? req.query.dir : 'next'
-  const limit = req.query.limit ? req.query.limit : 100
+  const limit = req.query.limit ? req.query.limit : 99
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
   let hasPrevs = cursor ? true : false
@@ -783,10 +783,10 @@ export const adesDesasignarPage = async (req, res) => {
         IDUSUA: req.params.id,
       },
     });
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/extended`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios`, {
       context: {
-        liqfor: usuario.data.data[0].USERID,
-        stafor: JSON.stringify(estadosDocumento.asignado),
+        liquidador: usuario.data.data[0].USERID,
+        estado: JSON.stringify(estadosDocumento.asignado),
         limit: limit + 1,
         direction: dir,
         cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
@@ -1304,23 +1304,23 @@ export const removeReferencia = async (req, res) => {
 // ades
 export const asignarFormularios = async (req, res) => {
   const user = req.user;
-  const formulario = {
-    LIQFOR: req.body.userid,
-    STAFOR: estadosDocumento.asignado,
-  }
-  const formularios = {
-    ARRFOR: JSON.parse(req.body.arrfor)
-  }
-  const movimiento = {
-    USUMOV: user.id,
-    TIPMOV: tiposMovimiento.asignarFormulario,
-  }
 
   try {
-    if (formularios.ARRFOR.length === 0) {
+    if (req.body.arrfor === '') {
       throw "No se han seleccionado registros para procesar."
     }
 
+    const formulario = {
+      LIQFOR: req.body.userid,
+      STAFOR: estadosDocumento.asignado,
+    }
+    const formularios = {
+      ARRFOR: JSON.parse(req.body.arrfor)
+    }
+    const movimiento = {
+      USUMOV: user.id,
+      TIPMOV: tiposMovimiento.asignarFormulario,
+    }
     await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/ades/asignar`, {
       formulario,
       formularios,
@@ -1342,21 +1342,22 @@ export const asignarFormularios = async (req, res) => {
 }
 export const desAsignarFormularios = async (req, res) => {
   const user = req.user;
-  const formulario = {
-    LIQFOR: 'PEND',
-    STAFOR: estadosDocumento.pendiente,
-  }
-  const formularios = {
-    ARRFOR: JSON.parse(req.body.arrfor)
-  }
-  const movimiento = {
-    USUMOV: user.id,
-    TIPMOV: tiposMovimiento.asignarFormulario,
-  }
   
   try {
-    if (formularios.ARRFOR.length === 0) {
+    if (req.body.arrfor === '') {
       throw "No se han seleccionado registros para procesar."
+    }
+
+    const formulario = {
+      LIQFOR: 'PEND',
+      STAFOR: estadosDocumento.pendiente,
+    }
+    const formularios = {
+      ARRFOR: JSON.parse(req.body.arrfor)
+    }
+    const movimiento = {
+      USUMOV: user.id,
+      TIPMOV: tiposMovimiento.asignarFormulario,
     }
 
     await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/ades/desasignar`, {

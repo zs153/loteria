@@ -90,8 +90,8 @@ module.exports = function (grunt) {
         //   // app
         //   'dist/app.js': ['./dist/app.js'],
         // }
-        src: ['./src/views/admin/formularios/ades/asignar.js'],
-        dest: './src/public/js/admin/asignar.min.js'
+        src: ['./src/views/admin/formularios/ades/desasignar.js'],
+        dest: './src/public/js/admin/desasignar.min.js'
       },
     },
   });

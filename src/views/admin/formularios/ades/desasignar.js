@@ -119,10 +119,10 @@ const buildTable = (state) => {
 
     // col7
     cell = document.createElement('td')
-    if (element.OBSFRA !== null) {
+    if (element.OBSFOR !== null) {
       cell.innerHTML = `<div class="d-flex py-1 align-items-center">
         <div class="flex-fill">
-          <div class="font-weight-medium">${element.OBSFOR.length > 30 ? element.OBSFOR.slice(0, 30) + '...' : element.OBSFOR}</div>
+          <div class="font-weight-medium">${element.OBSFOR}</div>
         </div>
       </div>`
     }
@@ -139,7 +139,7 @@ const buildTable = (state) => {
     table.appendChild(row)
   })
 }
-const addFraudes = () => {
+const addFormularios = () => {
   let arrFormularios = []
 
   document.querySelectorAll('input[type=checkbox]').forEach(e => {
@@ -147,8 +147,15 @@ const addFraudes = () => {
       arrFormularios.push(e.parentNode.parentNode.cells[7].value)
     }
   })
-  document.getElementById('arrfra').value = JSON.stringify(arrFormularios)
+  document.getElementById('arrfor').value = JSON.stringify(arrFormularios)
 }
+
+// events
+const elemBuscar = document.getElementById('buscarFormBox')
+elemBuscar.onchange = (event) => {
+  setCookie('filtrb', event.target.value, .5)
+}
+elemBuscar.value = getCookie('filtrb')
 
 // inicializar
 const elemAdd = document.getElementById('add')

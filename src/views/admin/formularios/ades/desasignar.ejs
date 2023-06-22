@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Fraudes</title>
+  <title>Formularios</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
@@ -38,7 +38,7 @@
                 <div class="card">
                   <div class="card-header">
                     <div>
-                      <h3 class="card-title">Desasignar Fraudes</h3>
+                      <h3 class="card-title">Desasignar Formularios</h3>
                       <span class="text-muted">
                         <small><%- datos.usuario.NOMUSU %></small>
                       </span>
@@ -80,10 +80,10 @@
                     </table>
                   </div>
                   <div class="card-footer">
-                    <form action="" id="add" method="POST" onsubmit="return addFraudes();">
+                    <form action="" id="add" method="POST" onsubmit="return addFormularios();">
                       <div class="col-12 d-flex">
-                        <a href="" id="vol" class="btn btn-white">Volver</a>
-                        <input type="hidden" name="arrfra" id="arrfra" value="">
+                        <a href="" id="vol" onclick="deleteCookie('filtrb');" class="btn btn-white">Volver</a>
+                        <input type="hidden" name="arrfor" id="arrfor" value="">
                         <input type="hidden" name="userid" id="userid" value="<%- datos.usuario.USERID %>">
                         <button type="submit" class="btn btn-link ms-auto" id="btnAdd">Desasignar formularios</button>
                       </div>
