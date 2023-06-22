@@ -17,8 +17,8 @@ const insertReferenciaSql = "BEGIN FORMULARIOS_PKG.INSERTREFERENCIA(:idform,:nif
 const updateReferenciaSql = "BEGIN FORMULARIOS_PKG.UPDATEREFERENCIA(:idrefe,:nifref,:desref,:tipref,:usumov,:tipmov); END;"
 const removeReferenciaSql = "BEGIN FORMULARIOS_PKG.DELETEREFERENCIA(:idrefe,:usumov,:tipmov ); END;"
 // ades
-const asignarUsuarioSql = "BEGIN FORMULARIOS_PKG.ASIGNARUSUARIOS(:liqfor,:stafor,:arrfor,:usumov,:tipmov); END;"
-const desAsignarUsuarioSql = "BEGIN FORMULARIOS_PKG.DESASIGNARUSUARIOS(:liqfor,:stafor,:arrfor,:usumov,:tipmov); END;"
+const asignarUsuarioSql = "BEGIN FORMULARIOS_PKG.ASIGNARFORMULARIOSUSUARIO(:liqfor,:stafor,:arrfor,:usumov,:tipmov); END;"
+const desAsignarUsuarioSql = "BEGIN FORMULARIOS_PKG.DESASIGNARFORMULARIOSUSUARIO(:liqfor,:stafor,:arrfor,:usumov,:tipmov); END;"
 
 // proc formulario
 export const formulario = async (context) => {
@@ -44,7 +44,6 @@ export const formularios = async (context) => {
   // bind
   let query = "WITH datos AS (SELECT ff.*,oo.desofi,tt.destip FROM formularios ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifor INNER JOIN tipos tt ON tt.idtipo = ff.tipfor"
   let bind = {
-    liqfor: context.liquidador,
     stafor: context.estado,
     limit: context.limit,
   };
@@ -57,11 +56,15 @@ export const formularios = async (context) => {
     bind.rest = context.rest
     query += " AND (ff.nifcon LIKE '%' || :rest || '%' OR ff.nomcon LIKE '%' || :rest || '%' OR ff.ejefor LIKE '%' || :rest || '%' OR ff.reffor LIKE '%' || :part || '%' OR ff.liqfor LIKE '%' || LOWER(:rest) || '%' OR tt.destip LIKE '%' || :rest || '%' OR oo.desofi LIKE '%' || :rest || '%')"
   }
-  query += " WHERE (ff.liqfor = :liqfor AND ff.stafor = :stafor)"
+  query += " WHERE ff.stafor = :stafor"
+  if (context.liqfor) {
+    bind.liqfor = context.liqfor
+    query += " AND ff.liqfor = :liqfor"
+  }
   if (context.pendientes) {
     bind.ofifor = context.pendientes.oficina
     bind.estado = context.pendientes.estado
-    query += " OR (ff.ofifor = :ofifor AND ff.stafor = :estado)"
+    query += " OR (ff.ofifor = :ofifor AND ff.stafor = :stafor)"
   }
   if (context.direction === 'next') {
     bind.idform = context.cursor.next;
@@ -70,7 +73,6 @@ export const formularios = async (context) => {
     bind.idform = context.cursor.prev;
     query += ")SELECT * FROM datos WHERE idform < :idform ORDER BY idform DESC FETCH NEXT :limit ROWS ONLY"
   }
-
   // proc
   const ret = await simpleExecute(query, bind)
 
@@ -114,7 +116,6 @@ export const extended = async (context) => {
     bind.idform = context.cursor.prev;
     query += ")SELECT * FROM datos WHERE idform < :idform ORDER BY idform DESC FETCH NEXT :limit ROWS ONLY"
   }
-
   // proc
   const ret = await simpleExecute(query, bind)
 
@@ -389,7 +390,6 @@ export const removeReferencia = async (context) => {
 export const asignarFormulariosUsuario = async (context) => {
   // bind
   let bind = context
-
   // proc
   const ret = await simpleExecute(asignarUsuarioSql, bind)
 
@@ -402,7 +402,6 @@ export const asignarFormulariosUsuario = async (context) => {
 export const desAsignarFormulariosUsuario = async (context) => {
   // bind
   let bind = context
-
   // proc
   const ret = await simpleExecute(desAsignarUsuarioSql, bind)
 
