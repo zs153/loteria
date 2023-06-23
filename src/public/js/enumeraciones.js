@@ -60,7 +60,8 @@ export const estadosUsuario = {
 export const estadosDocumento = {
   pendiente: 0,
   asignado: 1,
-  resuelto: 2,
+  pendientesAsignados: 2,
+  resuelto: 3,
 };
 export const estadosCarga = {
   pendiente: 0,

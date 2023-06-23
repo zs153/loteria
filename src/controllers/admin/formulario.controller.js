@@ -24,9 +24,9 @@ export const mainPage = async (req, res) => {
   }
 
   try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/extended`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios`, {
       context: {
-        stafor: JSON.stringify(estadosDocumento.pendiente),
+        stafor: estadosDocumento.pendientesAsignados,
         limit: limit + 1,
         direction: dir,
         cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
@@ -147,7 +147,7 @@ export const resueltosPage = async (req, res) => {
   }
 
   try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/extended`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios`, {
       context: {
         stafor: estadosDocumento.resuelto,
         limit: limit + 1,
@@ -693,7 +693,7 @@ export const adesAsignarPage = async (req, res) => {
     });
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios`, {
       context: {
-        estado: JSON.stringify(estadosDocumento.pendiente),
+        stafor: JSON.stringify(estadosDocumento.pendiente),
         limit: limit + 1,
         direction: dir,
         cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
@@ -708,7 +708,7 @@ export const adesAsignarPage = async (req, res) => {
     let prevCursor = 0
 
     if (hasNexts) {
-      alerts = [{ msg: 'Se supera el límite de registros permitidos. Sólo se muestran los 100 primeros registros. Refine la consulta' }]      
+      alerts = [{ msg: 'Se supera el límite de registros permitidos. Sólo se muestran los 100 primeros. Refine la consulta' }]      
       nextCursor = dir === 'next' ? formularios[limit - 1].IDFORM : formularios[0].IDFORM
       prevCursor = dir === 'next' ? formularios[0].IDFORM : formularios[limit - 1].IDFORM
       
@@ -785,14 +785,14 @@ export const adesDesasignarPage = async (req, res) => {
     });
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios`, {
       context: {
-        liquidador: usuario.data.data[0].USERID,
-        estado: JSON.stringify(estadosDocumento.asignado),
+        liqfor: usuario.data.data[0].USERID,
+        stafor: estadosDocumento.asignado,
         limit: limit + 1,
         direction: dir,
         cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
         part,
         rest,        
-      },
+      }
     });
 
     let formularios = result.data.data
@@ -801,7 +801,7 @@ export const adesDesasignarPage = async (req, res) => {
     let prevCursor = 0
 
     if (hasNexts) {
-      alerts = [{ msg: 'Se supera el límite de registros permitidos. Sólo se muestran los 100 primeros registros. Refine la consulta' }]      
+      alerts = [{ msg: 'Se supera el límite de registros permitidos. Sólo se muestran los 100 primeros. Refine la consulta' }]      
       nextCursor = dir === 'next' ? formularios[limit - 1].IDFORM : formularios[0].IDFORM
       prevCursor = dir === 'next' ? formularios[0].IDFORM : formularios[limit - 1].IDFORM
       

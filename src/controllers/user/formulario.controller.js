@@ -5,7 +5,6 @@ import { serverAPI,puertoAPI } from '../../config/settings'
 // pages formulario
 export const mainPage = async (req, res) => {
   const user = req.user
-
   const dir = req.query.dir ? req.query.dir : 'next'
   const limit = req.query.limit ? req.query.limit : 9
 
@@ -24,14 +23,15 @@ export const mainPage = async (req, res) => {
   }
 
   try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/extended`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios`, {
       context: {
-        stafor: JSON.stringify(estadosDocumento.pendiente),
+        liqfor: user.userid,
+        stafor: estadosDocumento.pendientesAsignados,
         limit: limit + 1,
         direction: dir,
         cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
         part,
-        rest,        
+        rest,
       },
     });
 
@@ -192,7 +192,7 @@ export const resueltosPage = async (req, res) => {
   }
 
   try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/extended`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios`, {
       context: {
         stafor: estadosDocumento.resuelto,
         limit: limit + 1,
@@ -736,7 +736,7 @@ export const adesAsignarPage = async (req, res) => {
         IDUSUA: req.params.id,
       },
     });
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/extended`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios`, {
       context: {
         stafor: JSON.stringify(estadosDocumento.pendiente),
         limit: limit + 1,
@@ -828,7 +828,7 @@ export const adesDesasignarPage = async (req, res) => {
         IDUSUA: req.params.id,
       },
     });
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/extended`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios`, {
       context: {
         liqfor: usuario.data.data[0].USERID,
         stafor: JSON.stringify(estadosDocumento.asignado),
