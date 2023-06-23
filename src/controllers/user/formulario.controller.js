@@ -106,7 +106,9 @@ export const addPage = async (req, res) => {
       context: {},
     })
     const oficinas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/oficina`, {
-      context: {},
+      context: {
+        IDOFIC: user.oficina,
+      },
     })
 
     const datos = {
