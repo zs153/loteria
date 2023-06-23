@@ -44,51 +44,9 @@ export const formularios = async (context) => {
   // bind
   let query = "WITH datos AS (SELECT ff.*,oo.desofi,tt.destip FROM formularios ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifor INNER JOIN tipos tt ON tt.idtipo = ff.tipfor"
   let bind = {
-    stafor: context.estado,
     limit: context.limit,
   };
-
-  if (context.part) {
-    bind.part = context.part
-    query += " AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefor LIKE '%' || :part || '%' OR ff.reffor LIKE '%' || :part || '%' OR ff.liqfor LIKE '%' || LOWER(:part) || '%' OR tt.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%')"
-  }
-  if (context.rest) {
-    bind.rest = context.rest
-    query += " AND (ff.nifcon LIKE '%' || :rest || '%' OR ff.nomcon LIKE '%' || :rest || '%' OR ff.ejefor LIKE '%' || :rest || '%' OR ff.reffor LIKE '%' || :part || '%' OR ff.liqfor LIKE '%' || LOWER(:rest) || '%' OR tt.destip LIKE '%' || :rest || '%' OR oo.desofi LIKE '%' || :rest || '%')"
-  }
-  query += " WHERE ff.stafor = :stafor"
-  if (context.liqfor) {
-    bind.liqfor = context.liqfor
-    query += " AND ff.liqfor = :liqfor"
-  }
-  if (context.pendientes) {
-    bind.ofifor = context.pendientes.oficina
-    bind.estado = context.pendientes.estado
-    query += " OR (ff.ofifor = :ofifor AND ff.stafor = :stafor)"
-  }
-  if (context.direction === 'next') {
-    bind.idform = context.cursor.next;
-    query += ")SELECT * FROM datos WHERE idform > :idform ORDER BY idform ASC FETCH NEXT :limit ROWS ONLY"
-  } else {
-    bind.idform = context.cursor.prev;
-    query += ")SELECT * FROM datos WHERE idform < :idform ORDER BY idform DESC FETCH NEXT :limit ROWS ONLY"
-  }
-  // proc
-  const ret = await simpleExecute(query, bind)
-
-  if (ret) {
-    return ({ stat: ret.rows.length, data: ret.rows })
-  } else {
-    return ({ stat: 0, data: [] })
-  }
-};
-export const extended = async (context) => {
-  // bind
-  let query = "WITH datos AS (SELECT ff.*,oo.desofi,tt.destip FROM formularios ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifor INNER JOIN tipos tt ON tt.idtipo = ff.tipfor"
-  let bind = {
-    limit: context.limit,
-  };
-
+  
   if (context.part) {
     bind.part = context.part
     query += " AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefor LIKE '%' || :part || '%' OR ff.reffor LIKE '%' || :part || '%' OR ff.liqfor LIKE '%' || LOWER(:part) || '%' OR tt.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%')"
@@ -98,15 +56,19 @@ export const extended = async (context) => {
     query += " AND (ff.nifcon LIKE '%' || :rest || '%' OR ff.nomcon LIKE '%' || :rest || '%' OR ff.ejefor LIKE '%' || :rest || '%' OR ff.reffor LIKE '%' || :rest || '%' OR ff.liqfor LIKE '%' || LOWER(:rest) || '%' OR tt.destip LIKE '%' || :rest || '%' OR oo.desofi LIKE '%' || :rest || '%')"
   }
   if (context.stafor) {
-    bind.stafor = context.stafor
-    query += " WHERE BITAND(ff.stafor, 2) = :stafor"
+    if (context.stafor === 2) {
+      query += " WHERE BITAND(ff.stafor, 2) = 0"
+    } else {
+      bind.stafor = context.stafor
+      query += " WHERE BITAND(ff.stafor, 3) = :stafor"
+    }
   } 
   if (context.liqfor) {
     bind.liqfor = context.liqfor
     if (context.stafor) {
-      query += " AND ff.liqfor = :liqfor"
+      query += " AND (ff.liqfor = :liqfor OR ff.stafor = 0)"
     } else {
-      query += " WHERE ff.liqfor = :liqfor"
+      query += " WHERE ff.liqfor = :liqfor OR ff.stafor = 0"
     }
   }
   if (context.direction === 'next') {
@@ -116,7 +78,7 @@ export const extended = async (context) => {
     bind.idform = context.cursor.prev;
     query += ")SELECT * FROM datos WHERE idform < :idform ORDER BY idform DESC FETCH NEXT :limit ROWS ONLY"
   }
-  // proc
+  //
   const ret = await simpleExecute(query, bind)
 
   if (ret) {

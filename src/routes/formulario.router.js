@@ -2,7 +2,6 @@ import express from 'express'
 import {
   formulario,
   formularios,
-  extended,
   asignarFormulario,
   crearFormulario,
   modificarFormulario,
@@ -28,7 +27,6 @@ const apiFormularioRouter = express.Router()
 // formularios
 apiFormularioRouter.post('/formulario', formulario)
 apiFormularioRouter.post('/formularios', formularios)
-apiFormularioRouter.post('/formularios/extended', extended)
 apiFormularioRouter.post('/formularios/insert', crearFormulario)
 apiFormularioRouter.post('/formularios/update', modificarFormulario)
 apiFormularioRouter.post('/formularios/delete', borrarFormulario)

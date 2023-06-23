@@ -27,19 +27,6 @@ export const formularios = async (req, res) => {
     res.status(400).json({ stat: null, data: err })
   }
 }
-export const extended = async (req, res) => {
-  // context
-  const context = req.body.context
-
-  // proc
-  try {
-    const result = await DAL.extended(context)
-
-    res.status(200).json(result)
-  } catch (err) {
-    res.status(400).json({ stat: null, data: err })
-  }
-}
 export const crearFormulario = async (req, res) => {
   // context
   const formulario = {
