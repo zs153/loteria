@@ -37,6 +37,7 @@ export const tiposMovimiento = {
   modificarHistorico: 64,
   borrarHistorico: 65,
   activarHistorico: 66,
+  envioSmsDesdeCierre: 67,
 };
 export const tiposPerfil = {
   general: 1,
@@ -47,11 +48,6 @@ export const tiposRol = {
   usuario: 1,
   responsable: 2,
   admin: 3,
-};
-export const tiposVisualizacion = {
-  todos: -1,
-  pendientes: 1,
-  resueltos: 2,
 };
 export const estadosUsuario = {
   reserva: 0,
@@ -94,6 +90,5 @@ export const arrEstadosSms = [
 export const arrEstadosFormulario = [
   { ID: 0, DES: "PENDIENTE", LIT: "PEN" },
   { ID: 1, DES: "ASIGNADO", LIT: "ASI" },
-  { ID: 2, DES: "RESUELTO", LIT: "RES" },
-  { ID: 3, DES: "REMITIDO", LIT: "REM" },
+  { ID: 3, DES: "RESUELTO", LIT: "RES" },
 ];

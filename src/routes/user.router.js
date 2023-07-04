@@ -15,14 +15,15 @@ userRouter.get('/perfil/:userid', authRoutes, usuario.perfilPage)
 
 // formulario
 userRouter.get("/formularios", authRoutes,formulario.mainPage);
-userRouter.get("/formularios/resueltos", authRoutes, formulario.resueltosPage);
 userRouter.get("/formularios/add", authRoutes, formulario.addPage);
 userRouter.get("/formularios/edit/:id", authRoutes, formulario.editPage);
+userRouter.get("/formularios/resueltos", authRoutes, formulario.resueltosPage);
 
 // referencias
 userRouter.get("/formularios/referencias/:id", authRoutes, formulario.referenciasPage);
 userRouter.get("/formularios/referencias/add/:id", authRoutes, formulario.referenciasAddPage);
 userRouter.get("/formularios/referencias/edit/:idfor/:idref", authRoutes, formulario.referenciasEditPage);
+userRouter.get("/formularios/resolver/:id", authRoutes, formulario.resolverPage);
 userRouter.get("/formularios/referencias/readonly/:id", authRoutes, formulario.referenciasReadonlyPage);
 
 // smss
@@ -48,10 +49,12 @@ userRouter.post("/formularios/delete", authRoutes, formulario.remove);
 userRouter.post("/formularios/asignar", authRoutes, formulario.asignar);
 userRouter.post("/formularios/desasignar", authRoutes, formulario.desasignar);
 userRouter.post("/formularios/resolver", authRoutes, formulario.resolver);
+
 // referencias
 userRouter.post("/formularios/referencias/insert", authRoutes, formulario.insertReferencia);
 userRouter.post("/formularios/referencias/update", authRoutes, formulario.updateReferencia);
 userRouter.post("/formularios/referencias/delete", authRoutes, formulario.removeReferencia);
+
 // sms
 userRouter.post("/formularios/smss/insert", authRoutes, formulario.insertSms);
 userRouter.post("/formularios/smss/update", authRoutes, formulario.updateSms);

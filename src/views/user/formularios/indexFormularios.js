@@ -242,7 +242,7 @@ const buildTable = (state) => {
               </a>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link" onclick="{document.getElementById('idcerr').value ='${element.IDFORM}', document.getElementById('msgcer').innerHTML ='<p>Ejercicio ${element.EJEFOR}</p><p>${element.NIFCON} ${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-resolver">
+              <a href="/user/formularios/resolver/${element.IDFORM}" class="nav-link">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke-width=".4" fill="none" d="M9.575 17.025 4.9 12.35l.475-.45 4.2 4.2 9.075-9.075.45.45Z"/>
                 </svg>

@@ -79,7 +79,7 @@ export const mainPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -122,7 +122,7 @@ export const addPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -164,6 +164,32 @@ export const editPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
+        alerts: [{ msg: error.response.data.data }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+};
+export const resolverPage = async (req, res) => {
+  const user = req.user;
+
+  try {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formulario`, {
+      context: {
+        IDFORM: req.params.id,
+      },
+    });
+    const datos = {
+      formulario: result.data.data[0],
+    };
+
+    res.render("user/formularios/resolver", { user, datos });
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
@@ -196,6 +222,7 @@ export const resueltosPage = async (req, res) => {
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios`, {
       context: {
+        liqfra: user.userid,
         stafor: estadosDocumento.resuelto,
         limit: limit + 1,
         direction: dir,
@@ -249,7 +276,7 @@ export const resueltosPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -271,189 +298,14 @@ export const readonlyPage = async (req, res) => {
     let formulario = result.data.data[0]
     formulario.FECFOR = formulario.FECFOR.slice(0,10).split('-').reverse().join('/')
     const datos = {
-      formulario: result.data.data[0],
+      formulario,
     }
 
     res.render("user/formularios/readonly", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
-      });
-    } else {
-      res.render("user/error500", {
-        alerts: [{ msg: error }],
-      });
-    }
-  }
-}
-
-// pag referencias
-export const referenciasPage = async (req, res) => {
-  const user = req.user;
-
-  const dir = req.query.dir ? req.query.dir : 'next'
-  const limit = req.query.limit ? req.query.limit : 9
-  const part = req.query.part ? req.query.part.toUpperCase() : ''
-
-  let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevs = cursor ? true : false
-
-  try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/referencias`, {
-      context: {
-        formulario: req.params.id,
-        limit: limit + 1,
-        direction: dir,
-        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
-        part,
-      },
-    })
-
-    let referencias = result.data.data
-    let hasNexts = referencias.length === limit + 1
-    let nextCursor = 0
-    let prevCursor = 0
-
-    if (hasNexts) {
-      nextCursor = dir === 'next' ? referencias[limit - 1].IDREFE : referencias[0].IDREFE
-      prevCursor = dir === 'next' ? referencias[0].IDREFE : referencias[limit - 1].IDREFE
-
-      referencias.pop()
-    } else {
-      nextCursor = dir === 'next' ? 0 : referencias[0]?.IDREFE
-      prevCursor = dir === 'next' ? referencias[0]?.IDREFE : 0
-
-      if (cursor) {
-        hasNexts = nextCursor === 0 ? false : true
-        hasPrevs = prevCursor === 0 ? false : true
-      } else {
-        hasNexts = false
-        hasPrevs = false
-      }
-    }
-
-    if (dir === 'prev') {
-      referencias = referencias.reverse()
-    }
-
-    cursor = {
-      next: nextCursor,
-      prev: prevCursor,
-    }
-
-    const formulario = {
-      IDFORM: req.params.id,
-    };
-    const datos = {
-      formulario,
-      referencias,
-      hasNexts,
-      hasPrevs,
-      cursor: convertNodeToCursor(JSON.stringify(cursor)),
-    }
-
-    res.render("user/formularios/referencias", { user, datos });
-  } catch (error) {
-    if (error.response?.status === 400) {
-      res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
-      });
-    } else {
-      res.render("user/error500", {
-        alerts: [{ msg: error }],
-      });
-    }
-  }
-}
-export const referenciasAddPage = async (req, res) => {
-  const user = req.user;
-  let formulario = {
-    IDFORM: req.params.id,
-  };
-
-  try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipo`, {
-      context: {},
-    });
-
-    const datos = {
-      tipos: result.data.data,
-      formulario,
-    };
-
-    res.render("user/formularios/referencias/add", { user, datos });
-  } catch (error) {
-    if (error.response?.status === 400) {
-      res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
-      });
-    } else {
-      res.render("user/error500", {
-        alerts: [{ msg: error }],
-      });
-    }
-  }
-}
-export const referenciasEditPage = async (req, res) => {
-  const user = req.user;
-  const formulario = {
-    IDFORM: req.params.idfor,
-  }
-
-  try {
-    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipo`, {
-      context: {},
-    });
-
-    const referencia = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/referencia`, {
-      context: {
-        IDREFE: req.params.idref,
-      },
-    });
-
-    const datos = {
-      formulario,
-      tipos: tipos.data.data,
-      referencia: referencia.data.data[0],
-    };
-
-    res.render("user/formularios/referencias/edit", { user, datos });
-  } catch (error) {
-    if (error.response?.status === 400) {
-      res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
-      });
-    } else {
-      res.render("user/error500", {
-        alerts: [{ msg: error }],
-      });
-    }
-  }
-}
-export const referenciasReadonlyPage = async (req, res) => {
-  const user = req.user;
-  const formulario = {
-    IDFORM: req.params.id,
-  };
-
-  try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/referencia`, {
-      context: {
-        IDFORM: req.params.id,
-      },
-    })
-
-    const datos = {
-      formulario,
-      referencias: result.data.data,
-    }
-
-    res.render("user/formularios/referencias/readonly", { user, datos });
-  } catch (error) {
-    if (error.response?.status === 400) {
-      res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -533,7 +385,7 @@ export const smssPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -564,7 +416,7 @@ export const smssAddPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -595,7 +447,7 @@ export const smssEditPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -627,7 +479,7 @@ export const smssReadonlyPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -637,9 +489,9 @@ export const smssReadonlyPage = async (req, res) => {
   }
 }
 
-// ades
-export const adesPage = async (req, res) => {
-  const user = req.user
+// pag referencias
+export const referenciasPage = async (req, res) => {
+  const user = req.user;
 
   const dir = req.query.dir ? req.query.dir : 'next'
   const limit = req.query.limit ? req.query.limit : 9
@@ -649,9 +501,9 @@ export const adesPage = async (req, res) => {
   let hasPrevs = cursor ? true : false
 
   try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/usuarios`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/referencias`, {
       context: {
-        oficina: user.rol === tiposRol.user ? 0 : user.oficina,          
+        formulario: req.params.id,
         limit: limit + 1,
         direction: dir,
         cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
@@ -659,111 +511,20 @@ export const adesPage = async (req, res) => {
       },
     })
 
-    let usuarios = result.data.data
-    let hasNexts = usuarios.length === limit +1
-    let nextCursor = ''
-    let prevCursor = ''
-    
-    if (hasNexts) {
-      nextCursor= dir === 'next' ? usuarios[limit - 1].NOMUSU : usuarios[0].NOMUSU
-      prevCursor = dir === 'next' ? usuarios[0].NOMUSU : usuarios[limit - 1].NOMUSU
-
-      usuarios.pop()
-    } else {
-      nextCursor = dir === 'next' ? '' : usuarios[0]?.NOMUSU
-      prevCursor = dir === 'next' ? usuarios[0]?.NOMUSU : ''
-      
-      if (cursor) {
-        hasNexts = nextCursor === '' ? false : true
-        hasPrevs = prevCursor === '' ? false : true
-      } else {
-        hasNexts = false
-        hasPrevs = false
-      }
-    }
-
-    if (dir === 'prev') {
-      usuarios = usuarios.sort((a,b) => a.NOMUSU > b.NOMUSU ? 1:-1)
-    }
-
-    cursor = {
-      next: nextCursor,
-      prev: prevCursor,
-    }    
-    const datos = {
-      usuarios,
-      hasPrevs,
-      hasNexts,
-      cursor: convertNodeToCursor(JSON.stringify(cursor)),
-      estadosUsuario,
-    }
-
-    res.render('user/formularios/ades', { user, datos })
-  } catch (error) {
-    if (error.response?.status === 400) {
-      res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
-      });
-    } else {
-      res.render("user/error500", {
-        alerts: [{ msg: error }],
-      });
-    }
-  }
-};
-export const adesAsignarPage = async (req, res) => {
-  const user = req.user
-
-  const dir = req.query.dir ? req.query.dir : 'next'
-  const limit = req.query.limit ? req.query.limit : 100
-
-  let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevs = cursor ? true : false
-  let part = ''
-  let rest = ''
-  let alerts = undefined
-
-  if (req.query.part) {
-    const partes = req.query.part.split(',')
-
-    part = partes[0].toUpperCase()
-    if (partes.length > 1) {
-      rest = partes[1].toUpperCase()
-    }
-  }
-  
-  try {
-    const usuario = await axios.post(`http://${serverAPI}:${puertoAPI}/api/usuario`, {
-      context: {
-        IDUSUA: req.params.id,
-      },
-    });
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios`, {
-      context: {
-        stafor: JSON.stringify(estadosDocumento.pendiente),
-        limit: limit + 1,
-        direction: dir,
-        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
-        part,
-        rest,        
-      },
-    });
-
-    let formularios = result.data.data
-    let hasNexts = formularios.length === limit + 1
+    let referencias = result.data.data
+    let hasNexts = referencias.length === limit + 1
     let nextCursor = 0
     let prevCursor = 0
 
     if (hasNexts) {
-      alerts = [{ msg: 'Se supera el límite de registros permitidos. Sólo se muestran los 100 primeros registros. Refine la consulta' }]      
-      nextCursor = dir === 'next' ? formularios[limit - 1].IDFORM : formularios[0].IDFORM
-      prevCursor = dir === 'next' ? formularios[0].IDFORM : formularios[limit - 1].IDFORM
-      
-      formularios.pop()
+      nextCursor = dir === 'next' ? referencias[limit - 1].IDREFE : referencias[0].IDREFE
+      prevCursor = dir === 'next' ? referencias[0].IDREFE : referencias[limit - 1].IDREFE
+
+      referencias.pop()
     } else {
-      nextCursor = dir === 'next' ? 0 : formularios[0]?.IDFORM
-      prevCursor = dir === 'next' ? formularios[0]?.IDFORM : 0
-      
+      nextCursor = dir === 'next' ? 0 : referencias[0]?.IDREFE
+      prevCursor = dir === 'next' ? referencias[0]?.IDREFE : 0
+
       if (cursor) {
         hasNexts = nextCursor === 0 ? false : true
         hasPrevs = prevCursor === 0 ? false : true
@@ -772,29 +533,32 @@ export const adesAsignarPage = async (req, res) => {
         hasPrevs = false
       }
     }
-    
+
     if (dir === 'prev') {
-      formularios = formularios.reverse()
+      referencias = referencias.reverse()
     }
-    
+
     cursor = {
       next: nextCursor,
       prev: prevCursor,
     }
-    
+
+    const formulario = {
+      IDFORM: req.params.id,
+    };
     const datos = {
-      usuario: usuario.data.data[0],
-      formularios,
+      formulario,
+      referencias,
       hasNexts,
       hasPrevs,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
-    };
+    }
 
-    res.render("user/formularios/ades/asignar", { user, alerts, datos });
+    res.render("user/formularios/referencias", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -803,91 +567,94 @@ export const adesAsignarPage = async (req, res) => {
     }
   }
 }
-export const adesDesasignarPage = async (req, res) => {
-  const user = req.user
+export const referenciasAddPage = async (req, res) => {
+  const user = req.user;
+  let formulario = {
+    IDFORM: req.params.id,
+  };
 
-  const dir = req.query.dir ? req.query.dir : 'next'
-  const limit = req.query.limit ? req.query.limit : 100
-
-  let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevs = cursor ? true : false
-  let part = ''
-  let rest = ''
-  let alerts = undefined
-
-  if (req.query.part) {
-    const partes = req.query.part.split(',')
-
-    part = partes[0].toUpperCase()
-    if (partes.length > 1) {
-      rest = partes[1].toUpperCase()
-    }
-  }
-  
   try {
-    const usuario = await axios.post(`http://${serverAPI}:${puertoAPI}/api/usuario`, {
-      context: {
-        IDUSUA: req.params.id,
-      },
-    });
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios`, {
-      context: {
-        liqfor: usuario.data.data[0].USERID,
-        stafor: JSON.stringify(estadosDocumento.asignado),
-        limit: limit + 1,
-        direction: dir,
-        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
-        part,
-        rest,        
-      },
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipo`, {
+      context: {},
     });
 
-    let formularios = result.data.data
-    let hasNexts = formularios.length === limit + 1
-    let nextCursor = 0
-    let prevCursor = 0
-
-    if (hasNexts) {
-      alerts = [{ msg: 'Se supera el límite de registros permitidos. Sólo se muestran los 100 primeros registros. Refine la consulta' }]      
-      nextCursor = dir === 'next' ? formularios[limit - 1].IDFORM : formularios[0].IDFORM
-      prevCursor = dir === 'next' ? formularios[0].IDFORM : formularios[limit - 1].IDFORM
-      
-      formularios.pop()
-    } else {
-      nextCursor = dir === 'next' ? 0 : formularios[0]?.IDFORM
-      prevCursor = dir === 'next' ? formularios[0]?.IDFORM : 0
-      
-      if (cursor) {
-        hasNexts = nextCursor === 0 ? false : true
-        hasPrevs = prevCursor === 0 ? false : true
-      } else {
-        hasNexts = false
-        hasPrevs = false
-      }
-    }
-    
-    if (dir === 'prev') {
-      formularios = formularios.reverse()
-    }
-    
-    cursor = {
-      next: nextCursor,
-      prev: prevCursor,
-    }
-    
     const datos = {
-      usuario: usuario.data.data[0],
-      formularios,
-      hasNexts,
-      hasPrevs,
-      cursor: convertNodeToCursor(JSON.stringify(cursor)),
+      tipos: result.data.data,
+      formulario,
     };
 
-    res.render("user/formularios/ades/desasignar", { user, alerts, datos });
+    res.render("user/formularios/referencias/add", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+}
+export const referenciasEditPage = async (req, res) => {
+  const user = req.user;
+  const formulario = {
+    IDFORM: req.params.idfor,
+  }
+
+  try {
+    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipo`, {
+      context: {},
+    });
+
+    const referencia = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/referencia`, {
+      context: {
+        IDREFE: req.params.idref,
+      },
+    });
+
+    const datos = {
+      formulario,
+      tipos: tipos.data.data,
+      referencia: referencia.data.data[0],
+    };
+
+    res.render("user/formularios/referencias/edit", { user, datos });
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.data }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+}
+export const referenciasReadonlyPage = async (req, res) => {
+  const user = req.user;
+  const formulario = {
+    IDFORM: req.params.id,
+  };
+
+  try {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/referencia`, {
+      context: {
+        IDFORM: req.params.id,
+      },
+    })
+
+    const datos = {
+      formulario,
+      referencias: result.data.data,
+    }
+
+    res.render("user/formularios/referencias/readonly", { user, datos });
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -930,7 +697,7 @@ export const insert = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -969,7 +736,7 @@ export const update = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -1012,7 +779,7 @@ export const remove = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -1050,7 +817,7 @@ export const asignar = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -1077,9 +844,23 @@ export const resolver = async (req, res) => {
         USUMOV: user.id,
         TIPMOV: tiposMovimiento.resolverFormulario,
       };
+      let sms = { 
+        TEXSMS: null,
+        MOVSMS: null,
+        STASMS: null,
+        TIPSMS: 0,
+      }
+
+      if (req.body.chkenv === 'true') {
+        sms.TEXSMS = req.body.texsms
+        sms.MOVSMS = req.body.movsms
+        sms.STASMS = estadosSms.pendiente
+        sms.TIPSMS = tiposMovimiento.envioSmsDesdeCierre
+      }
 
       await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/cierre`, {
         formulario,
+        sms,
         movimiento,
       });
       res.redirect(`/user/formularios?part=${req.query.part}`);
@@ -1089,7 +870,7 @@ export const resolver = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -1128,7 +909,7 @@ export const desasignar = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -1165,7 +946,7 @@ export const insertSms = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -1199,7 +980,7 @@ export const updateSms = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -1231,7 +1012,7 @@ export const removeSms = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -1244,7 +1025,6 @@ export const removeSms = async (req, res) => {
 // proc referencia
 export const insertReferencia = async (req, res) => {
   const user = req.user;
-  const fecha = new Date()
   const formulario = {
     IDFORM: req.body.idform,
   }
@@ -1269,7 +1049,7 @@ export const insertReferencia = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -1304,7 +1084,7 @@ export const updateReferencia = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -1337,85 +1117,7 @@ export const removeReferencia = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
-      });
-    } else {
-      res.render("user/error500", {
-        alerts: [{ msg: error }],
-      });
-    }
-  }
-}
-
-// ades
-export const asignarFormularios = async (req, res) => {
-  const user = req.user;
-  const formulario = {
-    LIQFOR: req.body.userid,
-    STAFOR: estadosDocumento.asignado,
-  }
-  const formularios = {
-    ARRFOR: JSON.parse(req.body.arrfor)
-  }
-  const movimiento = {
-    USUMOV: user.id,
-    TIPMOV: tiposMovimiento.asignarFormulario,
-  }
-
-  try {
-    if (formularios.ARRFOR.length === 0) {
-      throw "No se han seleccionado registros para procesar."
-    }
-
-    await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/ades/asignar`, {
-      formulario,
-      formularios,
-      movimiento,
-    });
-
-    res.redirect(`/user/formularios/ades?part=${req.query.part}`);
-  } catch (error) {
-    if (error.response?.status === 400) {
-      res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
-      });
-    } else {
-      res.render("user/error500", {
-        alerts: [{ msg: error }],
-      });
-    }
-  }
-}
-export const desAsignarFormularios = async (req, res) => {
-  const user = req.user;
-  const formulario = {
-    LIQFOR: 'PEND',
-    STAFOR: estadosDocumento.pendiente,
-  }
-  const formularios = {
-    ARRFOR: JSON.parse(req.body.arrfor)
-  }
-  const movimiento = {
-    USUMOV: user.id,
-    TIPMOV: tiposMovimiento.asignarFormulario,
-  }
-  
-  try {
-    if (formularios.ARRFOR.length === 0) {
-      throw "No se han seleccionado registros para procesar."
-    }
-
-    await axios.post(`http://${serverAPI}:${puertoAPI}/api/formularios/ades/desasignar`, {
-      formulario,
-      formularios,
-      movimiento,
-    });
-    
-    res.redirect(`/user/formularios/ades?part=${req.query.part}`);
-  } catch (error) {
-    if (error.response?.status === 400) {
-      res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("user/error500", {
@@ -1431,11 +1133,4 @@ const convertNodeToCursor = (node) => {
 }
 const convertCursorToNode = (cursor) => {
   return new Buffer.from(cursor, 'base64').toString('binary')
-}
-const randomString = (long, chars) => {
-  let result = "";
-  for (let i = long; i > 0; --i) {
-    result += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return result;
 }

@@ -35,18 +35,15 @@ adminRouter.get('/tipos/edit/:id', verifyTokenAndAdmin, tipo.editPage)
 adminRouter.get("/formularios", verifyTokenAndResp, formulario.mainPage);
 adminRouter.get("/formularios/edit/:id", verifyTokenAndResp, formulario.editPage);
 adminRouter.get("/formularios/resueltos", verifyTokenAndResp, formulario.resueltosPage);
+adminRouter.get("/formularios/resolver/:id", verifyTokenAndAdmin, formulario.resolverPage);
 adminRouter.get("/formularios/readonly/:id", verifyTokenAndResp, formulario.readonlyPage);
 
 // referencia
 adminRouter.get("/formularios/referencias/:id", verifyTokenAndResp, formulario.referenciasPage);
-adminRouter.get("/formularios/referencias/add/:id", verifyTokenAndResp, formulario.referenciasAddPage);
-adminRouter.get("/formularios/referencias/edit/:idfor/:idref", verifyTokenAndResp, formulario.referenciasEditPage);
 adminRouter.get("/formularios/referencias/readonly/:id", verifyTokenAndResp, formulario.referenciasReadonlyPage);
 
 // smss
 adminRouter.get("/formularios/smss/:id", verifyTokenAndResp, formulario.smssPage);
-adminRouter.get("/formularios/smss/add/:id", verifyTokenAndResp, formulario.smssAddPage);
-adminRouter.get("/formularios/smss/edit/:idfor/:idsms", verifyTokenAndResp, formulario.smssEditPage);
 adminRouter.get("/formularios/smss/readonly/:id", verifyTokenAndResp, formulario.smssReadonlyPage);
 
 // ades
@@ -83,21 +80,11 @@ adminRouter.post('/tipos/update', verifyTokenAndAdmin, tipo.update)
 adminRouter.post('/tipos/delete', verifyTokenAndAdmin, tipo.remove)
 
 // formularios
-adminRouter.post("/formularios/insert", verifyTokenAndResp, formulario.insert);
 adminRouter.post("/formularios/update", verifyTokenAndResp, formulario.update);
 adminRouter.post("/formularios/delete", verifyTokenAndResp, formulario.remove);
-adminRouter.post("/formularios/asignar", verifyTokenAndResp, formulario.asignar);
 adminRouter.post("/formularios/desasignar", verifyTokenAndResp, formulario.desasignar);
 adminRouter.post("/formularios/resolver", verifyTokenAndResp, formulario.resolver);
 
-// referencia
-adminRouter.post("/formularios/referencias/insert", verifyTokenAndResp, formulario.insertReferencia);
-adminRouter.post("/formularios/referencias/update", verifyTokenAndResp, formulario.updateReferencia);
-adminRouter.post("/formularios/referencias/delete", verifyTokenAndResp, formulario.removeReferencia);
-// sms
-adminRouter.post("/formularios/smss/insert", verifyTokenAndResp, formulario.insertSms);
-adminRouter.post("/formularios/smss/update", verifyTokenAndResp, formulario.updateSms);
-adminRouter.post("/formularios/smss/delete", verifyTokenAndResp, formulario.removeSms);
 // ades
 adminRouter.post("/formularios/ades/asignar", verifyTokenAndResp, formulario.asignarFormularios);
 adminRouter.post("/formularios/ades/desasignar", verifyTokenAndResp, formulario.desAsignarFormularios);
