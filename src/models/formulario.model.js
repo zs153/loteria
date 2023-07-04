@@ -7,7 +7,7 @@ const updateSql = "BEGIN FORMULARIOS_PKG.UPDATEFORMULARIO(:idform,:nifcon,:nomco
 const removeSql = "BEGIN FORMULARIOS_PKG.DELETEFORMULARIO(:idform,:usumov,:tipmov ); END;"
 const cambioSql = "BEGIN FORMULARIOS_PKG.CAMBIOESTADOFORMULARIO(:idform,:liqfor,:stafor,:usumov,:tipmov ); END;"
 const unasignSql = "BEGIN FORMULARIOS_PKG.UNASIGNFORMULARIO(:idform,:liqfor,:stafor,:usumov,:tipmov ); END;"
-const cierreSql = "BEGIN FORMULARIOS_PKG.CIERREFORMULARIO(:idform,:liqfor,:stafor,:usumov,:tipmov ); END;"
+const cierreSql = "BEGIN FORMULARIOS_PKG.CIERREFORMULARIO(:idform,:liqfor,:stafor,:texsms,:movsms,:stasms,:tipsms,:usumov,:tipmov ); END;"
 // sms
 const insertSmsSql = "BEGIN FORMULARIOS_PKG.INSERTSMSFORMULARIO(:idform,:texsms,:movsms,:stasms,:usumov,:tipmov,:idsmss); END;"
 const updateSmsSql = "BEGIN FORMULARIOS_PKG.UPDATESMS(:idsmss,:texsms,:movsms,:usumov,:tipmov); END;"

@@ -160,11 +160,17 @@ export const cierreFormulario = async (req, res) => {
     liqfor: req.body.formulario.LIQFOR,
     stafor: req.body.formulario.STAFOR,
   }
+  const sms = {
+    texsms: req.body.sms.TEXSMS,
+    movsms: req.body.sms.MOVSMS,
+    stasms: req.body.sms.STASMS,
+    tipsms: req.body.sms.TIPSMS,
+  }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
-  const context = Object.assign(formulario, movimiento)
+  const context = Object.assign(formulario, sms, movimiento)
 
   // proc
   try {
