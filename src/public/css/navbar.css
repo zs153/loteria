@@ -11,12 +11,6 @@ navabar
   padding-top: 0.25rem;
   padding-bottom: 0.25rem; 
 }
-/* .navbar {
-  align-items: stretch;
-  min-height: 3.5rem;
-  background: transparent;
-  color: rgba(35, 46, 60, 0.7); 
-} */
 .navbar > .container,
 .navbar > .container-fluid, .navbar > .container-sm, .navbar > .container-md, .navbar > .container-lg, .navbar > .container-xl, .navbar > .container-xxl {
   display: flex;
@@ -369,9 +363,9 @@ navabar
     position: absolute;
     left: 0;
     right: 0;
-    bottom: -.25rem;
+    bottom: 0;
     border: 0 solid #206bc4;
-    border-bottom-width: 2px; 
+    border-bottom-width: 3px; 
   }
 }
 @media (min-width: 992px) {
