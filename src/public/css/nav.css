@@ -57,7 +57,6 @@
 .nav-link-icon {
   width: 1.5rem;
   height: 1.25rem;
-  /* height: 2rem; */
   margin-right: 0.25rem;
   opacity: 0.7;
 }
@@ -184,6 +183,11 @@
 .subnav .active {
   color: #008ce3;
 }
+
+.subnav .active::before {
+  background-color: #008ce3;
+}
+
 .subnav ul {
   list-style-type: none;
 }
@@ -196,11 +200,3 @@
 .nav-link-ltr:hover::before, a.active::before {
   width: 100%;
 }
-
-.subnav .active::before {
-  background-color: #008ce3;
-}
-
-/* .navbar {
-  padding-left: 10px !important;
-} */

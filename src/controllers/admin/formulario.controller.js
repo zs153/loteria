@@ -92,6 +92,9 @@ export const editPage = async (req, res) => {
   const user = req.user;
 
   try {
+    const cargas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/carga`, {
+      context: {},
+    })
     const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipo`, {
       context: {},
     })
@@ -108,6 +111,7 @@ export const editPage = async (req, res) => {
     formulario.FECFOR = formulario.FECFOR.slice(0, 10)
     const datos = {
       formulario,
+      cargas: cargas.data.data,
       tipos: tipos.data.data,
       oficinas: oficinas.data.data,
       tiposRol,
@@ -760,6 +764,7 @@ export const update = async (req, res) => {
     EMACON: req.body.emacon,
     TELCON: req.body.telcon,
     MOVCON: req.body.movcon,
+    REFFOR: req.body.reffor,
     TIPFOR: req.body.tipfor,
     EJEFOR: req.body.ejefor,
     OFIFOR: req.body.ofifor,

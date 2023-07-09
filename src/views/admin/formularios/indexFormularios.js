@@ -149,7 +149,7 @@ const buildTable = (state) => {
     if (element.OBSFOR !== null) {
       cell.innerHTML = `<div class="d-flex py-1 align-items-center">
         <div class="flex-fill">
-          <div class="font-weight-medium">${element.OBSFOR.length > 37 ? element.OBSFOR.slice(0, 37) + '...' : element.OBSFOR}</div>
+          <div class="font-weight-medium">${element.OBSFOR.length > 66 ? element.OBSFOR.slice(0, 66) + '...' : element.OBSFOR}</div>
         </div>
       </div>`
     }
@@ -203,7 +203,7 @@ const buildTable = (state) => {
                 Formulario
               </a>
             </li>
-            <li class="nav-item ">
+            <li class="nav-item">
               <a href="/admin/formularios/referencias/readonly/${element.IDFORM}" class="nav-link">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke-width=".4" fill="none" d="M12.975 13.35h.65v-2.975H16.6v-.65h-2.975V6.75h-.65v2.975H10v.65h2.975ZM8.1 16.7q-.625 0-1.038-.412-.412-.413-.412-1.038V4.85q0-.6.412-1.013.413-.412 1.038-.412h10.4q.6 0 1.013.412.412.413.412 1.013v10.4q0 .625-.412 1.038-.413.412-1.013.412Zm0-.65h10.4q.3 0 .55-.25.25-.25.25-.55V4.85q0-.3-.25-.55-.25-.25-.55-.25H8.1q-.3 0-.55.25-.25.25-.25.55v10.4q0 .3.25.55.25.25.55.25Zm-2.575 3.225q-.625 0-1.037-.413-.413-.412-.413-1.037V6.8h.65v11.025q0 .3.25.55.25.25.55.25H16.55v.65ZM7.3 4.05v12-12Z"/>

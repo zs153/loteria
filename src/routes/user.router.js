@@ -18,6 +18,7 @@ userRouter.get("/formularios", authRoutes,formulario.mainPage);
 userRouter.get("/formularios/add", authRoutes, formulario.addPage);
 userRouter.get("/formularios/edit/:id", authRoutes, formulario.editPage);
 userRouter.get("/formularios/resueltos", authRoutes, formulario.resueltosPage);
+userRouter.get("/formularios/readonly/:id", authRoutes, formulario.readonlyPage);
 
 // referencias
 userRouter.get("/formularios/referencias/:id", authRoutes, formulario.referenciasPage);

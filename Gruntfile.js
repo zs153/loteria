@@ -89,8 +89,8 @@ module.exports = function (grunt) {
         //   // app
         //   'dist/app.js': ['./dist/app.js'],
         // }
-        src: ['./src/views/user/formularios/indexFormularios.js'],
-        dest: './src/public/js/user/indexFormularios.min.js'
+        src: ['./src/views/user/formularios/resueltos/indexResueltos.js'],
+        dest: './src/public/js/user/indexResueltos.min.js'
       },
     },
   });

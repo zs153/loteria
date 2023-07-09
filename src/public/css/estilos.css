@@ -5482,7 +5482,6 @@ tbody tr:hover svg {
 }
 .dots-menu > .nav-item:hover > .nav-link {
   color: #585858;
-  /* color: #8aa8bd; */
 }
 .dots-menu .nav-item:hover > ul {
   display: block;

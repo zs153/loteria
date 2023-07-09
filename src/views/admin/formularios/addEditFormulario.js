@@ -4,6 +4,7 @@ const nomcon = document.getElementById('nomcon')
 const ejefor = document.getElementById('ejefor')
 const fecfor = document.getElementById('fecfor')
 const tipfor = document.getElementById('cbotip')
+const reffor = document.getElementById('cboref')
 
 // func
 const getCookie = (key) => {
@@ -47,6 +48,7 @@ const validate = () => {
   const ejeforValue = ejefor.value.trim()
   const fecforValue = fecfor.value.trim()
   const tipforValue = tipfor.value
+  const refforValue = reffor.value
 
   if (nifconValue === '') {
     setError(nifcon, 'NIF/NIE requerido')
@@ -108,6 +110,13 @@ const validate = () => {
     }, 3000)
     return false
   }
+  if (refforValue === '0') {
+    setError(cboref, 'Seleccione una referencia')
+    setTimeout(function () {
+      setSuccess(cboref)
+    }, 3000)
+    return false
+  }  
   if (ejeforValue === '') {
     setError(ejefor, 'Ejercicio requerido')
     setTimeout(function () {
