@@ -32,6 +32,6 @@
     "grunt-contrib-concat": "^2.1.0",
     "grunt-contrib-cssmin": "^5.0.0",
     "grunt-contrib-uglify": "^5.2.2",
-    "nodemon": "^2.0.22"
+    "nodemon": "^3.0.1"
   }
 }
