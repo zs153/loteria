@@ -27,14 +27,15 @@ export const loteria = async (context) => {
 }
 export const loterias = async (context) => {
   // bind
-  let query = "WITH datos AS (SELECT ll.* FROM loterias ll"
+  let query = "WITH datos AS (SELECT ll.* FROM loterias ll WHERE (ll.usulot LIKE '%' || :part || '%' OR :part IS NULL)"
   let bind = {
     limit: context.limit,
+    part: context.part,
   };
   
-  if (context.part) {
-    bind.part = context.part
-    query += " WHERE (ll.usulot LIKE '%' || :part || '%')"
+  if (context.usulot) {
+    bind.usulot = context.usulot
+    query += " AND ll.usulot = :usulot"
   }
   if (context.stalot) {
     bind.stalot = context.stalot
@@ -49,9 +50,8 @@ export const loterias = async (context) => {
   }
 
   // exec
-  console.log(query,bind);
   const ret = await simpleExecute(query, bind)
-
+  
   if (ret) {
     return ({ stat: ret.rows.length, data: ret.rows })
   } else {

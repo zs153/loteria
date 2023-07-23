@@ -24,6 +24,7 @@ export const loterias = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
+    console.log('controller....',err);
     res.status(400).json({ stat: null, data: err })
   }
 }
