@@ -47,7 +47,9 @@ export const loterias = async (context) => {
     bind.idlote = context.cursor.prev;
     query += ")SELECT * FROM datos WHERE idlote < :idlote ORDER BY idlote DESC FETCH NEXT :limit ROWS ONLY"
   }
-  //
+
+  // exec
+  console.log(query,bind);
   const ret = await simpleExecute(query, bind)
 
   if (ret) {
