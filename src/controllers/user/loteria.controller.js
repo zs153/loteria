@@ -65,6 +65,7 @@ export const mainPage = async (req, res) => {
 
     res.render("user/loterias", { user, datos });
   } catch (error) {
+    console.log(error);
     if (error.response?.status === 400) {
       res.render("user/error400", {
         alerts: [{ msg: error.response.data.data }],
