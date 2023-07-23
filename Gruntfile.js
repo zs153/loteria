@@ -10,15 +10,6 @@ module.exports = function (grunt) {
     clean: {
       src: ['dist']
     },
-    concat: {
-      options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-      },
-      css: {
-        src: ['src/public/css/estilos.css', 'src/public/css/navbar.css'],
-        dest: 'src/public/css/concat.css'
-      },
-    },
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
@@ -66,12 +57,10 @@ module.exports = function (grunt) {
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
 
   // Default task.
-  grunt.registerTask('concat-js', ['concat:js']);
   grunt.registerTask('default-js', ['uglify:js']);
-  grunt.registerTask('default-css', ['concat:css', 'uglify:css']);
-  grunt.registerTask('concat-css', ['concat:css']);
+  grunt.registerTask('css-min', ['cssmin']);
 };

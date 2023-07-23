@@ -5,14 +5,8 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { port } from '../config/settings'
 // routes
-import apiOficinaRouter from '../routes/oficina.router'
 import apiUsuarioRouter from '../routes/usuario.router'
-import apiHistoricoRouter from '../routes/historico.router'
-import apiGenteRouter from '../routes/gente.router'
-import apiFormularioRouter from '../routes/formulario.router'
-import apiTipoRouter from '../routes/tipo.router'
-import apiCargaRouter from '../routes/carga.router'
-import apiEstadisticaRouter from '../routes/estadistica.router'
+import apiLoteriaRouter from '../routes/loteria.router'
 
 let httpServer
 
@@ -29,14 +23,8 @@ function initialize() {
     app.use(cors())
 
     // routes
-    app.use('/api', apiOficinaRouter)
+    app.use('/api', apiLoteriaRouter)
     app.use('/api', apiUsuarioRouter)
-    app.use('/api', apiHistoricoRouter)
-    app.use('/api', apiGenteRouter)
-    app.use('/api', apiFormularioRouter)
-    app.use('/api', apiTipoRouter)
-    app.use('/api', apiCargaRouter)
-    app.use('/api', apiEstadisticaRouter)
 
     // server
     httpServer

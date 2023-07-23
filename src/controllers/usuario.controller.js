@@ -30,11 +30,9 @@ export const crear = async (req, res) => {
   // context
   const usuario = {
     NOMUSU: req.body.usuario.NOMUSU,
-    OFIUSU: req.body.usuario.OFIUSU,
     ROLUSU: req.body.usuario.ROLUSU,
     USERID: req.body.usuario.USERID,
     EMAUSU: req.body.usuario.EMAUSU,
-    PERUSU: req.body.usuario.PERUSU,
     TELUSU: req.body.usuario.TELUSU,
     STAUSU: req.body.usuario.STAUSU,
   }
@@ -53,15 +51,13 @@ export const crear = async (req, res) => {
     res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
-export const modificiar = async (req, res) => {
+export const modificar = async (req, res) => {
   // context
   const usuario = {
     IDUSUA: req.body.usuario.IDUSUA,
     NOMUSU: req.body.usuario.NOMUSU,
-    OFIUSU: req.body.usuario.OFIUSU,
     ROLUSU: req.body.usuario.ROLUSU,
     EMAUSU: req.body.usuario.EMAUSU,
-    PERUSU: req.body.usuario.PERUSU,
     TELUSU: req.body.usuario.TELUSU,
     STAUSU: req.body.usuario.STAUSU,
   }

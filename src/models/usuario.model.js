@@ -1,14 +1,14 @@
 import { BIND_OUT, NUMBER } from "oracledb";
 import { simpleExecute } from "../services/database.js";
 
-const insertSql = "BEGIN FORMULARIOS_PKG.INSERTUSUARIO(:nomusu,:ofiusu,:rolusu,:userid,:emausu,:perusu,:telusu,:stausu,:usumov,:tipmov,:idusua); END;";
-const updateSql = "BEGIN FORMULARIOS_PKG.UPDATEUSUARIO(:idusua,:nomusu,:ofiusu,:rolusu,:emausu,:perusu,:telusu,:stausu,:usumov,:tipmov); END;";
-const removeSql = "BEGIN FORMULARIOS_PKG.DELETEUSUARIO(:idusua,:usumov,:tipmov); END;";
-const perfilSql = "BEGIN FORMULARIOS_PKG.UPDATEPERFILUSUARIO(:idusua,:nomusu,:emausu,:telusu, :usumov,:tipmov); END;";
+const insertSql = "BEGIN LOTERIAS_PKG.INSERTUSUARIO(:nomusu,:rolusu,:userid,:emausu,:telusu,:stausu,:usumov,:tipmov,:idusua); END;";
+const updateSql = "BEGIN LOTERIAS_PKG.UPDATEUSUARIO(:idusua,:nomusu,:rolusu,:emausu,:telusu,:stausu,:usumov,:tipmov); END;";
+const removeSql = "BEGIN LOTERIAS_PKG.DELETEUSUARIO(:idusua,:usumov,:tipmov); END;";
+const perfilSql = "BEGIN LOTERIAS_PKG.UPDATEPERFILUSUARIO(:idusua,:nomusu,:emausu,:telusu, :usumov,:tipmov); END;";
 
 export const usuario = async (context) => {
   // bind
-  let query = "SELECT uu.*,oo.desofi FROM usuarios uu INNER JOIN oficinas oo ON oo.idofic = uu.ofiusu";
+  let query = "SELECT uu.* FROM usuarios uu";
   const bind = context
 
   if (context.IDUSUA) {
@@ -17,8 +17,6 @@ export const usuario = async (context) => {
     query += " WHERE uu.userid = :userid";
   } else if (context.EMAUSU) {
     query += " WHERE uu.emausu = :emausu";
-  } else if (context.OFIUSU) {
-    query += " WHERE uu.ofiusu = :ofiusu";
   } 
 
   // proc
@@ -40,9 +38,9 @@ export const usuarios = async (context) => {
 
   if (context.oficina) {
     bind.ofiusu = context.oficina
-    query = "WITH datos AS (SELECT uu.idusua,uu.userid,uu.nomusu,uu.telusu,uu.stausu,oo.desofi FROM usuarios uu INNER JOIN oficinas oo ON oo.idofic = uu.ofiusu WHERE uu.ofiusu = :ofiusu AND (uu.nomusu LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR uu.userid LIKE '%' || LOWER(:part) || '%' OR :part IS NULL))"
+    query = "WITH datos AS (SELECT uu.* FROM usuarios uu WHERE (uu.nomusu LIKE '%' || :part || '%' OR uu.userid LIKE '%' || LOWER(:part) || '%' OR :part IS NULL))"
   } else {
-    query = "WITH datos AS (SELECT uu.idusua,uu.userid,uu.nomusu,uu.telusu,uu.stausu,oo.desofi FROM usuarios uu INNER JOIN oficinas oo ON oo.idofic = uu.ofiusu WHERE uu.nomusu LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR uu.userid LIKE '%' || LOWER(:part) || '%' OR :part IS NULL)"
+    query = "WITH datos AS (SELECT uu.* FROM usuarios uu WHERE (uu.nomusu LIKE '%' || :part || '%' OR uu.userid LIKE '%' || LOWER(:part) || '%' OR :part IS NULL))"
   }
 
   if (context.direction === 'next') {
