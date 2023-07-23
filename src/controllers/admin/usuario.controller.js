@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { serverAPI,puertoAPI } from '../../config/settings'
-import { arrTiposRol,arrTiposPerfil,arrEstadosUsuario,estadosUsuario,tiposMovimiento,tiposRol } from '../../public/js/enumeraciones'
+import { estadosUsuario,tiposMovimiento } from '../../public/js/enumeraciones'
 
 export const mainPage = async (req, res) => {
   const user = req.user
@@ -76,17 +76,9 @@ export const mainPage = async (req, res) => {
 }
 export const addPage = async (req, res) => {
   const user = req.user
-  const filteredRol = arrTiposRol.filter(itm => itm.id <= user.rol)
 
   try {
-    const oficinas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/oficina`, {
-      context: {},
-    })
     const datos = {
-      oficinas: oficinas.data.data,
-      filteredRol,
-      arrTiposPerfil,
-      arrEstadosUsuario,
     }
 
     res.render('admin/usuarios/add', { user, datos })
@@ -104,23 +96,15 @@ export const addPage = async (req, res) => {
 }
 export const editPage = async (req, res) => {
   const user = req.user
-  const filteredRol = arrTiposRol.filter(itm => itm.id <= user.rol)
 
   try {
-    const oficinas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/oficina`, {
-      context: {}
-    })
-    const usuario = await axios.post(`http://${serverAPI}:${puertoAPI}/api/usuario`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/usuario`, {
       context: {
         IDUSUA: req.params.id,
       },
     })
     const datos = {
-      usuario: usuario.data.data[0],
-      oficinas: oficinas.data.data,
-      filteredRol,
-      arrTiposPerfil,
-      arrEstadosUsuario,
+      usuario: result.data.data[0],
     }
 
     res.render('admin/usuarios/edit', { user, datos })
@@ -145,11 +129,9 @@ export const insert = async (req, res) => {
   try {
     const usuario = {
       NOMUSU: req.body.nomusu.toUpperCase(),
-      OFIUSU: req.body.ofiusu,
       ROLUSU: req.body.rolusu,
       USERID: req.body.userid.toLowerCase(),
       EMAUSU: req.body.emausu,
-      PERUSU: req.body.perusu,
       TELUSU: req.body.telusu,
       STAUSU: req.body.stausu,
     }
@@ -181,10 +163,8 @@ export const update = async (req, res) => {
   const usuario = {
     IDUSUA: req.body.idusua,
     NOMUSU: req.body.nomusu.toUpperCase(),
-    OFIUSU: req.body.ofiusu,
     ROLUSU: req.body.rolusu,
     EMAUSU: req.body.emausu,
-    PERUSU: req.body.perusu,
     TELUSU: req.body.telusu,
     STAUSU: req.body.stausu,
   }
